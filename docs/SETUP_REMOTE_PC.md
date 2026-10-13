@@ -33,17 +33,24 @@ Dies ist ein **lokales Git-Repository mit ersten C#-Implementierungen**, Tests, 
 
 **Nicht als bestanden behaupten:** Unity-Compile, Unity-Test und Windows-Build sind bis zu diesen manuellen Schritten **ausstehend**.
 
-## GitHub privat verbinden
+## Öffentliches GitHub-Repository verbinden
 
-Auf GitHub einmalig `Avatar5` als **privates, LEERES** Repository erstellen (kein README, keine gitignore).
+Das öffentliche Repository ist bereits erstellt: https://github.com/SimonSteinschaden/Avatar-5
+
+Das Starter-Archiv enthält die lokale Git-Historie und eine vorkonfigurierte `origin`-Remote. Nach Entpacken in `C:\Dev\Avatar5` und nach Installation von Git for Windows:
 
 ```powershell
 cd C:\Dev\Avatar5
-git remote add origin https://github.com/SimonSteinschaden/Avatar5.git
+git remote -v
+git status
 git push -u origin main
 ```
 
-Es wird eine GitHub-Anmeldung benötigt. Falls du das Repository bereits anders erstellt hast, keine Historie überschreiben: erst Remote-Stand prüfen.
+Beim Push wird ggf. eine Anmeldung bei GitHub erforderlich. **Nie `git push --force` verwenden**, falls sich der Remote-Stand zwischenzeitlich verändert hat. In diesem Fall zuerst den Remote-Stand prüfen und konfliktfrei zusammenführen.
+
+Der Unity-URP-Template-Import erfolgt unabhängig davon. Nach erfolgreicher Editor-Kompilierung `.meta`-, `Packages`- und `ProjectSettings`-Dateien versionieren; `Library`, `Temp` und Builds nicht versionieren.
+
+Wichtig für dieses öffentliche Repository: Keine fremden Assets ohne Weiterverbreitungsrecht, keine Zugangsdaten und keine geschützten Avatar-/Borderlands-Inhalte einchecken.
 
 ## Optional / später
 

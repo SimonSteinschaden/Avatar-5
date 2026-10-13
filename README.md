@@ -1,6 +1,6 @@
 # AVATAR5 — Technische Gesamtarchitektur v1.0
 
-**Stand:** 13.10.2026 · **Status:** Planungsbaseline / noch nicht implementiert · **Plattform:** Windows PC
+**Stand:** 13.10.2026 · **Status:** P00-Source-Starter vorhanden, Unity-Import/Tests noch ausstehend · **Plattform:** Windows PC
 
 ## Projektzusammenfassung
 
@@ -48,6 +48,12 @@ Nicht neun getrennte Programme, sondern **neun klar abgegrenzte Module/Workstrea
 ## Dokumentenstatus
 
 Diese Dokumente sind **Implementierungsspezifikationen, keine lauffähige Unity-Software**. Konkrete SDK-Methodennamen und Paketversionen werden vor der Implementierung anhand der installierten Unity-Version geprüft. Beispiel-C#-Typen in den Spezifikationen sind architektonische Contracts; Codex muss ihre Unity-/Netcode-Serialisierung und tatsächliche API-Kompilierbarkeit sicherstellen.
+
+## Öffentliche Entwicklung auf GitHub
+
+Repository: https://github.com/SimonSteinschaden/Avatar-5
+
+**Kein Open-Source-Lizenztext vergeben.** Der öffentliche Quellcode ist sichtbar, aber damit nicht automatisch zur beliebigen Nutzung freigegeben. Kostenlose Fremd-Assets nur einchecken, wenn ihre Lizenz die Weiterverbreitung im öffentlichen Repository erlaubt. Niemals Zugangsschlüssel oder private Zugangsdaten einchecken.
 
 ## Entwicklungsstand / Sofortstart
 
