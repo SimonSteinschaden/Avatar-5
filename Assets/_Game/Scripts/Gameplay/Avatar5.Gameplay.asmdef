@@ -1,0 +1,7 @@
+{
+  "name": "Avatar5.Gameplay",
+  "rootNamespace": "Avatar5.Gameplay",
+  "references": ["Avatar5.Contracts"],
+  "autoReferenced": true,
+  "noEngineReferences": true
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Avatar5.Contracts",
+  "rootNamespace": "Avatar5.Contracts",
+  "references": [],
+  "autoReferenced": true,
+  "noEngineReferences": true
+}

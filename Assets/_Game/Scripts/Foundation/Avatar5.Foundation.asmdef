@@ -1,0 +1,6 @@
+{
+  "name": "Avatar5.Foundation",
+  "rootNamespace": "Avatar5.Foundation",
+  "references": ["Avatar5.Contracts"],
+  "autoReferenced": true
+}
