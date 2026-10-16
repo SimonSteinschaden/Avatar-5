@@ -36,6 +36,7 @@
 5. [Sofort verwendbare Codex-Aufträge](docs/12_CODEX_AUFTRAEGE.md)
 6. [Asset- und Lizenzpolitik](docs/13_ASSET_LIZENZEN.md)
 7. [AGENTS.md](AGENTS.md) — direkte Regeln für Codex.
+8. [CLAUDE.md](CLAUDE.md) — dieselben Regeln und der aktuelle Einstieg für Claude Code.
 
 ## Architekturprinzip
 
@@ -57,4 +58,4 @@ Repository: https://github.com/SimonSteinschaden/Avatar-5
 
 ## Entwicklungsstand / Sofortstart
 
-Das Repository enthält seit dem 13.10.2026 die ersten C#-Contracts, Bootstrap-/Editorwerkzeuge und vorbereitete NUnit-Tests. **Unity-Kompilierung noch nicht geprüft.** Siehe [Remote-PC Setup](docs/SETUP_REMOTE_PC.md) und [Implementierungsstand](docs/IMPLEMENTATION_STATUS.md).
+Der vorbereitete lokale Starterstand enthält erste C#-Contracts, Bootstrap-/Editorwerkzeuge und vorbereitete NUnit-Tests. **Unity-Kompilierung noch nicht geprüft.** Siehe [Remote-PC Setup](docs/SETUP_REMOTE_PC.md) und [Implementierungsstand](docs/IMPLEMENTATION_STATUS.md).
