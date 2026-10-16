@@ -1,0 +1,10 @@
+{
+  "name": "Avatar5.Rendering",
+  "rootNamespace": "Avatar5.Rendering",
+  "references": [
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "Unity.InputSystem"
+  ],
+  "autoReferenced": true
+}
