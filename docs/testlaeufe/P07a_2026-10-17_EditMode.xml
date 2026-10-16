@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="35" result="Passed" total="35" passed="35" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:37Z" duration="3,0501368">
+  <test-suite type="TestSuite" id="1000" name="Avatar5-URP-Template" fullname="Avatar5-URP-Template" runstate="Runnable" testcasecount="35" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:37Z" duration="3.050137" total="35" passed="35" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1006" name="Avatar5.Tests.EditMode.dll" fullname="C:/Users/rdpadmin/Desktop/Repositories/Avatar5-p07a/Library/ScriptAssemblies/Avatar5.Tests.EditMode.dll" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.043175" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="22564" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1007" name="Avatar5" fullname="Avatar5" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.042668" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1008" name="Tests" fullname="Avatar5.Tests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.042419" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1009" name="EditMode" fullname="Avatar5.Tests.EditMode" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.042192" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="ContractsSmokeTests" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.040852" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="CommandSequences_AreIndependentPerActor" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.CommandSequences_AreIndependentPerActor" methodname="CommandSequences_AreIndependentPerActor" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="1534988983" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.015891" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1004" name="DuplicateCommands_AreRejectedForSameActor" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.DuplicateCommands_AreRejectedForSameActor" methodname="DuplicateCommands_AreRejectedForSameActor" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="96977621" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.000382" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="NetworkProtocol_AcceptsMatchingVersion" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.NetworkProtocol_AcceptsMatchingVersion" methodname="NetworkProtocol_AcceptsMatchingVersion" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="195189888" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.004893" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="NetworkProtocol_RejectsMismatchedVersion" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.NetworkProtocol_RejectsMismatchedVersion" methodname="NetworkProtocol_RejectsMismatchedVersion" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="1827705451" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.000257" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1048" name="Avatar5.Tests.Rendering.dll" fullname="C:/Users/rdpadmin/Desktop/Repositories/Avatar5-p07a/Library/ScriptAssemblies/Avatar5.Tests.Rendering.dll" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:37Z" duration="2.997348" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="22564" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1049" name="Avatar5" fullname="Avatar5" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:37Z" duration="2.995549" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1050" name="Tests" fullname="Avatar5.Tests" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:37Z" duration="2.994708" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1051" name="Rendering" fullname="Avatar5.Tests.Rendering" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:37Z" duration="2.992367" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1010" name="RenderingAssetTests" fullname="Avatar5.Tests.Rendering.RenderingAssetTests" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:35Z" duration="0.988634" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1029" name="Benchmark_OnlyRunsWithCommandLineFlag" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Benchmark_OnlyRunsWithCommandLineFlag" methodname="Benchmark_OnlyRunsWithCommandLineFlag" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1252945334" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.000771" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1028" name="InkSampleRadius_ScalesWithResolution" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.InkSampleRadius_ScalesWithResolution" methodname="InkSampleRadius_ScalesWithResolution" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1295413335" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.001554" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="InkVolumeDefaults_AreOffSoOtherScenesStayUnchanged" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.InkVolumeDefaults_AreOffSoOtherScenesStayUnchanged" methodname="InkVolumeDefaults_AreOffSoOtherScenesStayUnchanged" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1060010346" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:34Z" duration="0.001914" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="OtherScenes_DoNotEnableInkLines" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.OtherScenes_DoNotEnableInkLines" methodname="OtherScenes_DoNotEnableInkLines" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1799572375" result="Passed" start-time="2026-10-16 22:27:34Z" end-time="2026-10-16 22:27:35Z" duration="0.950901" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="PaletteColours_MatchElementIdentity" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteColours_MatchElementIdentity" methodname="PaletteColours_MatchElementIdentity" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1353882449" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.005260" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1021" name="PaletteFamily_HasRequiredToonMaterials" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.013661" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1016" name="PaletteFamily_HasRequiredToonMaterials(&quot;Fire&quot;,3)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Fire&quot;,3)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1960492626" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.007616" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1017" name="PaletteFamily_HasRequiredToonMaterials(&quot;Water&quot;,2)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Water&quot;,2)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1042685601" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.000648" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1018" name="PaletteFamily_HasRequiredToonMaterials(&quot;Earth&quot;,3)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Earth&quot;,3)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1910203692" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.001120" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1019" name="PaletteFamily_HasRequiredToonMaterials(&quot;Air&quot;,3)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Air&quot;,3)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1620774576" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.000989" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1020" name="PaletteFamily_HasRequiredToonMaterials(&quot;Neutral&quot;,4)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Neutral&quot;,4)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1613996376" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.001047" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1024" name="PcRenderer_HasActiveInkFeature_OnRenderGraph" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PcRenderer_HasActiveInkFeature_OnRenderGraph" methodname="PcRenderer_HasActiveInkFeature_OnRenderGraph" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1036632500" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.002556" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="QualityProfiles_LowMediumHigh_ScaleCost" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.QualityProfiles_LowMediumHigh_ScaleCost" methodname="QualityProfiles_LowMediumHigh_ScaleCost" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="617179809" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.003237" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="RenderingAssembly_HasNoGameplayDependencies" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.RenderingAssembly_HasNoGameplayDependencies" methodname="RenderingAssembly_HasNoGameplayDependencies" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="611207958" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.001264" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1015" name="Shader_CompilesWithoutErrors" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.004446" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1011" name="Shader_CompilesWithoutErrors(&quot;Avatar5/Toon&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Avatar5/Toon&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1086674342" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.002778" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1012" name="Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Water&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Water&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1164397246" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.000472" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1013" name="Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Hull Outline&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Hull Outline&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="693740790" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.000226" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1014" name="Shader_CompilesWithoutErrors(&quot;Hidden/Avatar5/InkOutline&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Hidden/Avatar5/InkOutline&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1323953153" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:35Z" duration="0.000165" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1030" name="ToonBandTests" fullname="Avatar5.Tests.Rendering.ToonBandTests" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:36Z" duration="0.559519" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1035" name="ShadeSide_UsesShadeColourNotBlack" fullname="Avatar5.Tests.Rendering.ToonBandTests.ShadeSide_UsesShadeColourNotBlack" methodname="ShadeSide_UsesShadeColourNotBlack" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="1319080980" result="Passed" start-time="2026-10-16 22:27:35Z" end-time="2026-10-16 22:27:36Z" duration="0.490458" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1034" name="Sphere_ShowsConfiguredNumberOfBands" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.066993" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1031" name="Sphere_ShowsConfiguredNumberOfBands(2)" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands(2)" methodname="Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="1067008899" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.021856" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1032" name="Sphere_ShowsConfiguredNumberOfBands(3)" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands(3)" methodname="Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="1659857661" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.020720" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1033" name="Sphere_ShowsConfiguredNumberOfBands(4)" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands(4)" methodname="Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="570679509" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.022571" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1036" name="VisualStyleSceneRenderTests" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:37Z" duration="1.442486" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1044" name="Camera_FramesCharactersAndInk_AtAspect" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Camera_FramesCharactersAndInk_AtAspect" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.210195" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1042" name="Camera_FramesCharactersAndInk_AtAspect(1920,1080)" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Camera_FramesCharactersAndInk_AtAspect(1920,1080)" methodname="Camera_FramesCharactersAndInk_AtAspect" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="937138504" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.148147" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1043" name="Camera_FramesCharactersAndInk_AtAspect(2520,1080)" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Camera_FramesCharactersAndInk_AtAspect(2520,1080)" methodname="Camera_FramesCharactersAndInk_AtAspect" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="408093004" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.059930" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1040" name="InkLines_AppearOnCharactersAndScene" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.InkLines_AppearOnCharactersAndScene" methodname="InkLines_AppearOnCharactersAndScene" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="783774597" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:36Z" duration="0.183941" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[ink pixels whole 24940 (off 265), hero 858 (off 36), enemy 1327 (off 0)
+]]></output>
+              </test-case>
+              <test-case id="1041" name="InnerAndOuterLines_AreDistinguishable" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.InnerAndOuterLines_AreDistinguishable" methodname="InnerAndOuterLines_AreDistinguishable" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="934371998" result="Passed" start-time="2026-10-16 22:27:36Z" end-time="2026-10-16 22:27:37Z" duration="0.236387" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[silhouette(red) +34137, inner(cyan) +31474; edge-test shapes red +2243, cyan +2813
+]]></output>
+              </test-case>
+              <test-case id="1045" name="LightingPresets_KeepCharactersReadable" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.LightingPresets_KeepCharactersReadable" methodname="LightingPresets_KeepCharactersReadable" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1882732369" result="Passed" start-time="2026-10-16 22:27:37Z" end-time="2026-10-16 22:27:37Z" duration="0.273259" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Day: hero luma 0,513, hero dark 3,2 %, scene luma 0,533
+Golden Hour: hero luma 0,385, hero dark 4,3 %, scene luma 0,403
+Overcast: hero luma 0,386, hero dark 4,1 %, scene luma 0,426
+Night: hero luma 0,223, hero dark 9,0 %, scene luma 0,233
+]]></output>
+              </test-case>
+              <test-case id="1047" name="QualityController_ShutdownRestoresCameraAndKeyword" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.QualityController_ShutdownRestoresCameraAndKeyword" methodname="QualityController_ShutdownRestoresCameraAndKeyword" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1256452136" result="Passed" start-time="2026-10-16 22:27:37Z" end-time="2026-10-16 22:27:37Z" duration="0.002101" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1046" name="QualityProfiles_SwitchRenderingSettings" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.QualityProfiles_SwitchRenderingSettings" methodname="QualityProfiles_SwitchRenderingSettings" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="959748231" result="Passed" start-time="2026-10-16 22:27:37Z" end-time="2026-10-16 22:27:37Z" duration="0.153788" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[ink pixels low 29686, high 38733
+]]></output>
+              </test-case>
+              <test-case id="1037" name="Scene_ContainsRequiredContent" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Scene_ContainsRequiredContent" methodname="Scene_ContainsRequiredContent" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1693669004" result="Passed" start-time="2026-10-16 22:27:37Z" end-time="2026-10-16 22:27:37Z" duration="0.003362" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="Scene_UsesOnlyAvatar5Shaders" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Scene_UsesOnlyAvatar5Shaders" methodname="Scene_UsesOnlyAvatar5Shaders" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="624762408" result="Passed" start-time="2026-10-16 22:27:37Z" end-time="2026-10-16 22:27:37Z" duration="0.001124" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1039" name="ToonScene_RendersWithoutErrorShader" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.ToonScene_RendersWithoutErrorShader" methodname="ToonScene_RendersWithoutErrorShader" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1242477037" result="Passed" start-time="2026-10-16 22:27:37Z" end-time="2026-10-16 22:27:37Z" duration="0.096456" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/rdpadmin/AppData/LocalLow/DefaultCompany/Avatar5-URP-Template\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

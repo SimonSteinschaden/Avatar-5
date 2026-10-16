@@ -1,0 +1,17 @@
+{
+  "name": "Avatar5.Tests.Rendering",
+  "rootNamespace": "Avatar5.Tests.Rendering",
+  "references": [
+    "Avatar5.Rendering",
+    "Avatar5.Rendering.Editor",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "UnityEngine.TestRunner",
+    "UnityEditor.TestRunner"
+  ],
+  "includePlatforms": ["Editor"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "autoReferenced": false
+}
