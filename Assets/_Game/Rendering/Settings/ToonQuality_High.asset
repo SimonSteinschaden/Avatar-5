@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79140159321832e49a05fcf8a08b8368, type: 3}
+  m_Name: ToonQuality_High
+  m_EditorClassIdentifier: Avatar5.Rendering::Avatar5.Rendering.ToonQualityProfile
+  displayName: High
+  outlineEnabled: 1
+  silhouetteThicknessPx: 3.2
+  innerThicknessPx: 1.5
+  innerLines: 1
+  innerIntensity: 0.9
+  highQualitySampling: 1
+  innerFadeEndMetres: 80
+  simplifiedToon: 0
+  antialiasing: 2
+  antialiasingQuality: 2
+  renderShadows: 1
