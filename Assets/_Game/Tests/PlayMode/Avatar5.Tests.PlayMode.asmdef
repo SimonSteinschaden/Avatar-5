@@ -1,0 +1,17 @@
+{
+  "name": "Avatar5.Tests.PlayMode",
+  "rootNamespace": "Avatar5.Tests.PlayMode",
+  "references": [
+    "Avatar5.Contracts",
+    "Avatar5.Gameplay",
+    "Avatar5.Foundation",
+    "Avatar5.Player",
+    "Avatar5.Input",
+    "Avatar5.Presentation",
+    "Unity.InputSystem",
+    "Unity.InputSystem.TestFramework",
+    "Unity.Cinemachine"
+  ],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

@@ -62,6 +62,26 @@ public readonly record struct PresentationCue(
 
 **Wichtig:** Beispiel-Records definieren Semantik, nicht die fertige Netzwerkserialisierung. In der echten Unity-Implementierung je nach NGO-Version `INetworkSerializable`/unterstützte Serializer und kompatible RPC-APIs verwenden, byte-/bandbreitensparend quantisieren, Endianness und Versionierung testen.
 
+## 3a. Umgesetzte P01-Verträge (`Avatar5.Contracts/PlayerContracts.cs`)
+
+```csharp
+public struct PlayerPose {            // lesbarer Bewegungs-/Ziel-Snapshot eines Actors
+    ulong ActorId; uint LastProcessedSequenceId;
+    Float3 Position; Float3 Velocity;   // Welt, Meter bzw. m/s
+    float FacingYawDegrees;             // Grad, im Uhrzeigersinn ab Welt +Z
+    Float2 AimDirection; }              // Einheitsvektor Welt-XZ oder (0,0)
+public interface IPlayerCommandSink { RequestStatus Submit(in PlayerCommand command); }
+public interface IPlayerPoseSource  { PlayerPose CurrentPose { get; } }
+```
+
+Semantik von `PlayerCommand` ab P01:
+- `Move`: **kamerarelativ bereits in Welt-XZ umgerechnete** Bewegungsabsicht (`X` → Welt x, `Y` → Welt z), Länge ≤ 1 (Analogwert erlaubt, Diagonale nie schneller). Die Kamera ist rein lokal, deshalb rechnet der Client um; der Host erhält nur die Welt-Absicht und clampt erneut.
+- `Aim`: Einheitsrichtung Welt-XZ vom Actor zum Ziel oder `(0,0)` = kein Ziel (Actor blickt in Laufrichtung). Keine absolute Zielkoordinate; P02 kann im `AbilityRequest` einen Ground-Target-Punkt ergänzen.
+- `Action`/`ActionRefId`: Flanke `Cast`/`Interact`/`Dodge` im Frame des Drückens; `ActionRefId` = Fähigkeiten-Slot (bis P02 immer 0).
+- `SequenceId` strikt steigend pro Actor; `ClientTick` aus 20-Hz-Clienttakt (Diagnose/Ordnung, keine Autorität).
+- `IPlayerCommandSink.Submit` liefert `Accepted`, `RejectedNoAuthority` (fremde ActorId) oder `Duplicate` (gleiche/ältere SequenceId). In P01 ist der lokale `CharacterMotor` die Senke; P03 schaltet eine Netzwerk-Senke davor und prüft zusätzlich die Connection-Ownership.
+- Für `IPlayerCommandSink` ersetzt `RequestStatus` die `CommandResult`-Skizze aus §4.
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp

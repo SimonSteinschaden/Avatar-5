@@ -69,7 +69,8 @@ flowchart TD
 
 - `Avatar5.Contracts` — flache DTOs, IDs, Event-Definitionen; darf nicht auf Implementierungsassemblies verweisen.
 - `Avatar5.Gameplay` — regelseitiges Combat, Progression-Domäne, Mission-State-Maschinen; verweist nur auf Contracts und minimalen Runtime-Abstraktionen.
-- `Avatar5.Input` — Eingabe und Camera-Adapter.
+- `Avatar5.Input` — Eingabe und Camera-Adapter (`PlayerInputAdapter`, `IsometricCameraRig`, `CameraProfile`).
+- `Avatar5.Player` — Unity-Adapter des Charakter-Motors (`CharacterMotor` um den engine-freien `PlayerMotorCore` aus `Avatar5.Gameplay`), kennt weder Geräte noch HUD noch Sessions.
 - `Avatar5.Networking` — Unity NGO, MPS-Sessions, Relay, Host-Adapters.
 - `Avatar5.AI` — Entscheidungen, Gegner, NavMesh-Integration.
 - `Avatar5.World` — Level-Flow, Interactables, Quests.

@@ -32,6 +32,7 @@ Avatar5 ist **interner Codename**. Die vier Elemente und allgemeine Fantasy-Spie
 | AssetID | Kategorie | Titel | Autor | URL | Lizenz | kommerziell? | Attribution | geprüft am | Szenen/Dateien |
 |---|---|---|---|---|---|---|---|---|---|
 | SAMPLE-001 | 3D | Placeholder Rock | Eigenarbeit | intern | eigene Rechte | ja | nein | offen | VisualStyle_Test |
+| P01-001 | 3D/Material | Greybox-Arena, Spieler-Platzhalter und 5 Greybox-Materialien | Eigenarbeit (per Editor-Skript aus Unity-Built-in-Primitives und URP/Lit erzeugt) | intern | Unity-Engine-Bestandteile + eigene Rechte | ja | nein | 16.10.2026 | P01_TestArena, Player_Placeholder.prefab, Assets/_Game/Materials |
 
 **Achtung:** Die Sample-Zeile ist nur ein Muster und kein Beleg für einen tatsächlich erstellten Asset.
 

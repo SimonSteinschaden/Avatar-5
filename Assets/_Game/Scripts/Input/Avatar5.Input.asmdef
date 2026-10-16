@@ -1,0 +1,12 @@
+{
+  "name": "Avatar5.Input",
+  "rootNamespace": "Avatar5.Input",
+  "references": [
+    "Avatar5.Contracts",
+    "Avatar5.Gameplay",
+    "Avatar5.Foundation",
+    "Unity.InputSystem",
+    "Unity.Cinemachine"
+  ],
+  "autoReferenced": true
+}
