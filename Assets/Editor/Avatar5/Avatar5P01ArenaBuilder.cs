@@ -195,7 +195,7 @@ namespace Avatar5.EditorTools
             go.transform.localScale = localScale;
             go.GetComponent<MeshRenderer>().sharedMaterial = material;
             if (!keepCollider) UnityEngine.Object.DestroyImmediate(go.GetComponent<Collider>());
-            if (keepCollider) GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.BatchingStatic | StaticEditorFlags.NavigationStatic);
+            if (keepCollider) GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.BatchingStatic);
             return go;
         }
 
