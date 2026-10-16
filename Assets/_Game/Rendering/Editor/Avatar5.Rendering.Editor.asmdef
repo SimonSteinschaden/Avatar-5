@@ -1,0 +1,11 @@
+{
+  "name": "Avatar5.Rendering.Editor",
+  "rootNamespace": "Avatar5.EditorTools.Rendering",
+  "references": [
+    "Avatar5.Rendering",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

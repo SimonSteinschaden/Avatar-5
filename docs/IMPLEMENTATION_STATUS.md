@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 16.10.2026 · **Letzte Story:** P01 Spielersteuerung und isometrische Kamera (Branch `feature/p01-steuerung-kamera`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged)
 
 ## Implementiert / als Source vorhanden
 
@@ -25,7 +25,35 @@
 
 **Spielen:** `Assets/_Game/Scenes/P01_TestArena.unity` öffnen → Play. WASD/linker Stick bewegen, Maus/rechter Stick zielen, Mausrad zoomt, Esc/Start pausiert die Eingabe.
 
-## Ausgeführte Prüfungen (16.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode)
+### P07a – Toon-Shading und schwarze Konturen (Style-Prototyp)
+
+| Baustein | Ort | Inhalt |
+|---|---|---|
+| `Avatar5/Toon` (HLSL) | `Assets/_Game/Rendering/Shaders` | 2–4 Lichtstufen, Schattenfarbe, Übergangsweichheit, Hauptlicht + Forward+-Zusatzlichter, Schatten, Specular/Rim, Pinsel-Wobble, DepthNormals mit Ink-Kategorie |
+| `Avatar5/Toon Water`, `Avatar5/Toon Hull Outline` | dito | Comic-Wasser mit Tiefenstufen/Schaum/Uferlinie; optionale Inverted-Hull-Kontur (evaluiert, nicht Standard) |
+| `InkOutlineRendererFeature` + `InkOutlineVolume` | `Avatar5.Rendering` | Render-Graph-Pass: Silhouetten über Tiefe, Innenlinien über Normalen, getrennte Dicke/Intensität, Schwellen, Farbe, Ein/Aus, Kategorie-Masking, Debug-Ansichten; im `PC_Renderer` registriert, ohne Volume inaktiv |
+| `ToonQualityProfile` ×3, `GraphicsQualityController` | dito + `Rendering/Settings` | Low / Medium / High zur Laufzeit, ohne Projekt-Assets zu verändern |
+| `GraphicsDebugOverlay`, `LightingPresetSwitcher`, `VisualStyleCameraRig`, `VisualStyleBenchmark` | dito | Debug-Modus (F1–F6, `[`/`]`), 4 Lichtpresets, eigenständige Isometrie-Kamera (P01-Werte 40°/45°, Ortho 8), Frametime-Messung per Kommandozeile |
+| 28 Toon-Materialien | `Assets/_Game/Rendering/Materials` | Feuer, Wasser, Erde, Luft, Neutral (Holz/Stein/Metall/Stoff), Umgebung, Figuren, Gegner |
+| `VisualStyle_Test.unity` | `Assets/_Game/Scenes` | Held, Gegner, Fluss mit Wasser, Holzbrücke und Pavillon, Ruinen/Steinblöcke, Felsen, Bäume, Element-Objekte, Kantentest-Sockel, gerichtetes Licht mit Schatten |
+| Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
+
+**Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P07a (16./17.10.2026, Unity 6000.3.26f1, Windows 11, RTX 4060, Batchmode mit GPU)
+
+| Lauf | Ergebnis |
+|---|---|
+| Kompilierung + Szenengenerierung (`VisualStyleSceneBuilder.BuildFromCommandLine`) | Exit 0, keine Compilerfehler/-warnungen aus P07a-Code |
+| EditMode auf dem P07a-Branch | **35/35 bestanden** (4 P00 + 31 P07a) |
+| Probe-Merge mit P01 (`a5570e7`, identischer Code wie dieser Merge), EditMode | **61/61 bestanden** |
+| Probe-Merge mit P01, PlayMode | **27 bestanden, 2 übersprungen** (Paket-eigene Input-System-Tests) |
+| Windows-x64-Development-Player (nur `VisualStyle_Test`) | gebaut und gestartet; Benchmark 1080p: GPU-Median Low 0.75 ms, Medium 1.16 ms, High 1.34–1.49 ms, Ink-Pass ≈ 0.14 ms |
+| 1080p-Screenshots (13 Stück, gleiche Kamera) | `docs/p07a_screenshots/` |
+
+Beim Merge nach `main` gab es Konflikte nur in `docs/IMPLEMENTATION_STATUS.md` und `docs/13_ASSET_LIZENZEN.md`; der Code entspricht dem getesteten Probe-Merge. Auf dem Merge-Commit selbst wurden keine weiteren Unity-Läufe ausgeführt.
+
+## Ausgeführte Prüfungen P01 (16.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode)
 
 Ausgeführt in einer Kopie des Projekts, weil der Editor das Original geöffnet hatte. Ergebnis-XML: `docs/testlaeufe/`.
 
@@ -47,14 +75,17 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - Dodge/Cast/Interact werden nur als Absicht im `PlayerCommand` geliefert; Ausführung gehört zu P02.
 - Netzwerk: kein NGO-Code. `IPlayerCommandSink` ist der Andockpunkt für P03; Host-Validierung der maximalen Strecke und Connection-Ownership folgen dort.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
-- Toon-Shader/Outline (P07a), Schaden/Fähigkeiten/Gegner/Weltfortschritt/Persistenz.
+- Schaden/Fähigkeiten/Gegner/Weltfortschritt/Persistenz.
+- P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
 
 ## Technische Einschränkungen / Hinweise
 
 - `SequenceDeduplicator` setzt strikt steigende Sequenznummern voraus; Wraparound und Out-of-order-Buffering sind später zu lösen.
 - `Packages/manifest.json` enthält `testables: ["com.unity.inputsystem"]`, damit `InputTestFixture` verfügbar ist; dadurch laufen 4 Paket-eigene Tests im PlayMode mit.
 - Der Arena-Generator überschreibt `P01_TestArena.unity` und `Player_Placeholder.prefab`; manuelle Änderungen dort gehen beim erneuten Generieren verloren.
+- Der P07a-Generator überschreibt `VisualStyle_Test.unity`; Materialien, Meshes und Profile werden in-place aktualisiert (GUIDs bleiben stabil).
+- URP hat `PC_Renderer.asset` beim Hinzufügen des Ink-Features migriert (Asset-Version 3). Beim Öffnen ergänzt URP ggf. `DefaultVolumeProfile.asset` um einen (deaktivierten) `InkOutlineVolume`-Eintrag.
 
 ## Nächster sinnvoller Schritt
 
-Kurzer manueller Spieltest der Arena mit Maus/Tastatur und Controller zum Feintuning, danach P03 (Online-Sessions mit NGO) auf Basis von `IPlayerCommandSink`/`PlayerPose` oder P07a (Toon-Outline-Testszene).
+P03 (Online-Sessions mit NGO, Ziel M1: 2–4 Spieler auf zwei echten PCs) auf Basis von `IPlayerCommandSink`/`PlayerPose`. Danach P02 (`fireball`, `water_wave` hostautoritativ), P04 (erste Gegner), P05 Level 1. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.

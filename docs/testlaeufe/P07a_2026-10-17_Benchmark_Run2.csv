@@ -1,0 +1,6 @@
+case,width,height,frames,cpu_median_ms,cpu_p95_ms,cpu_max_ms,gpu_median_ms,gpu_p95_ms,ink_gpu_median_ms,fps_from_median
+# device,"NVIDIA GeForce RTX 4060","Direct3D12","12th Gen Intel(R) Core(TM) i5-12400F",6000.3.26f1
+"Low",1920,1080,4636,1.567,2.949,4.735,0.754,1.265,-1.000,637.960
+"Medium",1920,1080,3437,2.341,3.606,5.304,1.163,2.729,-1.000,427.186
+"High",1920,1080,3118,2.637,4.068,5.394,1.339,3.010,-1.000,379.248
+"Medium (ink off)",1920,1080,3652,2.216,3.415,5.287,1.023,2.408,-1.000,451.203
