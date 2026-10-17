@@ -6,9 +6,26 @@ namespace Avatar5.Gameplay.Enemies
 {
     public enum EnemyState : byte { Idle, Approach, Telegraph, Attack, Recover, Return, Dead }
 
+    /// <summary>Boss phase: entered once health drops to <see cref="HealthFraction"/> or below.</summary>
+    public sealed class EnemyPhase
+    {
+        public float HealthFraction;
+        public float TelegraphDuration;
+        public float RecoverDuration;
+        public int AttackAbilityId;
+        public int TelegraphCueId;
+        public float MoveSpeedMultiplier = 1f;
+        /// <summary>Attack radius used for the telegraph ring; informational for presentation.</summary>
+        public float AttackStartRange;
+    }
+
     /// <summary>Balancing data of one enemy archetype; authored as asset, validated here.</summary>
     public sealed class EnemyDefinition
     {
+        /// <summary>Ranged enemies back off when a player is closer than this (0 = never).</summary>
+        public float PreferredMinRange;
+        /// <summary>Optional later phases (bosses), ordered by decreasing health fraction.</summary>
+        public readonly List<EnemyPhase> Phases = new List<EnemyPhase>();
         public int EnemyTypeId;
         public string Key;
         public float MaxHealth = 100f;
@@ -37,6 +54,15 @@ namespace Avatar5.Gameplay.Enemies
             if (TelegraphDuration < 0.3f) errors.Add(Key + ": telegraph shorter than 0.3 s is not readable");
             if (RecoverDuration < 0f) errors.Add(Key + ": RecoverDuration < 0");
             if (AttackAbilityId <= 0) errors.Add(Key + ": AttackAbilityId missing");
+            if (PreferredMinRange < 0f || (PreferredMinRange > 0f && PreferredMinRange >= AttackStartRange)) errors.Add(Key + ": PreferredMinRange must be below AttackStartRange");
+            var previous = 1f;
+            foreach (var phase in Phases)
+            {
+                if (!(phase.HealthFraction > 0f && phase.HealthFraction < previous)) errors.Add(Key + ": phases need decreasing health fractions in (0,1)");
+                if (phase.TelegraphDuration < 0.3f) errors.Add(Key + ": phase telegraph shorter than 0.3 s is not readable");
+                if (phase.AttackAbilityId <= 0) errors.Add(Key + ": phase without attack");
+                previous = phase.HealthFraction;
+            }
             return errors;
         }
     }
@@ -83,6 +109,7 @@ namespace Avatar5.Gameplay.Enemies
         private ulong _target;
         private Float2 _lockedOrigin;
         private Float2 _lockedAim;
+        private int _phase;
 
         public EnemyBrain(EnemyDefinition definition, Float2 home)
         {
@@ -95,6 +122,35 @@ namespace Avatar5.Gameplay.Enemies
         public EnemyState State { get { return _state; } }
         public ulong Target { get { return _target; } }
         public EnemyDefinition Definition { get { return _definition; } }
+
+        /// <summary>0 = base phase, 1.. = index+1 into <see cref="EnemyDefinition.Phases"/>.</summary>
+        public int Phase { get { return _phase; } }
+        public int CurrentAttackAbilityId { get { return _phase == 0 ? _definition.AttackAbilityId : _definition.Phases[_phase - 1].AttackAbilityId; } }
+        public int CurrentTelegraphCueId { get { return _phase == 0 ? _definition.TelegraphCueId : _definition.Phases[_phase - 1].TelegraphCueId; } }
+        public float CurrentTelegraphDuration { get { return _phase == 0 ? _definition.TelegraphDuration : _definition.Phases[_phase - 1].TelegraphDuration; } }
+        private float CurrentRecoverDuration { get { return _phase == 0 ? _definition.RecoverDuration : _definition.Phases[_phase - 1].RecoverDuration; } }
+        private float CurrentAttackStartRange
+        {
+            get
+            {
+                if (_phase == 0) return _definition.AttackStartRange;
+                var r = _definition.Phases[_phase - 1].AttackStartRange;
+                return r > 0f ? r : _definition.AttackStartRange;
+            }
+        }
+        public float CurrentMoveSpeed { get { return _definition.MoveSpeed * (_phase == 0 ? 1f : _definition.Phases[_phase - 1].MoveSpeedMultiplier); } }
+
+        /// <summary>Advances boss phases from the current health fraction. Phases never go back. Returns true on a change.</summary>
+        public bool UpdatePhase(float healthFraction)
+        {
+            var changed = false;
+            while (_phase < _definition.Phases.Count && healthFraction <= _definition.Phases[_phase].HealthFraction)
+            {
+                _phase++;
+                changed = true;
+            }
+            return changed;
+        }
 
         public void OnDefeated()
         {
@@ -148,10 +204,21 @@ namespace Avatar5.Gameplay.Enemies
                         _state = EnemyState.Return;
                         break;
                     }
-                    if (Distance(self, targetPosition) <= _definition.AttackStartRange)
+                    var toTarget = Distance(self, targetPosition);
+                    if (_definition.PreferredMinRange > 0f && toTarget < _definition.PreferredMinRange)
+                    {
+                        // Ranged enemies keep their distance instead of attacking point-blank.
+                        var away = new Float2(self.X - targetPosition.X, self.Y - targetPosition.Y);
+                        var length = PlanarMath.Length(away);
+                        away = length > 1e-3f ? PlanarMath.Scale(away, 3f / length) : new Float2(3f, 0f);
+                        output.HasDestination = true;
+                        output.Destination = PlanarMath.Add(self, away);
+                        break;
+                    }
+                    if (toTarget <= CurrentAttackStartRange)
                     {
                         _state = EnemyState.Telegraph;
-                        _timer = _definition.TelegraphDuration;
+                        _timer = CurrentTelegraphDuration;
                         _lockedOrigin = self;
                         _lockedAim = targetPosition;
                         output.TelegraphStarted = true;
@@ -166,7 +233,7 @@ namespace Avatar5.Gameplay.Enemies
                     if (_timer <= 0f)
                     {
                         _state = EnemyState.Recover;
-                        _timer = _definition.RecoverDuration;
+                        _timer = CurrentRecoverDuration;
                         output.ReleaseAttack = true;
                         output.State = EnemyState.Attack;
                     }
@@ -254,13 +321,105 @@ namespace Avatar5.Gameplay.Enemies
         }
     }
 
-    /// <summary>The first archetype of the vertical slice and its attack.</summary>
+    /// <summary>The vertical-slice archetypes (brute, skirmisher, caster) and the mini-boss, with their attacks.</summary>
     public static class StarterEnemies
     {
-        public const int BruteTypeId = 1;
-        public const int BruteSlamAbilityId = 901;
+        public const int BruteTypeId = 1, SkirmisherTypeId = 2, CasterTypeId = 3, WardenTypeId = 10;
+        public const int BruteSlamAbilityId = 901, SkirmisherSlashId = 902, CasterBoltId = 903, WardenSlamId = 910, WardenShockwaveId = 911;
         public const int BruteSlamCue = 9001;
         public const int BruteTelegraphCue = 9000;
+        public const int SkirmisherTelegraphCue = 9010, SkirmisherSlashCue = 9011;
+        public const int CasterTelegraphCue = 9020, CasterBoltCue = 9021;
+        public const int WardenTelegraphCue = 9100, WardenSlamCue = 9101, WardenPhase2TelegraphCue = 9102, WardenShockwaveCue = 9103;
+
+        public static EnemyDefinition Get(int enemyTypeId)
+        {
+            switch (enemyTypeId)
+            {
+                case BruteTypeId: return Brute();
+                case SkirmisherTypeId: return Skirmisher();
+                case CasterTypeId: return Caster();
+                case WardenTypeId: return Warden();
+                default: throw new System.ArgumentException("Unknown enemy type " + enemyTypeId);
+            }
+        }
+
+        public static Combat.AbilityDefinition[] AllAttacks()
+        {
+            return new[] { BruteSlam(), SkirmisherSlash(), CasterBolt(), WardenSlam(), WardenShockwave() };
+        }
+
+        public static EnemyDefinition Skirmisher()
+        {
+            return new EnemyDefinition
+            {
+                EnemyTypeId = SkirmisherTypeId, Key = "skirmisher", MaxHealth = 70f, MoveSpeed = 5f, AggroRadius = 11f, LeashRadius = 18f,
+                AttackStartRange = 1.5f, TelegraphDuration = 0.55f, RecoverDuration = 0.7f, AttackAbilityId = SkirmisherSlashId,
+                TelegraphCueId = SkirmisherTelegraphCue
+            };
+        }
+
+        public static EnemyDefinition Caster()
+        {
+            return new EnemyDefinition
+            {
+                EnemyTypeId = CasterTypeId, Key = "caster", MaxHealth = 60f, MoveSpeed = 3f, AggroRadius = 14f, LeashRadius = 20f,
+                AttackStartRange = 9f, PreferredMinRange = 4f, TelegraphDuration = 0.8f, RecoverDuration = 1.4f,
+                AttackAbilityId = CasterBoltId, TelegraphCueId = CasterTelegraphCue
+            };
+        }
+
+        public static EnemyDefinition Warden()
+        {
+            var warden = new EnemyDefinition
+            {
+                EnemyTypeId = WardenTypeId, Key = "warden", MaxHealth = 600f, MoveSpeed = 2.6f, AggroRadius = 12f, LeashRadius = 16f,
+                AttackStartRange = 2.6f, TelegraphDuration = 1.1f, RecoverDuration = 1.4f, AttackAbilityId = WardenSlamId,
+                TelegraphCueId = WardenTelegraphCue
+            };
+            warden.Phases.Add(new EnemyPhase
+            {
+                HealthFraction = 0.5f, TelegraphDuration = 0.85f, RecoverDuration = 0.9f, AttackAbilityId = WardenShockwaveId,
+                TelegraphCueId = WardenPhase2TelegraphCue, MoveSpeedMultiplier = 1.3f, AttackStartRange = 3.5f
+            });
+            return warden;
+        }
+
+        public static Combat.AbilityDefinition SkirmisherSlash()
+        {
+            return new Combat.AbilityDefinition
+            {
+                Id = SkirmisherSlashId, Key = "skirmisher_slash", Element = ElementKind.Air, Targeting = AbilityTargeting.Cone,
+                Range = 2f, ConeHalfAngleDegrees = 60f, Damage = 9f, Knockback = 0.5f, CueId = SkirmisherSlashCue
+            };
+        }
+
+        public static Combat.AbilityDefinition CasterBolt()
+        {
+            return new Combat.AbilityDefinition
+            {
+                Id = CasterBoltId, Key = "caster_bolt", Element = ElementKind.Fire, Targeting = AbilityTargeting.Projectile,
+                Range = 14f, ProjectileSpeed = 11f, ProjectileRadius = 0.3f, Damage = 12f, CueId = CasterBoltCue
+            };
+        }
+
+        public static Combat.AbilityDefinition WardenSlam()
+        {
+            return new Combat.AbilityDefinition
+            {
+                Id = WardenSlamId, Key = "warden_slam", Element = ElementKind.Earth, Targeting = AbilityTargeting.Cone,
+                Range = 3.5f, ConeHalfAngleDegrees = 180f, Damage = 22f, Knockback = 2.5f, CueId = WardenSlamCue
+            };
+        }
+
+        public static Combat.AbilityDefinition WardenShockwave()
+        {
+            return new Combat.AbilityDefinition
+            {
+                Id = WardenShockwaveId, Key = "warden_shockwave", Element = ElementKind.Earth, Targeting = AbilityTargeting.Cone,
+                Range = 5f, ConeHalfAngleDegrees = 180f, Damage = 16f, Knockback = 3f, CueId = WardenShockwaveCue
+            };
+        }
 
         public static EnemyDefinition Brute()
         {
