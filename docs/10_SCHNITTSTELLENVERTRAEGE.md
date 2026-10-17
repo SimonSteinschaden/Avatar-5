@@ -115,6 +115,32 @@ interface ISessionService {
 - **Simulation:** Nur der Host bewegt `CharacterMotor`; Position/Yaw repliziert `NetworkTransform` (Server-Autorität, Interpolation, 20 Ticks/s). `LastProcessedSequenceId` und Zielrichtung kommen als NetworkVariable. Clients lesen `IPlayerPoseSource` von `NetworkPlayerAvatar`; die Geschwindigkeit wird dort aus der Transform-Änderung geschätzt.
 - Eine Streckenprüfung entfällt, weil der Client keine Positionen sendet, nur Absichten (Länge wird vom Motor auf ≤ 1 begrenzt).
 
+## 3d. Umgesetzte P02-Kampfverträge (`Avatar5.Contracts/CombatContracts.cs`, S02-01)
+
+```csharp
+enum TeamKind { Players, Enemies, Neutral }
+enum AbilityTargeting { Projectile, Cone }
+[Flags] enum StatusFlags : byte { None = 0, Burning = 1, Wet = 2 }
+enum CombatEventKind { AbilityCastAccepted = 1, AbilityRejected, DamageApplied, StatusApplied, StatusRemoved,
+                       ReactionTriggered, ActorDefeated, ActorRevived, ProjectileEnded }   // = CombatEvent.ResultKind
+enum ReactionKind { None, Steam = 1, Extinguish = 2 }                                       // = CombatEvent.EffectId bei ReactionTriggered
+struct ActorCombatState { ulong ActorId; TeamKind Team; float Health, MaxHealth, Energy, MaxEnergy; StatusFlags Status; bool Defeated; }
+struct AbilityCastResult { RequestStatus Status; ulong CastId; }
+interface IAbilityCatalog { bool Contains(int abilityId); int[] Ids { get; } }
+interface ICombatService { AbilityCastResult TryCast(in AbilityRequest request); bool TryGetState(ulong actorId, out ActorCombatState state); }
+interface ICombatEventStream { event Action<CombatEvent> EventRaised; }
+interface ICombatStateSource { ActorCombatState CombatState { get; } }
+```
+
+Belegung der `CombatEvent`-Felder: `EventId` streng steigend pro Session (Cues teilen sich den Zähler); `SourceActorId`/`TargetActorId`; `AbilityId` (0 = Schaden über Zeit); `EffectId` = CastId bei Treffern/Projektilende, `RequestStatus` bei `AbilityRejected`, `StatusFlags` bei Statusereignissen, `ReactionKind` bei Reaktionen; `Amount` = angewandter Schaden, Energiekosten (Cast) oder Statusdauer.
+
+- **Host-only:** `CombatSimulation` (Avatar5.Gameplay, engine-frei) ist die einzige Stelle, die Health schreibt. Prüfreihenfolge eines Casts: Actor existiert/lebt → Sequenz neu (sonst `Duplicate`, ohne Event) → Fähigkeit im Loadout (`RejectedInvalidState`) → Cooldown (`RejectedCooldown`) → Energie (`RejectedResource`) → Richtung vorhanden (`RejectedRange`).
+- **Idempotenz:** Jede Kombination (CastId, Ziel) wird höchstens einmal angewendet; Clients verwerfen Events mit bereits gesehener EventId (`CombatEventDeduplicator`).
+- **Reaktionen deklarativ** (`CombatRules.Reactions`, erste passende Regel gewinnt): Feuer auf Nass → Dampf (+15 Schaden, Nass weg, kein Brennen); Wasser auf Brennend → Löschen (+5 Schaden, Brennen weg, danach Nass).
+- **Transport:** Host bündelt Events und Cues pro Frame als Named Message `A5.Combat` (ReliableFragmentedSequenced) an alle Clients; Lebenspunkte/Energie/Status zusätzlich als NetworkVariable am `NetworkCombatActor`. Präsentation hört lokal auf `Foundation.PresentationBus` und ändert nie Spielzustand.
+- **Eingabe:** `PlayerCommand.Action = Cast`, `ActionRefId` = Slot (0 linke Maustaste/rechter Trigger, 1 rechte Maustaste/linker Trigger, neue Action `CastSecondary`). Der Host bildet daraus `AbilityRequest` (Ziel = Position + Zielrichtung × 5 m, ohne Zielrichtung die Blickrichtung).
+- **Ids:** Spieler-Actor 1–4 (`ActorIds`), Nicht-Spieler `1000 + NetworkObjectId` (nur Session-gültig, nie speichern).
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp

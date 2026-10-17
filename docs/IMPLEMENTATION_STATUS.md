@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit:** P03 S03-01 Sessions (`feature/p03-sessions`) und S03-02 Netzwerk-Spieler (`feature/p03-network-player`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`)
 
 ## Implementiert / als Source vorhanden
 
@@ -52,6 +52,22 @@ Kleine P01-Ergänzungen (nur Lese-Properties): `CharacterMotor.Definition`, `Pla
 
 **Spielen (LAN/gleicher PC):** `P03_NetworkArena.unity` öffnen → Play → „Private Sitzung erstellen“. Zweite Instanz (Build `Avatar5/Build/P03 Network Arena Player`) → Code `127.0.0.1:7777` → Beitreten. Jede Instanz steuert nur ihre eigene Figur.
 
+### P02 Story S02-01 – Kampfkern: `fireball` und `water_wave` hostautoritativ (Branch `feature/p02-combat-core`, baut auf S03-02 auf)
+
+| Baustein | Assembly | Inhalt |
+|---|---|---|
+| `TeamKind`, `StatusFlags`, `CombatEventKind`, `ReactionKind`, `ActorCombatState`, `ICombatService`, `IAbilityCatalog`, `ICombatEventStream`, `ICombatStateSource` | `Avatar5.Contracts` | Verträge §3d |
+| `AbilityDefinition`, `AbilityCatalog`, `CombatRules`/`ReactionRule`, `StarterAbilities`, `CombatSimulation`, `ICombatWorld` | `Avatar5.Gameplay` (engine-frei) | Validierte Fähigkeitsdaten; Cooldown, Energie (+15/s), Loadout, Sequenz-Duplikate; Projektil logisch simuliert (Wand/erstes Ziel), Kegel sofort; Brennen (5/s in 0,5-s-Schritten), Nass; Reaktionen Dampf und Löschen als Regeltabelle; jeder Treffer (Cast, Ziel) genau einmal; Besiegt genau einmal |
+| `AbilityDefinitionAsset`, `fireball.asset`, `water_wave.asset` | `Avatar5.Combat` (neu) | ScriptableObject-Authoring → Runtime-Definition |
+| `CombatHost`, `NetworkCombatActor`, `CombatEventDeduplicator` | `Avatar5.Networking` | Host simuliert, schreibt Leben/Energie/Status in NetworkVariables, verschickt Events + Cues gebündelt; Clients deduplizieren; Trainingspuppen (5000 LP) werden vom Host gespawnt, Wiederbelebung nach 3 s |
+| `CombatCueView`, `CombatFeedbackView`, `HealthBarView`, `PresentationBus`, `ActorRegistry` | `Avatar5.Presentation` / `Avatar5.Foundation` | Greybox-Feuerball, Wellenblitz, Schadens-/Reaktionstexte, Lebensbalken, Statusfarbe, lokales Kampf-HUD – nur aus Host-Ereignissen |
+| `TrainingDummy.prefab`, Erweiterung `Avatar5P03NetworkArenaBuilder` | Assets/Editor | Spieler-Prefab mit Kampfwerten (100 LP, 100 Energie, Loadout Feuerball/Wasserwelle), 2 Puppen vor den Startpunkten |
+| `scripts/P02-CombatTest.ps1` | – | Kampf-Mehrprozesstest |
+
+Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot 1; `Cast` → Slot 0.
+
+**Spielen:** wie oben in `P03_NetworkArena`; linke Maustaste Feuerball, rechte Maustaste Wasserwelle auf die Puppen vor dem Start. Erst Welle, dann Feuerball → „Dampf!“; erst Feuerball, dann Welle → „Gelöscht!“.
+
 ### P07a – Toon-Shading und schwarze Konturen (Style-Prototyp)
 
 | Baustein | Ort | Inhalt |
@@ -66,6 +82,17 @@ Kleine P01-Ergänzungen (nur Lese-Properties): `CharacterMotor.Definition`, `Pla
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P02 S02-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
+
+| Lauf | Ergebnis |
+|---|---|
+| EditMode | **116/116 bestanden** (neu: 12 Kampfkern-Fälle inkl. 120 Casts mit Wiederholungen → eindeutige, steigende EventIds, Leben = Summe der Schadensereignisse; identische Ereignisfolge bei gleichen Eingaben) |
+| PlayMode | **33 bestanden, 2 übersprungen** (Paket-Tests); neu: Host-Feuerball über `CombatHost` trifft die gespawnte Puppe genau einmal, doppelte Sequenz castet nicht zweimal, Energie wird verbraucht |
+| `scripts/P02-CombatTest.ps1` (4 Prozesse, alle Bots zaubern auf die Puppen, Client 3 versucht alle 0,05 s zu zaubern) | **25/25**: 49 angenommene Casts, Dampf 4×, Löschen 4×; jeder Client erhielt dieselben 471 Ereignisse wie der Host, 0 Duplikate; Puppen-Leben auf allen 4 Rechnern identisch und gleich der Summe der Schadensereignisse |
+| Regression `scripts/P03-NetworkPlayerTest.ps1` | **8/8** |
+
+Der erste Kampf-Build stürzte ab, weil drei MonoBehaviours in einer Datei lagen (Unity braucht Dateiname = Klassenname); aufgeteilt, danach lief alles. Ergebnisse: `docs/testlaeufe/P02_2026-10-17_*`.
 
 ## Ausgeführte Prüfungen P03 S03-02 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
 
@@ -125,9 +152,10 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - Lokale Occlusion-Behandlung der Kamera (Hindernisse vor dem Spieler ausblenden) fehlt; geplant mit P07-Outline/Fade.
 - Dodge/Cast/Interact werden nur als Absicht im `PlayerCommand` geliefert; Ausführung gehört zu P02.
 - P03: **Relay/Internet nicht getestet**, weil das Projekt noch nicht mit einem Unity-Cloud-Projekt verknüpft ist (`cloudProjectId` leer); der Relay-Adapter ist nur kompiliert. Kein Test über zwei PCs/Internetanschlüsse (M1-Abnahme), keine Latenz-/Verlustsimulation, keine Netzmetriken, kein Rejoin, kein Szenenwechsel. Keine manuelle Bedienung der Debug-Lobby durch eine Person.
-- Netzwerk-Spieler: keine Client-Prediction (eigene Figur reagiert mit einer Netzwerk-Rundreise Verzögerung; laut Architektur erst nach Latenzmessung entscheiden). Kein manueller Spieltest mit zwei Personen, keine Latenz-/Verlustsimulation. Dodge/Cast/Interact werden übertragen, aber noch nicht ausgeführt (P02). Late Join nur, solange die Arena geladen ist; Szenenwechsel fehlt noch.
+- Netzwerk-Spieler: keine Client-Prediction (eigene Figur reagiert mit einer Netzwerk-Rundreise Verzögerung; laut Architektur erst nach Latenzmessung entscheiden). Kein manueller Spieltest mit zwei Personen, keine Latenz-/Verlustsimulation. Dodge/Interact werden übertragen, aber noch nicht ausgeführt. Late Join nur, solange die Arena geladen ist; Szenenwechsel fehlt noch.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
-- Schaden/Fähigkeiten/Gegner/Weltfortschritt/Persistenz.
+- P02: erst 2 von 24 Fähigkeiten, nur Feuer/Wasser; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Spieler können noch nicht besiegt werden, weil es keine Gegnerangriffe gibt (P04); Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
+- Gegner/Weltfortschritt/Persistenz.
 - P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
 
 ## Technische Einschränkungen / Hinweise
@@ -140,4 +168,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P02 (`fireball`, `water_wave` hostautoritativ), P04 (erste Gegner), P05 Level 1. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P04 (erster Gegner mit Telegraph-Angriff über den Kampfkern), P05 Level 1, dann P02 auf 4 Elemente × 2 Fähigkeiten. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.

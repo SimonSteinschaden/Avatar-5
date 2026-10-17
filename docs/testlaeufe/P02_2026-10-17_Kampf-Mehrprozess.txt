@@ -1,0 +1,36 @@
+PASS  host reported combat  ()
+PASS  casts accepted on host  (casts=49)
+PASS  Steam reaction happened  (steam=4)
+PASS  Extinguish reaction happened  (extinguish=4)
+PASS  two dummies present  (dummies=2)
+PASS  host: dummy 1002 damage events = HP lost  (lost 215,0, events 215,0)
+PASS  host: dummy 1001 damage events = HP lost  (lost 810,0, events 810,0)
+PASS  client1 received same number of events as host  (client=471 host=471)
+PASS  client1 no duplicate events  (dupes=0)
+PASS  client1 dummy 1002 health equals host  (client 4785,0 host 4785,0)
+PASS  client1 dummy 1002 damage events equal host  (client 215,0 host 215,0)
+PASS  client1 dummy 1001 health equals host  (client 4190,0 host 4190,0)
+PASS  client1 dummy 1001 damage events equal host  (client 810,0 host 810,0)
+PASS  client2 received same number of events as host  (client=471 host=471)
+PASS  client2 no duplicate events  (dupes=0)
+PASS  client2 dummy 1002 health equals host  (client 4785,0 host 4785,0)
+PASS  client2 dummy 1002 damage events equal host  (client 215,0 host 215,0)
+PASS  client2 dummy 1001 health equals host  (client 4190,0 host 4190,0)
+PASS  client2 dummy 1001 damage events equal host  (client 810,0 host 810,0)
+PASS  client3 received same number of events as host  (client=471 host=471)
+PASS  client3 no duplicate events  (dupes=0)
+PASS  client3 dummy 1002 health equals host  (client 4785,0 host 4785,0)
+PASS  client3 dummy 1002 damage events equal host  (client 215,0 host 215,0)
+PASS  client3 dummy 1001 health equals host  (client 4190,0 host 4190,0)
+PASS  client3 dummy 1001 damage events equal host  (client 810,0 host 810,0)
+
+--- client1
+    A5COMBAT t=29.2 self=2 events=471 casts=49 steam=4 extinguish=4 dupes=0 e1002=4785.0/5000|dmg=215.0|st=0 e1001=4190.0/5000|dmg=810.0|st=0
+--- client2
+    A5COMBAT t=29.2 self=3 events=471 casts=49 steam=4 extinguish=4 dupes=0 e1001=4190.0/5000|dmg=810.0|st=0 e1002=4785.0/5000|dmg=215.0|st=0
+--- client3
+    A5COMBAT t=29.2 self=4 events=471 casts=49 steam=4 extinguish=4 dupes=0 e1002=4785.0/5000|dmg=215.0|st=0 e1001=4190.0/5000|dmg=810.0|st=0
+--- host
+    A5COMBAT t=32.2 self=1 events=471 casts=49 steam=4 extinguish=4 dupes=0 e1001=4190.0/5000|dmg=810.0|st=0 e1002=4785.0/5000|dmg=215.0|st=0
+
+25/25 checks passed
