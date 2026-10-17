@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 4304368841283052275}
   - component: {fileID: 1078066528892511840}
   - component: {fileID: 613419268608925258}
+  - component: {fileID: 4625822227346581758}
+  - component: {fileID: 2259102614668220995}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Untagged
@@ -219,6 +221,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Avatar5.Networking::Avatar5.Networking.NetworkPlayerAvatar
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &4625822227346581758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106979028877982754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e42d1dbabb99074e8c2d994353a063b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Avatar5.Networking::Avatar5.Networking.NetworkCombatActor
+  ShowTopMostFoldoutHeaderGroup: 1
+  team: 0
+  maxHealth: 100
+  maxEnergy: 100
+  energyRegenPerSecond: 15
+  loadout: 65000000c9000000
+--- !u!114 &2259102614668220995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106979028877982754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3703ee6c3d85894ab1ab42e3d08b943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Avatar5.Presentation::Avatar5.Presentation.HealthBarView
+  tintTarget: {fileID: 3305725597935210930}
+  height: 2.3
 --- !u!1 &2118457283190256390
 GameObject:
   m_ObjectHideFlags: 0

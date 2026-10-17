@@ -169,6 +169,8 @@ namespace Avatar5.Networking
             if (rig != null) rig.Target = transform;
             var hud = FindAnyObjectByType<MovementDebugHud>();
             if (hud != null) hud.Configure(this);
+            var feedback = FindAnyObjectByType<CombatFeedbackView>();
+            if (feedback != null) feedback.SetLocalPlayer(GetComponent<NetworkCombatActor>());
         }
 
         /// <summary>Local intent from the owner's input adapter (or bot). Forwards to the host.</summary>
@@ -198,7 +200,11 @@ namespace Avatar5.Networking
             var command = wire.ToCommand(0);
             var status = _ingress.Admit(sender, ref command, Time.unscaledTimeAsDouble);
             if (status != RequestStatus.Accepted) return status;
-            return _motor.Submit(command);
+            status = _motor.Submit(command);
+            // Movement and casting share the command; the cast only runs once the motor accepted the sequence.
+            if (status == RequestStatus.Accepted && command.Action == PlayerActionKind.Cast && CombatHost.Instance != null)
+                CombatHost.Instance.HandleCastCommand(ActorId, command, transform);
+            return status;
         }
 
         private void LateUpdate()

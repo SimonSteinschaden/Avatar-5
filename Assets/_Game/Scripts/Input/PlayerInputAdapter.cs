@@ -34,6 +34,7 @@ namespace Avatar5.Input
         private InputAction _aimPointer;
         private InputAction _aimStick;
         private InputAction _cast;
+        private InputAction _castSecondary;
         private InputAction _interact;
         private InputAction _dodge;
         private InputAction _pause;
@@ -98,12 +99,13 @@ namespace Avatar5.Input
             var yaw = CameraYaw();
             var move = new Float2(0f, 0f);
             var action = PlayerActionKind.None;
+            var slot = 0;
 
             if (!IsPaused && _hasFocus)
             {
                 if (_move != null) move = InputIntentMath.CameraRelativeMove(_move.ReadValue<Vector2>().ToFloat2(), yaw, stickDeadZone);
                 UpdateAim(yaw);
-                action = ReadAction();
+                action = ReadAction(out slot);
                 if (_zoom != null && cameraRig != null)
                 {
                     var zoom = _zoom.ReadValue<float>();
@@ -111,8 +113,8 @@ namespace Avatar5.Input
                 }
             }
 
-            // ActionRefId = ability slot; always slot 0 until P02 defines the loadout.
-            var command = _sequencer.Next(tick, move, CurrentAim, action, 0);
+            // ActionRefId = ability slot (0 = primary, 1 = secondary cast).
+            var command = _sequencer.Next(tick, move, CurrentAim, action, slot);
             LastCommand = command;
             LastStatus = _sink != null ? _sink.Submit(command) : RequestStatus.RejectedInvalidState;
             return command;
@@ -172,10 +174,16 @@ namespace Avatar5.Input
             return true;
         }
 
-        private PlayerActionKind ReadAction()
+        private PlayerActionKind ReadAction(out int slot)
         {
+            slot = 0;
             if (_dodge != null && _dodge.WasPressedThisFrame()) return PlayerActionKind.Dodge;
             if (_cast != null && _cast.WasPressedThisFrame()) return PlayerActionKind.Cast;
+            if (_castSecondary != null && _castSecondary.WasPressedThisFrame())
+            {
+                slot = 1;
+                return PlayerActionKind.Cast;
+            }
             if (_interact != null && _interact.WasPressedThisFrame()) return PlayerActionKind.Interact;
             return PlayerActionKind.None;
         }
@@ -189,7 +197,7 @@ namespace Avatar5.Input
         {
             if (_runtimeActions != null) Destroy(_runtimeActions);
             _runtimeActions = null;
-            _move = _aimPointer = _aimStick = _cast = _interact = _dodge = _pause = _zoom = null;
+            _move = _aimPointer = _aimStick = _cast = _castSecondary = _interact = _dodge = _pause = _zoom = null;
             if (actions == null) return;
 
             // Own copy per local person so enable state and rebinding never leak between adapters.
@@ -199,6 +207,7 @@ namespace Avatar5.Input
             _aimPointer = map.FindAction("AimPointer", true);
             _aimStick = map.FindAction("AimStick", true);
             _cast = map.FindAction("Cast", true);
+            _castSecondary = map.FindAction("CastSecondary", false);
             _interact = map.FindAction("Interact", true);
             _dodge = map.FindAction("Dodge", true);
             _pause = map.FindAction("Pause", true);

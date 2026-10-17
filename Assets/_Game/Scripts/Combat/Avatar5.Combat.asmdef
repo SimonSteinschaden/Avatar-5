@@ -1,0 +1,6 @@
+{
+  "name": "Avatar5.Combat",
+  "rootNamespace": "Avatar5.Combat",
+  "references": ["Avatar5.Contracts", "Avatar5.Gameplay"],
+  "autoReferenced": true
+}

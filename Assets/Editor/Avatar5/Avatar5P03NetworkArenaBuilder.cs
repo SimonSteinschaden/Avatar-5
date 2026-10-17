@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Avatar5.Combat;
+using Avatar5.Contracts;
+using Avatar5.Gameplay.Combat;
 using Avatar5.Networking;
 using Avatar5.Presentation;
 using Unity.Netcode;
@@ -22,6 +25,9 @@ namespace Avatar5.EditorTools
     {
         public const string ScenePath = "Assets/_Game/Scenes/P03_NetworkArena.unity";
         public const string PrefabPath = "Assets/_Game/Prefabs/NetworkPlayer.prefab";
+        public const string DummyPrefabPath = "Assets/_Game/Prefabs/TrainingDummy.prefab";
+        public const string AbilityFolder = "Assets/_Game/Data/Abilities";
+        private static readonly int[] PlayerLoadout = { StarterAbilities.FireballId, StarterAbilities.WaterWaveId };
         public const string NetworkPrefabsListPath = "Assets/DefaultNetworkPrefabs.asset";
         public const string PlayerOutput = "Artifacts/P03Arena/Avatar5_P03Arena.exe";
         private const int NetworkTickRate = 20;
@@ -32,9 +38,12 @@ namespace Avatar5.EditorTools
             if (!File.Exists(Avatar5P01ArenaBuilder.ScenePath) || !File.Exists(Avatar5P01ArenaBuilder.PlayerPrefabPath))
                 Avatar5P01ArenaBuilder.Build();
 
+            var abilities = EnsureAbilityAssets();
             var prefab = BuildPlayerPrefab();
+            var dummy = BuildDummyPrefab();
+            RegisterNetworkPrefab(dummy);
             var prefabsList = RegisterNetworkPrefab(prefab);
-            BuildScene(prefab, prefabsList);
+            BuildScene(prefab, dummy, abilities, prefabsList);
             AssetDatabase.SaveAssets();
             Debug.Log("Avatar5: P03 network arena generated at " + ScenePath);
         }
@@ -95,6 +104,10 @@ namespace Avatar5.EditorTools
             netTransform.SyncRotAngleZ = false;
             netTransform.SyncScaleX = netTransform.SyncScaleY = netTransform.SyncScaleZ = false;
             root.AddComponent<NetworkPlayerAvatar>();
+            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Players, 100f, 100f, 15f, PlayerLoadout);
+            var bar = root.AddComponent<HealthBarView>();
+            var body = root.transform.Find("Body");
+            if (body != null) SetField(bar, "tintTarget", body.GetComponent<Renderer>());
 
             // The input adapter must not drive the motor directly any more; the avatar wires it for the owner.
             var adapter = root.GetComponent<Avatar5.Input.PlayerInputAdapter>();
@@ -105,6 +118,63 @@ namespace Avatar5.EditorTools
             }
 
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+            UnityEngine.Object.DestroyImmediate(root);
+            return prefab;
+        }
+
+        private static AbilityDefinitionAsset[] EnsureAbilityAssets()
+        {
+            if (!AssetDatabase.IsValidFolder(AbilityFolder))
+            {
+                if (!AssetDatabase.IsValidFolder("Assets/_Game/Data")) AssetDatabase.CreateFolder("Assets/_Game", "Data");
+                AssetDatabase.CreateFolder("Assets/_Game/Data", "Abilities");
+            }
+            var definitions = new[] { StarterAbilities.Fireball(), StarterAbilities.WaterWave() };
+            var assets = new AbilityDefinitionAsset[definitions.Length];
+            for (var i = 0; i < definitions.Length; i++)
+            {
+                var path = AbilityFolder + "/" + definitions[i].Key + ".asset";
+                var asset = AssetDatabase.LoadAssetAtPath<AbilityDefinitionAsset>(path);
+                if (asset == null)
+                {
+                    asset = ScriptableObject.CreateInstance<AbilityDefinitionAsset>();
+                    asset.CopyFrom(definitions[i]);
+                    AssetDatabase.CreateAsset(asset, path);
+                }
+                assets[i] = asset;
+            }
+            return assets;
+        }
+
+        private static GameObject BuildDummyPrefab()
+        {
+            var root = new GameObject("TrainingDummy");
+            var controller = root.AddComponent<CharacterController>();
+            controller.radius = 0.5f;
+            controller.height = 1.8f;
+            controller.center = new Vector3(0f, 0.9f, 0f);
+            controller.minMoveDistance = 0f;
+
+            var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            body.name = "Body";
+            UnityEngine.Object.DestroyImmediate(body.GetComponent<Collider>());
+            body.transform.SetParent(root.transform, false);
+            body.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+            body.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+            var material = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Game/Materials/Greybox_Obstacle.mat");
+            if (material != null) body.GetComponent<Renderer>().sharedMaterial = material;
+
+            root.AddComponent<NetworkObject>();
+            var netTransform = root.AddComponent<NetworkTransform>();
+            netTransform.AuthorityMode = NetworkTransform.AuthorityModes.Server;
+            netTransform.Interpolate = true;
+            netTransform.SyncRotAngleX = netTransform.SyncRotAngleY = netTransform.SyncRotAngleZ = false;
+            netTransform.SyncScaleX = netTransform.SyncScaleY = netTransform.SyncScaleZ = false;
+            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Enemies, 5000f, 0f, 0f, new int[0]);
+            var bar = root.AddComponent<HealthBarView>();
+            SetField(bar, "tintTarget", body.GetComponent<Renderer>());
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(root, DummyPrefabPath);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;
         }
@@ -122,7 +192,7 @@ namespace Avatar5.EditorTools
             return list;
         }
 
-        private static void BuildScene(GameObject prefab, NetworkPrefabsList prefabsList)
+        private static void BuildScene(GameObject prefab, GameObject dummy, AbilityDefinitionAsset[] abilities, NetworkPrefabsList prefabsList)
         {
             var scene = EditorSceneManager.OpenScene(Avatar5P01ArenaBuilder.ScenePath, OpenSceneMode.Single);
 
@@ -154,6 +224,28 @@ namespace Avatar5.EditorTools
             session.AddComponent<SessionDebugLobby>();
             var spawner = session.AddComponent<NetworkPlayerSpawner>();
             spawner.Configure(prefab.GetComponent<NetworkObject>(), points.ToArray());
+
+            var dummyRoot = new GameObject("TrainingDummyPoints").transform;
+            var dummyPoints = new List<Transform>();
+            foreach (var offset in new[] { new Vector3(-1.5f, 0f, 4f), new Vector3(1.5f, 0f, 4f) })
+            {
+                var point = new GameObject("Dummy_" + (dummyPoints.Count + 1)).transform;
+                point.SetParent(dummyRoot, false);
+                point.position = center + offset;
+                point.rotation = Quaternion.Euler(0f, 180f, 0f);
+                dummyPoints.Add(point);
+            }
+            session.AddComponent<CombatHost>().Configure(abilities, dummy.GetComponent<NetworkObject>(), dummyPoints.ToArray());
+
+            var views = new GameObject("CombatViews");
+            views.AddComponent<CombatCueView>().Configure(new[]
+            {
+                new CueVisual { CueId = StarterAbilities.FireballCue, Kind = CueVisualKind.Projectile, Color = new Color(1f, 0.45f, 0.05f, 1f),
+                    Speed = StarterAbilities.Fireball().ProjectileSpeed, Range = StarterAbilities.Fireball().Range },
+                new CueVisual { CueId = StarterAbilities.WaterWaveCue, Kind = CueVisualKind.Cone, Color = new Color(0.2f, 0.55f, 1f, 0.8f),
+                    Range = StarterAbilities.WaterWave().Range, ConeHalfAngleDegrees = StarterAbilities.WaterWave().ConeHalfAngleDegrees }
+            });
+            views.AddComponent<CombatFeedbackView>();
 
             var hud = UnityEngine.Object.FindAnyObjectByType<MovementDebugHud>();
             if (hud != null)

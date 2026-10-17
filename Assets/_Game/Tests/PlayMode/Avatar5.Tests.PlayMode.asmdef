@@ -3,6 +3,7 @@
   "rootNamespace": "Avatar5.Tests.PlayMode",
   "references": [
     "Avatar5.Contracts",
+    "Avatar5.Combat",
     "Avatar5.Gameplay",
     "Avatar5.Foundation",
     "Avatar5.Player",
@@ -14,6 +15,8 @@
     "Unity.InputSystem.TestFramework",
     "Unity.Cinemachine"
   ],
-  "optionalUnityReferences": ["TestAssemblies"],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
   "autoReferenced": false
 }

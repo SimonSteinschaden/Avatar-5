@@ -43,6 +43,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CastSecondary",
+                    "type": "Button",
+                    "id": "3b6f0c52-7d4e-4f1a-9a41-5e2c8d7b1a01",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "a38322a3-28e3-4ddf-9249-44c78dcddd3d",
@@ -242,6 +251,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Cast",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b6f0c52-7d4e-4f1a-9a41-5e2c8d7b1a02",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CastSecondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b6f0c52-7d4e-4f1a-9a41-5e2c8d7b1a03",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CastSecondary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
