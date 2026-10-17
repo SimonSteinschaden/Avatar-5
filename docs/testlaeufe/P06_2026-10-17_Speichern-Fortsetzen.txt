@@ -1,0 +1,12 @@
+PASS  run1: checkpoint saved  (A5SAVE saved id=campaign checkpoint=1101 completed=False)
+PASS  run1: save file on disk  (C:\A5W\p03\scripts\..\Artifacts\Level01\save-logs\saves\campaign.json)
+PASS  run1: save holds lever and gate A on  (1001:1,1101:1,2001:0,2101:0,9001:0)
+PASS  run1: save is schema 1 with UTC time  (schema=1 time=2026-10-17T01:20:09Z)
+PASS  run2: host loaded the save  (A5SAVE loaded id=campaign checkpoint=1101 usedBackup=False)
+PASS  run2: host world restored before play  (A5WORLD t=0.2 level=1 completed=0 states=1001:1,1101:1,2001:0,2101:0,9001:0)
+PASS  run2: joining client sees restored world  (A5WORLD t=1.2 level=1 completed=0 states=1001:1,1101:1,2001:0,2101:0,9001:0)
+PASS  run3: future schema refused with a clear error  (A5SAVE load-failed error=UnsupportedSchema detail=schema 9 is not supported by this build)
+PASS  run3: host started the level fresh  (A5WORLD t=0.2 level=1 completed=0 states=1001:0,1101:0,2001:0,2101:0,9001:0)
+PASS  run3: refused save file left untouched  ()
+
+10/10 checks passed

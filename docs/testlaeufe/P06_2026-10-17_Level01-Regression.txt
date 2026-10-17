@@ -1,0 +1,77 @@
+PASS  solo: route finished  ()
+PASS  solo: level completed  (A5WORLD t=75.3 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0)
+PASS  solo: lever, gates and brazier on  (1001:1,1101:1,2001:1,2101:1,9001:0)
+PASS  coop: level completed  (A5WORLD t=81.3 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0)
+PASS  coop: host reports completion  (lines with completed=1: 57)
+PASS  coop: client1 world state equals host  (1001:1,1101:1,2001:1,2101:1,9001:0 completed=True)
+PASS  coop: client2 world state equals host  (1001:1,1101:1,2001:1,2101:1,9001:0 completed=True)
+PASS  coop: late world state equals host  (1001:1,1101:1,2001:1,2101:1,9001:0 completed=True)
+PASS  coop: late joiner saw gate A open in its first report  (A5WORLD t=1.2 level=1 completed=0 states=1001:1,1101:1,2001:1,2101:1,9001:0)
+PASS  coop: late joiner arrived before the level was finished  (A5WORLD t=1.2 level=1 completed=0 states=1001:1,1101:1,2001:1,2101:1,9001:0)
+PASS  coop: every route bot reached the end  (3/3)
+
+--- coop-client1.log
+    A5SESSION result=ok error=None
+    A5ROUTE step=1/12 at=4.0,5.7
+    A5ROUTE step=2/12 at=4.0,5.8
+    A5ROUTE step=3/12 at=0.5,8.7
+    A5ROUTE step=4/12 at=-0.2,14.4
+    A5ROUTE step=5/12 at=0.6,16.8
+    A5ROUTE step=6/12 at=2.5,28.8
+    A5ROUTE step=7/12 at=2.5,28.8
+    A5ROUTE step=8/12 at=3.5,29.0
+    A5ROUTE step=9/12 at=4.6,30.0
+    A5ROUTE step=10/12 at=-0.6,32.9
+    A5ROUTE step=11/12 at=0.0,38.4
+    A5ROUTE step=12/12 done at=-0.2,43.5
+    A5WORLD t=75.2 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0
+--- coop-client2.log
+    A5SESSION result=ok error=None
+    A5ROUTE step=1/12 at=3.7,5.9
+    A5ROUTE step=2/12 at=3.7,6.0
+    A5ROUTE step=3/12 at=0.5,8.7
+    A5ROUTE step=4/12 at=-0.1,14.4
+    A5ROUTE step=5/12 at=-0.2,16.5
+    A5ROUTE step=6/12 at=3.5,28.7
+    A5ROUTE step=7/12 at=3.5,28.7
+    A5ROUTE step=8/12 at=3.1,29.0
+    A5ROUTE step=9/12 at=3.1,29.0
+    A5ROUTE step=10/12 at=-0.2,32.5
+    A5ROUTE step=11/12 at=0.0,38.4
+    A5ROUTE step=12/12 done at=0.6,43.0
+    A5WORLD t=75.2 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0
+--- coop-host.log
+    A5SESSION result=ok error=None
+    A5ROUTE step=1/12 at=3.6,5.9
+    A5ROUTE step=2/12 at=3.6,6.0
+    A5ROUTE step=3/12 at=0.4,8.5
+    A5ROUTE step=4/12 at=0.0,14.4
+    A5ROUTE step=5/12 at=0.0,18.8
+    A5ROUTE step=6/12 at=3.0,28.4
+    A5ROUTE step=7/12 at=3.0,28.5
+    A5ROUTE step=8/12 at=3.0,28.7
+    A5ROUTE step=9/12 at=3.0,28.7
+    A5ROUTE step=10/12 at=0.1,32.4
+    A5ROUTE step=11/12 at=0.0,38.4
+    A5ROUTE step=12/12 done at=0.0,42.4
+    A5WORLD t=81.3 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0
+--- coop-late.log
+    A5SESSION result=ok error=None
+    A5WORLD t=57.2 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0
+--- solo-host.log
+    A5SESSION result=ok error=None
+    A5ROUTE step=1/12 at=3.6,5.9
+    A5ROUTE step=2/12 at=3.7,6.0
+    A5ROUTE step=3/12 at=0.4,8.6
+    A5ROUTE step=4/12 at=0.0,14.4
+    A5ROUTE step=5/12 at=0.0,15.4
+    A5ROUTE step=6/12 at=3.0,28.4
+    A5ROUTE step=7/12 at=3.0,28.4
+    A5ROUTE step=8/12 at=3.0,28.5
+    A5ROUTE step=9/12 at=3.0,28.5
+    A5ROUTE step=10/12 at=-0.1,32.4
+    A5ROUTE step=11/12 at=0.0,38.4
+    A5ROUTE step=12/12 done at=0.0,42.5
+    A5WORLD t=75.3 level=1 completed=1 states=1001:1,1101:1,2001:1,2101:1,9001:0
+
+11/11 checks passed

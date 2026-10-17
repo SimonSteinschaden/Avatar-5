@@ -177,6 +177,24 @@ interface IWorldStateService { int LevelId { get; } bool IsCompleted { get; } in
 - Transport: jede Änderung als Named Message `A5.World` (ReliableSequenced), beim Beitritt ein vollständiger Snapshot `A5.WorldSnapshot`; Clients deduplizieren über EventId. Darstellung (`WorldObjectAuthoring.Apply`) schaltet bei Toren auch Collider und NavMeshObstacle.
 - `Snapshot()`/`Restore()` liefern den Checkpoint-/Rejoin-Zustand ohne Ereignisse (Grundlage für P06).
 
+## 3g. Umgesetzte P06-Speicherverträge (S06-01, `Avatar5.Contracts/SaveContracts.cs`)
+
+```csharp
+[Serializable] class SaveGameV1 { int schemaVersion = 1; int contentVersion; string saveId; string savedAtUtc /* ISO-8601 UTC */;
+    int levelId; int checkpointId; bool levelCompleted; List<SaveWorldObject> worldObjects; List<SavePlayerRecord> playerRecords;
+    List<string> completedRewardIds; }
+[Serializable] class SaveWorldObject { int id; int state; }
+[Serializable] class SavePlayerRecord { int slot; float health; }
+enum SaveLoadError { None, NotFound, Corrupt, UnsupportedSchema, ContentMismatch, UnknownContentId, IoError }
+struct SaveLoadResult { SaveLoadError Error; string Detail; bool UsedBackup; SaveGameV1 Save; bool Success; }
+```
+
+- **Besitzregel v1:** Der Kampagnen-Spielstand gehört dem Host und liegt nur auf dessen PC (`Application.persistentDataPath/Saves/campaign.json`). Clients speichern keinen Kampagnenfortschritt. Charakterfortschritt über verschiedene Hosts hinweg ist nicht zugesagt.
+- **Atomisch:** `AtomicSaveStore` schreibt `.tmp`, liest und validiert zurück, tauscht dann per `File.Replace` und behält den vorigen Stand als `.bak.json`. Laden fällt bei beschädigter Hauptdatei auf das Backup zurück (`UsedBackup`), **nicht** bei fremder Schema-/Inhaltsversion.
+- **Versionen:** Schema 0 (frühe Testdateien: `version`, `id`, `level`, `objects[objectId,on]`) wird migriert; jede andere unbekannte Version → `UnsupportedSchema` mit Versionsnummer. Abweichende `contentVersion` oder Level → `ContentMismatch`; unbekannte `WorldObjectId` → `UnknownContentId`.
+- **Checkpoints:** Host speichert, wenn ein Tor aufgeht und wenn das Level geschafft ist. Belohnungen laufen über `RewardLedger` mit stabilen `RewardGrantId`s (`level:<id>:completed`), jede höchstens einmal.
+- **Fortsetzen:** Host mit „Spielstand fortsetzen“ (Lobby) bzw. `-a5-continue` stellt den Weltzustand vor dem ersten Spieler wieder her; Clients erhalten ihn per Snapshot. Ein unbrauchbarer Stand wird nie überschrieben: Der Host speichert dann unter `campaign-new` weiter.
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp
