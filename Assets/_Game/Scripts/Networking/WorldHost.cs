@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Avatar5.Contracts;
 using Avatar5.Foundation;
 using Avatar5.Gameplay.Enemies;
+using Avatar5.Gameplay.Progression;
 using Avatar5.Gameplay.Save;
 using Avatar5.Gameplay.World;
 using Avatar5.Persistence;
@@ -60,6 +61,12 @@ namespace Avatar5.Networking
         private AtomicSaveStore _store;
         private LevelDefinition _definition;
         private EncounterDirector _encounters;
+        private List<EncounterDefinition> _encounterDefinitions = new List<EncounterDefinition>();
+        private ProgressionService _progression;
+        private bool _statsHooked;
+
+        /// <summary>Host only: XP, levels and talents of the campaign (v1: per player slot, host-owned).</summary>
+        public ProgressionService Progression { get { return _progression; } }
         private readonly List<Float2> _livingPlayers = new List<Float2>();
         private bool _combatHooked;
 
@@ -109,6 +116,8 @@ namespace Avatar5.Networking
             _definition = _level.BuildDefinition();
             _service = new WorldStateService(_definition);
             _rewards.Load(null);
+            _progression = new ProgressionService(new ProgressionRules());
+            _progression.Changed += slot => { if (CombatHost.Instance != null) CombatHost.Instance.ApplyStats((ulong)slot + 1UL); };
             _store = new AtomicSaveStore(CampaignSaveSettings.ResolveDirectory());
             if (CampaignSaveSettings.ContinueRequested) LoadCampaign();
             _service.Changed += OnWorldChanged;
@@ -120,7 +129,8 @@ namespace Avatar5.Networking
             }
             IsCompleted = _service.IsCompleted;
 
-            _encounters = new EncounterDirector(_level.BuildEncounters());
+            _encounterDefinitions = _level.BuildEncounters();
+            _encounters = new EncounterDirector(_encounterDefinitions);
             foreach (var o in _definition.Objects)
             {
                 // Encounters finished before a checkpoint stay finished after "continue".
@@ -129,6 +139,7 @@ namespace Avatar5.Networking
             _encounters.Completed += id =>
             {
                 Debug.Log("[Avatar5.World] encounter " + id + " completed");
+                GrantXp("encounter:" + id, IsBossEncounter(id) ? _progression.Rules.BossXp : _progression.Rules.EncounterXp);
                 if (_service != null) _service.CompleteEncounter(id);
             };
         }
@@ -139,6 +150,7 @@ namespace Avatar5.Networking
             _service = null;
             _impactHooked = false;
             _combatHooked = false;
+            _statsHooked = false;
             _encounters = null;
         }
 
@@ -186,6 +198,12 @@ namespace Avatar5.Networking
                 };
                 _combatHooked = true;
             }
+            if (!_statsHooked && combat != null && combat.Simulation != null && _progression != null)
+            {
+                combat.Simulation.Stats = _progression;
+                foreach (var p in _progression.All) combat.ApplyStats((ulong)p.Slot + 1UL);
+                _statsHooked = true;
+            }
             if (IsCompleted) return;
             _livingPlayers.Clear();
             var playerCount = 0;
@@ -219,6 +237,7 @@ namespace Avatar5.Networking
             if (LastLoad.Success)
             {
                 SaveSnapshots.Restore(LastLoad.Save, _service, _rewards);
+                _progression.Restore(LastLoad.Save.playerRecords, LastLoad.Save.progressionGrants);
                 Debug.Log(SaveLogTag + " loaded id=" + LastLoad.Save.saveId + " checkpoint=" + LastLoad.Save.checkpointId
                     + " usedBackup=" + LastLoad.UsedBackup + (string.IsNullOrEmpty(LastLoad.Detail) ? string.Empty : " detail=" + LastLoad.Detail));
             }
@@ -242,6 +261,11 @@ namespace Avatar5.Networking
                 players.Add(new SavePlayerRecord { slot = (int)actor.ActorId - 1, health = actor.CombatState.Health });
             }
             var save = SaveSnapshots.Capture(CampaignSaveSettings.SaveId, _service, checkpointId, _rewards, players, System.DateTime.UtcNow);
+            if (_progression != null)
+            {
+                _progression.WriteInto(save.playerRecords);
+                save.progressionGrants = _progression.GrantedKeys();
+            }
             var result = _store.Save(save);
             Debug.Log(SaveLogTag + (result.Success ? " saved" : " save-failed error=" + result.Error + " detail=" + result.Detail)
                 + " id=" + save.saveId + " checkpoint=" + checkpointId + " completed=" + save.levelCompleted);
@@ -256,6 +280,7 @@ namespace Avatar5.Networking
                 if (e.StateCode == WorldStateCodes.LevelCompletedCode)
                 {
                     _rewards.TryGrant(RewardLedger.LevelCompleted(e.LevelId));
+                    GrantXp(RewardLedger.LevelCompleted(e.LevelId), _progression.Rules.LevelCompletedXp);
                     SaveCheckpoint(e.WorldObjectId);
                 }
                 else if (e.StateCode == WorldStateCodes.On && TryKind(e.WorldObjectId, out kind) && kind == WorldObjectKind.Gate)
@@ -335,6 +360,49 @@ namespace Avatar5.Networking
                 if (_level != null) _level.Apply(e.WorldObjectId, e.StateCode);
             }
             PresentationBus.Publish(e);
+        }
+
+        /// <summary>Credits XP to every player in the session (each reward once per slot).</summary>
+        private void GrantXp(string rewardId, int xp)
+        {
+            if (_progression == null) return;
+            var slots = new List<int>();
+            foreach (var avatar in FindObjectsByType<NetworkPlayerAvatar>(FindObjectsSortMode.None))
+                if (avatar.IsSpawned) slots.Add((int)avatar.ActorId - 1);
+            var credited = _progression.Grant(rewardId, xp, slots);
+            Debug.Log("[Avatar5.World] reward " + rewardId + " +" + xp + " XP for " + credited + " player(s)");
+        }
+
+        private bool IsBossEncounter(int encounterId)
+        {
+            foreach (var e in _encounterDefinitions)
+            {
+                if (e.Id != encounterId) continue;
+                foreach (var s in e.Spawns) if (s.EnemyTypeId == StarterEnemies.WardenTypeId) return true;
+            }
+            return false;
+        }
+
+        /// <summary>Host: a player spends a talent point.</summary>
+        internal TalentResult ChooseTalent(ulong actorId, TalentId talent)
+        {
+            if (_progression == null) return TalentResult.UnknownTalent;
+            var result = _progression.ChooseTalent((int)actorId - 1, talent);
+            Debug.Log("[Avatar5.World] actor " + actorId + " talent " + talent + ": " + result);
+            return result;
+        }
+
+        internal PlayerProgressView ViewOf(ulong actorId)
+        {
+            if (_progression == null) return default(PlayerProgressView);
+            var slot = (int)actorId - 1;
+            var p = _progression.Get(slot);
+            var level = _progression.LevelOf(slot);
+            return new PlayerProgressView
+            {
+                Level = level, Xp = p.Xp, XpForNextLevel = _progression.Rules.XpForLevel(level + 1), FreePoints = _progression.FreePoints(slot),
+                PowerRank = p.Rank(TalentId.Power), FocusRank = p.Rank(TalentId.Focus), VigorRank = p.Rank(TalentId.Vigor)
+            };
         }
 
         private bool TryKind(int objectId, out WorldObjectKind kind)

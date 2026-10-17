@@ -54,21 +54,23 @@ function WorldOf([string] $file) {
 # ---- solo, once per element class (every class must be able to finish alone) -----------------
 $code = "127.0.0.1:$Port"
 foreach ($class in 'fire', 'water', 'earth', 'air') {
-    Run "solo-$class" @(@{ Name = 'host'; Quit = $Seconds; Args = @('-a5-session', 'host', '-a5-class', $class, '-a5-bot-delay', '3', '-a5-bot-route', $route) })
+    Run "solo-$class" @(@{ Name = 'host'; Quit = $Seconds; Args = @('-a5-session', 'host', '-a5-class', $class, '-a5-bot-delay', '3', '-a5-bot-route', $route, '-a5-bot-talents', 'vigor,power') })
     $log = "solo-$class-host.log"
     $soloWorld = WorldOf $log
     $plays = (Get-Content (Join-Path $LogDir $log) -ErrorAction SilentlyContinue | Where-Object { $_ -like '*Actor 1 plays*' } | Select-Object -First 1)
     Check "solo ${class}: class applied" ([string]$plays -match "plays $class") "$plays"
     Check "solo ${class}: route finished" ((Lines $log 'A5ROUTE' | Where-Object { $_ -like '*done*' }).Count -ge 1) ''
     Check "solo ${class}: level completed" ($soloWorld -and $soloWorld.Completed) $(if ($soloWorld) { $soloWorld.Line } else { 'no world report' })
+    $prog = Lines $log 'A5PROGRESS' | Select-Object -Last 1
+    Check "solo ${class}: XP and talents (level 3, vigor+power, 115 max HP)" ([string]$prog -match 'level=3 .*points=0 power=1 focus=0 vigor=1 maxhp=115') "$prog"
     Check "solo ${class}: lever, gates and shrine on" ($soloWorld -and $soloWorld.States -eq '1001:1,1101:1,2001:1,2101:1,3001:1,3101:1,9001:0') $(if ($soloWorld) { $soloWorld.States } else { '' })
 }
 
 # ---- co-op with a late joiner ------------------------------------------------------------------
 $coop = @(
-    @{ Name = 'host'; Quit = $Seconds + 6; Args = @('-a5-session', 'host', '-a5-class', 'fire', '-a5-bot-delay', '6', '-a5-bot-route', $route) },
-    @{ Name = 'client1'; Wait = 3; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'water', '-a5-bot-delay', '3', '-a5-bot-route', $route) },
-    @{ Name = 'client2'; Wait = 1; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'earth', '-a5-bot-delay', '2', '-a5-bot-route', $route) },
+    @{ Name = 'host'; Quit = $Seconds + 6; Args = @('-a5-session', 'host', '-a5-class', 'fire', '-a5-bot-delay', '6', '-a5-bot-route', $route, '-a5-bot-talents', 'vigor,power') },
+    @{ Name = 'client1'; Wait = 3; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'water', '-a5-bot-delay', '3', '-a5-bot-route', $route, '-a5-bot-talents', 'vigor,power') },
+    @{ Name = 'client2'; Wait = 1; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'earth', '-a5-bot-delay', '2', '-a5-bot-route', $route, '-a5-bot-talents', 'vigor,power') },
     # Joins after the lever was pulled; must still see gate A open (snapshot on join). Stands still.
     @{ Name = 'late'; Wait = 14; Quit = $Seconds - 18; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'air') }
 )
@@ -88,6 +90,12 @@ Check 'coop: late joiner saw gate A open in its first report' ($lateFirst -match
 $doneCount = 0
 foreach ($name in 'host', 'client1', 'client2') { if ((Lines "coop-$name.log" 'A5ROUTE' | Where-Object { $_ -like '*done*' }).Count -ge 1) { $doneCount++ } }
 Check 'coop: every route bot reached the end' ($doneCount -eq 3) "$doneCount/3"
+foreach ($name in 'host', 'client1', 'client2') {
+    $prog = Lines "coop-$name.log" 'A5PROGRESS' | Select-Object -Last 1
+    Check "coop: $name earned level 3 and spent its points" ([string]$prog -match 'level=3 .*points=0') "$prog"
+}
+$lateProg = Lines 'coop-late.log' 'A5PROGRESS' | Select-Object -Last 1
+Check 'coop: late joiner was credited for fights after joining' ([string]$lateProg -match 'level=[23] ') "$lateProg"
 
 $failed = 0
 foreach ($r in $results) {

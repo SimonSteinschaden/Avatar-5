@@ -90,18 +90,58 @@ namespace Avatar5.Networking
         }
     }
 
+    /// <summary>Replicated progression of one player (host-written).</summary>
+    public struct NetProgress : INetworkSerializable, IEquatable<NetProgress>
+    {
+        public PlayerProgressView View;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref View.Level);
+            serializer.SerializeValue(ref View.Xp);
+            serializer.SerializeValue(ref View.XpForNextLevel);
+            serializer.SerializeValue(ref View.FreePoints);
+            serializer.SerializeValue(ref View.PowerRank);
+            serializer.SerializeValue(ref View.FocusRank);
+            serializer.SerializeValue(ref View.VigorRank);
+        }
+
+        public bool Equals(NetProgress other)
+        {
+            return View.Level == other.View.Level && View.Xp == other.View.Xp && View.FreePoints == other.View.FreePoints
+                && View.PowerRank == other.View.PowerRank && View.FocusRank == other.View.FocusRank && View.VigorRank == other.View.VigorRank
+                && View.XpForNextLevel == other.View.XpForNextLevel;
+        }
+    }
+
     /// <summary>
     /// Networked player actor. The host owns the simulation: it runs the <see cref="CharacterMotor"/>, the
     /// NetworkTransform (server authority) replicates the result. The owning client only sends intents
     /// (<see cref="PlayerCommand"/>) through this sink; other clients just watch the interpolated transform.
     /// </summary>
     [RequireComponent(typeof(CharacterMotor))]
-    public sealed class NetworkPlayerAvatar : NetworkBehaviour, IPlayerCommandSink, IPlayerPoseSource
+    public sealed class NetworkPlayerAvatar : NetworkBehaviour, IPlayerCommandSink, IPlayerPoseSource, IProgressionSource
     {
         public const string LogTag = "A5PLAYER";
 
         private readonly NetworkVariable<NetPoseExtras> _extras = new NetworkVariable<NetPoseExtras>();
         private readonly CommandSendThrottle _throttle = new CommandSendThrottle();
+        private readonly NetworkVariable<NetProgress> _progress = new NetworkVariable<NetProgress>();
+
+        public PlayerProgressView Progress { get { return _progress.Value.View; } }
+
+        /// <summary>Owner: spend a talent point (host validates).</summary>
+        public void RequestTalent(Avatar5.Gameplay.Progression.TalentId talent)
+        {
+            if (IsOwner && IsSpawned) ChooseTalentRpc((byte)talent);
+        }
+
+        [Rpc(SendTo.Server, Delivery = RpcDelivery.Reliable)]
+        private void ChooseTalentRpc(byte talent, RpcParams rpcParams = default)
+        {
+            if (rpcParams.Receive.SenderClientId != OwnerClientId || WorldHost.Instance == null) return;
+            WorldHost.Instance.ChooseTalent(ActorId, (Avatar5.Gameplay.Progression.TalentId)talent);
+        }
 
         private CharacterMotor _motor;
         private HostCommandIngress _ingress;
@@ -199,6 +239,7 @@ namespace Avatar5.Networking
                 var actor = GetComponent<NetworkCombatActor>();
                 feedback.SetLocalPlayer(actor);
                 feedback.SetLocalElement(PlayerClassSettings.Selected);
+                feedback.SetLocalProgress(this);
             }
         }
 
@@ -278,7 +319,13 @@ namespace Avatar5.Networking
             if (dt > 0f) _estimatedVelocity = (transform.position - _lastPosition) / dt;
             _lastPosition = transform.position;
 
+            if (IsOwner && !SessionBot.IsActive) ReadTalentKeys();
             if (!IsServer) return;
+            if (WorldHost.Instance != null)
+            {
+                var progress = new NetProgress { View = WorldHost.Instance.ViewOf(ActorId) };
+                if (!progress.Equals(_progress.Value)) _progress.Value = progress;
+            }
             var pose = _motor.CurrentPose;
             var extras = new NetPoseExtras
             {
@@ -286,6 +333,17 @@ namespace Avatar5.Networking
                 Aim = new Vector2(pose.AimDirection.X, pose.AimDirection.Y)
             };
             if (!extras.Equals(_extras.Value)) _extras.Value = extras;
+        }
+
+        /// <summary>Debug talent input until the P07 talent menu exists: keys 1/2/3 spend a free point.</summary>
+        private void ReadTalentKeys()
+        {
+            if (Progress.FreePoints <= 0) return;
+            var keyboard = UnityEngine.InputSystem.Keyboard.current;
+            if (keyboard == null) return;
+            if (keyboard.digit1Key.wasPressedThisFrame) RequestTalent(Avatar5.Gameplay.Progression.TalentId.Power);
+            else if (keyboard.digit2Key.wasPressedThisFrame) RequestTalent(Avatar5.Gameplay.Progression.TalentId.Focus);
+            else if (keyboard.digit3Key.wasPressedThisFrame) RequestTalent(Avatar5.Gameplay.Progression.TalentId.Vigor);
         }
 
         private static PlayerMovementDefinition MovementDefinitionOf(CharacterMotor motor)

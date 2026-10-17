@@ -172,6 +172,7 @@ namespace Avatar5.Networking
             _actors[actor.ActorId] = actor;
             _simulation.RegisterActor(actor.ActorId, actor.Team, actor.MaxHealth, actor.MaxEnergy, actor.EnergyRegenPerSecond, actor.Loadout);
             foreach (var c in actor.GetComponentsInChildren<Collider>()) _ignored.Add(c);
+            if (actor.Team == TeamKind.Players) ApplyStats(actor.ActorId);
             ActorCombatState state;
             if (_simulation.TryGetState(actor.ActorId, out state)) actor.WriteState(state);
         }
@@ -240,6 +241,14 @@ namespace Avatar5.Networking
             actor.SetElementClass(element, loadout);
             if (_actors.ContainsKey(actor.ActorId) && !_simulation.SetLoadout(actor.ActorId, loadout)) return false;
             return true;
+        }
+
+        /// <summary>Host: re-applies talent stats (max health) to a player actor.</summary>
+        internal void ApplyStats(ulong actorId)
+        {
+            NetworkCombatActor actor;
+            if (_simulation == null || _simulation.Stats == null || !_actors.TryGetValue(actorId, out actor) || actor == null) return;
+            _simulation.SetMaxHealth(actorId, actor.MaxHealth + _simulation.Stats.GetStats(actorId).MaxHealthBonus);
         }
 
         internal bool IsFrozen(ulong actorId)

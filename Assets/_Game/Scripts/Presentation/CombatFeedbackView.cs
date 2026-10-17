@@ -31,6 +31,13 @@ namespace Avatar5.Presentation
             _local = local;
         }
 
+        private IProgressionSource _progress;
+
+        public void SetLocalProgress(IProgressionSource progress)
+        {
+            _progress = progress;
+        }
+
         public void SetLocalElement(ElementKind element)
         {
             _localElement = element;
@@ -139,9 +146,20 @@ namespace Avatar5.Presentation
 
             if (_local == null) return;
             var s = _local.CombatState;
-            GUILayout.BeginArea(new Rect(Screen.width - 260f, Screen.height - 110f, 240f, 90f), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(Screen.width - 300f, Screen.height - 150f, 280f, 130f), GUI.skin.box);
             GUILayout.Label("Leben: " + Mathf.CeilToInt(s.Health) + " / " + Mathf.RoundToInt(s.MaxHealth));
             GUILayout.Label("Energie: " + Mathf.FloorToInt(s.Energy) + " / " + Mathf.RoundToInt(s.MaxEnergy));
+            if (_progress != null)
+            {
+                var p = _progress.Progress;
+                if (p.Level > 0)
+                {
+                    GUILayout.Label("Stufe " + p.Level + " · XP " + p.Xp + " / " + p.XpForNextLevel
+                        + (p.FreePoints > 0 ? " · " + p.FreePoints + " Talentpunkt(e)" : string.Empty));
+                    GUILayout.Label("Talente: Kraft " + p.PowerRank + " · Fokus " + p.FocusRank + " · Zähigkeit " + p.VigorRank
+                        + (p.FreePoints > 0 ? "  (Tasten 1/2/3)" : string.Empty));
+                }
+            }
             GUILayout.Label(AbilityHint(_localElement) + " · E Benutzen" + (s.Status != StatusFlags.None ? " · " + s.Status : string.Empty));
             GUILayout.EndArea();
         }

@@ -10,6 +10,7 @@ using UnityEngine;
 namespace Avatar5.Networking
 {
     /// <summary>
+    /// <c>-a5-bot-talents power,focus,...</c>: spends free talent points in this order.
     /// Test automation for multi-process runs (no input devices in batchmode).
     /// <c>-a5-bot-move X,Z</c>: the local avatar sends this world-space move intent every frame.
     /// <c>-a5-bot-delay S</c>: waits S seconds after spawning before moving (default 0).
@@ -57,6 +58,8 @@ namespace Avatar5.Networking
         private float _startTime;
         private float _castUntil = float.MaxValue;
         private float _approach;
+        private readonly List<Avatar5.Gameplay.Progression.TalentId> _talentPlan = new List<Avatar5.Gameplay.Progression.TalentId>();
+        private float _nextTalentTry;
         private readonly List<int> _castSlots = new List<int>();
         private readonly List<float> _castIntervals = new List<float>();
         private readonly List<float> _nextCast = new List<float>();
@@ -98,6 +101,14 @@ namespace Avatar5.Networking
                 }
             }
             if (TryArg("-a5-bot-route", out value)) _route = ParseRoute(value);
+            if (TryArg("-a5-bot-talents", out value))
+            {
+                foreach (var part in value.Split(','))
+                {
+                    Avatar5.Gameplay.Progression.TalentId t;
+                    if (Enum.TryParse(part.Trim(), true, out t)) _talentPlan.Add(t);
+                }
+            }
             if (TryArg("-a5-bot-after-move", out value)) { _afterMove = ParseVector(value); _hasAfterMove = true; }
             _onlyBrutes = TryArg("-a5-bot-target", out value) && string.Equals(value, "brute", StringComparison.OrdinalIgnoreCase);
             float approach;
@@ -109,6 +120,12 @@ namespace Avatar5.Networking
         private void Update()
         {
             if (_avatar == null || !_avatar.IsSpawned) return;
+            if (_talentPlan.Count > 0 && _avatar.Progress.FreePoints > 0 && Time.unscaledTime >= _nextTalentTry)
+            {
+                _avatar.RequestTalent(_talentPlan[0]);
+                _talentPlan.RemoveAt(0);
+                _nextTalentTry = Time.unscaledTime + 0.5f;
+            }
             _tick++;
             if (_route != null)
             {
@@ -348,6 +365,14 @@ namespace Avatar5.Networking
                 }
                 Debug.Log(line.ToString());
                 Debug.Log(CombatLine(manager));
+                foreach (var avatar in Avatars)
+                {
+                    if (avatar == null || !avatar.IsSpawned || !avatar.IsOwner) continue;
+                    var p = avatar.Progress;
+                    Debug.Log("A5PROGRESS self=" + avatar.ActorId + " level=" + p.Level + " xp=" + p.Xp + " points=" + p.FreePoints
+                        + " power=" + p.PowerRank + " focus=" + p.FocusRank + " vigor=" + p.VigorRank
+                        + " maxhp=" + avatar.GetComponent<NetworkCombatActor>().CombatState.MaxHealth.ToString("0", CultureInfo.InvariantCulture));
+                }
                 if (WorldHost.Instance != null && WorldHost.Instance.LevelId > 0) Debug.Log(WorldLine());
             }
         }
