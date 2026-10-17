@@ -373,7 +373,7 @@ namespace Avatar5.Gameplay.Enemies
         {
             var warden = new EnemyDefinition
             {
-                EnemyTypeId = WardenTypeId, Key = "warden", MaxHealth = 600f, MoveSpeed = 2.6f, AggroRadius = 12f, LeashRadius = 16f,
+                EnemyTypeId = WardenTypeId, Key = "warden", MaxHealth = 450f, MoveSpeed = 2.6f, AggroRadius = 12f, LeashRadius = 16f,
                 AttackStartRange = 2.6f, TelegraphDuration = 1.1f, RecoverDuration = 1.4f, AttackAbilityId = WardenSlamId,
                 TelegraphCueId = WardenTelegraphCue
             };

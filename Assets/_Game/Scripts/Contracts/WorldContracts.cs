@@ -11,7 +11,9 @@ namespace Avatar5.Contracts
         /// <summary>Element target: lit by a fire impact nearby.</summary>
         Brazier,
         /// <summary>Level exit: completes the level when a living player stands in it and its requirements are met.</summary>
-        Goal
+        Goal,
+        /// <summary>Enemy encounter: On once all its enemies are defeated (P04 EncounterDirector).</summary>
+        Encounter
     }
 
     /// <summary>Value of <see cref="WorldEvent.StateCode"/> for object changes; level completion uses <see cref="LevelCompletedCode"/>.</summary>

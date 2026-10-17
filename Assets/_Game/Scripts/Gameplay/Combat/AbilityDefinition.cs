@@ -237,7 +237,7 @@ namespace Avatar5.Gameplay.Combat
             return new AbilityDefinition
             {
                 Id = GustId, Key = "gust", Element = ElementKind.Air, Targeting = AbilityTargeting.Cone,
-                EnergyCost = 20f, Cooldown = 1.8f, Range = 5f, ConeHalfAngleDegrees = 30f, Damage = 6f, Knockback = 4f,
+                EnergyCost = 20f, Cooldown = 1.8f, Range = 5f, ConeHalfAngleDegrees = 30f, Damage = 10f, Knockback = 4f,
                 CueId = GustCue
             };
         }
@@ -248,7 +248,7 @@ namespace Avatar5.Gameplay.Combat
             {
                 Id = WindBladeId, Key = "wind_blade", Element = ElementKind.Air, Targeting = AbilityTargeting.Projectile,
                 EnergyCost = 14f, Cooldown = 0.5f, Range = 15f, ProjectileSpeed = 24f, ProjectileRadius = 0.25f,
-                Damage = 11f, CueId = WindBladeCue
+                Damage = 16f, CueId = WindBladeCue
             };
         }
 

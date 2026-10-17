@@ -156,6 +156,17 @@ namespace Avatar5.Gameplay.World
             }
         }
 
+        /// <summary>Marks an encounter object completed (raised by the encounter director); idempotent.</summary>
+        public bool CompleteEncounter(int encounterId)
+        {
+            WorldObjectDefinition o;
+            if (!_objects.TryGetValue(encounterId, out o) || o.Kind != WorldObjectKind.Encounter || _states[encounterId] == WorldStateCodes.On) return false;
+            Set(encounterId, WorldStateCodes.On);
+            return true;
+        }
+
+        public IEnumerable<WorldObjectDefinition> Objects { get { return _level.Objects; } }
+
         /// <summary>Host calls this with living players' positions; completes the level once.</summary>
         public void CheckGoal(ulong actorId, Float2 position)
         {

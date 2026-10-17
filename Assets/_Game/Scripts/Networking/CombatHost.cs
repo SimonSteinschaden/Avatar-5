@@ -25,6 +25,14 @@ namespace Avatar5.Networking
         [SerializeField] private AbilityDefinitionAsset[] abilities = new AbilityDefinitionAsset[0];
         [SerializeField] private NetworkObject dummyPrefab;
         [SerializeField] private Transform[] dummyPoints = new Transform[0];
+        [System.Serializable]
+        public struct EnemyPrefabEntry
+        {
+            public int EnemyTypeId;
+            public NetworkObject Prefab;
+        }
+
+        [SerializeField] private EnemyPrefabEntry[] enemyPrefabs = new EnemyPrefabEntry[0];
         [SerializeField] private NetworkObject enemyPrefab;
         [SerializeField] private Transform[] enemyPoints = new Transform[0];
 
@@ -32,6 +40,7 @@ namespace Avatar5.Networking
         private readonly List<CombatEvent> _pendingEvents = new List<CombatEvent>();
         private readonly List<PresentationCue> _pendingCues = new List<PresentationCue>();
         private readonly Dictionary<ulong, float> _reviveAt = new Dictionary<ulong, float>();
+        private readonly Dictionary<ulong, float> _despawnAt = new Dictionary<ulong, float>();
         private readonly Dictionary<ulong, ulong> _enemyTargets = new Dictionary<ulong, ulong>();
         private readonly HashSet<Collider> _ignored = new HashSet<Collider>();
         private readonly RaycastHit[] _hits = new RaycastHit[16];
@@ -50,6 +59,33 @@ namespace Avatar5.Networking
             abilities = abilityAssets ?? new AbilityDefinitionAsset[0];
             dummyPrefab = dummy;
             dummyPoints = points ?? new Transform[0];
+        }
+
+        public void ConfigureEnemyPrefabs(EnemyPrefabEntry[] entries)
+        {
+            enemyPrefabs = entries ?? new EnemyPrefabEntry[0];
+        }
+
+        /// <summary>
+        /// Host: spawns an encounter enemy with scaled health that does not revive. Returns its actor id (0 = no prefab).
+        /// </summary>
+        internal ulong SpawnEnemy(int enemyTypeId, Vector3 position, float healthMultiplier)
+        {
+            NetworkObject prefab = null;
+            foreach (var e in enemyPrefabs) if (e.EnemyTypeId == enemyTypeId) prefab = e.Prefab;
+            if (prefab == null)
+            {
+                Debug.LogWarning("[Avatar5.Combat] no prefab for enemy type " + enemyTypeId);
+                return 0;
+            }
+            var definition = StarterEnemies.Get(enemyTypeId);
+            var instance = Instantiate(prefab, position, Quaternion.Euler(0f, 180f, 0f));
+            var actor = instance.GetComponent<NetworkCombatActor>();
+            actor.Configure(TeamKind.Enemies, definition.MaxHealth * healthMultiplier, 0f, 0f, actor.Loadout, 0f);
+            var brain = instance.GetComponent<EnemyBrainHost>();
+            if (brain != null) brain.Configure(enemyTypeId);
+            instance.Spawn(true);
+            return actor.ActorId;
         }
 
         public void ConfigureEnemies(NetworkObject enemy, Transform[] points)
@@ -251,6 +287,17 @@ namespace Avatar5.Networking
                 if (pair.Value != null && _simulation.TryGetState(pair.Key, out state)) pair.Value.WriteState(state);
             }
 
+            if (_despawnAt.Count > 0)
+            {
+                var gone = new List<ulong>();
+                foreach (var pair in _despawnAt) if (Time.time >= pair.Value) gone.Add(pair.Key);
+                foreach (var id in gone)
+                {
+                    _despawnAt.Remove(id);
+                    NetworkCombatActor actor;
+                    if (_actors.TryGetValue(id, out actor) && actor != null && actor.IsSpawned) actor.NetworkObject.Despawn(true);
+                }
+            }
             if (_reviveAt.Count > 0)
             {
                 var due = new List<ulong>();
@@ -268,11 +315,16 @@ namespace Avatar5.Networking
         private void OnSimulationEvent(CombatEvent e)
         {
             _pendingEvents.Add(e);
-            NetworkCombatActor actor;
+            NetworkCombatActor actor = null;
             if (e.ResultKind == (int)CombatEventKind.ActorDefeated && _actors.TryGetValue(e.TargetActorId, out actor)
                 && actor.ReviveSeconds > 0f)
             {
                 _reviveAt[e.TargetActorId] = Time.time + actor.ReviveSeconds;
+            }
+            else if (e.ResultKind == (int)CombatEventKind.ActorDefeated && actor != null && actor.Team == TeamKind.Enemies)
+            {
+                // Enemies that stay defeated (encounters) disappear shortly after, so the field clears.
+                _despawnAt[e.TargetActorId] = Time.time + 2f;
             }
         }
 

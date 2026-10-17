@@ -36,7 +36,9 @@ namespace Avatar5.Contracts
         ActorRevived = 8,
         ProjectileEnded = 9,
         /// <summary>An enemy announced an attack (Amount = telegraph seconds, AbilityId = the attack).</summary>
-        TelegraphStarted = 10
+        TelegraphStarted = 10,
+        /// <summary>A boss entered a new phase (EffectId = phase index, 0 = first).</summary>
+        BossPhaseChanged = 11
     }
 
     /// <summary>Elemental reactions (value of <see cref="CombatEvent.EffectId"/> for ReactionTriggered).</summary>

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Avatar5.Contracts;
+using Avatar5.Gameplay.Enemies;
 using Avatar5.Gameplay.World;
 using UnityEngine;
 
@@ -25,6 +27,25 @@ namespace Avatar5.World
             var level = new LevelDefinition { LevelId = levelId, Key = levelKey };
             foreach (var o in GetComponentsInChildren<WorldObjectAuthoring>(true)) level.Objects.Add(o.ToDefinition());
             return level;
+        }
+
+        /// <summary>Encounters of this level: every Encounter world object with its spawn markers.</summary>
+        public List<EncounterDefinition> BuildEncounters()
+        {
+            var list = new List<EncounterDefinition>();
+            foreach (var o in GetComponentsInChildren<WorldObjectAuthoring>(true))
+            {
+                if (o.Kind != WorldObjectKind.Encounter) continue;
+                var d = o.ToDefinition();
+                var e = new EncounterDefinition { Id = d.Id, Center = d.Position, ActivationRadius = d.Radius };
+                foreach (var m in o.GetComponentsInChildren<EncounterSpawnMarker>(true))
+                {
+                    var p = m.transform.position;
+                    e.Spawns.Add(new EncounterSpawn { EnemyTypeId = m.EnemyTypeId, Position = new Float2(p.x, p.z), MinPlayers = m.MinPlayers });
+                }
+                list.Add(e);
+            }
+            return list;
         }
 
         public void Apply(int objectId, int state)

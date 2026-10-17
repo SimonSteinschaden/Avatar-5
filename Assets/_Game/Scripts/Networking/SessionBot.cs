@@ -194,9 +194,14 @@ namespace Avatar5.Networking
                 case 'K':
                     float distance;
                     var toEnemy = AimAtNearestEnemy(out distance);
-                    if (distance > 14f) { done = _stepTimer > 1f; break; }
+                    // Done only when nothing alive is near for a while (dodging can carry the bot ~10 m back).
+                    if (distance > 20f) { done = _stepTimer > 2f; break; }
                     _stepTimer = 0f;
-                    move = distance > 3.5f ? toEnemy : new Float2(0f, 0f);
+                    // Like a careful player: keep ~5 m, and step out of the ring only while the enemy telegraphs.
+                    var telegraphing = _nearestBrain != null && _nearestBrain.State == Avatar5.Gameplay.Enemies.EnemyState.Telegraph;
+                    if (telegraphing && distance < 5.5f) move = new Float2(-toEnemy.X, -toEnemy.Y);
+                    else if (distance > 5.5f) move = toEnemy;
+                    else move = new Float2(0f, 0f);
                     if (distance <= 9f && Time.unscaledTime >= _nextRouteCast)
                     {
                         aim = toEnemy;
@@ -231,8 +236,11 @@ namespace Avatar5.Networking
             return steps;
         }
 
+        private EnemyBrainHost _nearestBrain;
+
         private Float2 AimAtNearestEnemy(out float distance)
         {
+            _nearestBrain = null;
             var best = float.MaxValue;
             distance = float.MaxValue;
             var aim = new Float2(0f, 0f);
@@ -248,6 +256,7 @@ namespace Avatar5.Networking
                 {
                     best = d;
                     distance = Mathf.Sqrt(d);
+                    _nearestBrain = actor.GetComponent<EnemyBrainHost>();
                     offset.Normalize();
                     aim = new Float2(offset.x, offset.z);
                 }

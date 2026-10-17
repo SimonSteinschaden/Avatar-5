@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Avatar5.Contracts;
 using Avatar5.Foundation;
+using Avatar5.Gameplay.Enemies;
 using Avatar5.Gameplay.Save;
 using Avatar5.Gameplay.World;
 using Avatar5.Persistence;
@@ -58,6 +59,9 @@ namespace Avatar5.Networking
         private readonly RewardLedger _rewards = new RewardLedger();
         private AtomicSaveStore _store;
         private LevelDefinition _definition;
+        private EncounterDirector _encounters;
+        private readonly List<Float2> _livingPlayers = new List<Float2>();
+        private bool _combatHooked;
 
         public const string SaveLogTag = "A5SAVE";
         public SaveLoadResult LastLoad { get; private set; }
@@ -115,6 +119,18 @@ namespace Avatar5.Networking
                 _level.Apply(pair.Key, pair.Value);
             }
             IsCompleted = _service.IsCompleted;
+
+            _encounters = new EncounterDirector(_level.BuildEncounters());
+            foreach (var o in _definition.Objects)
+            {
+                // Encounters finished before a checkpoint stay finished after "continue".
+                if (o.Kind == WorldObjectKind.Encounter && _service.GetState(o.Id) == WorldStateCodes.On) _encounters.MarkCompleted(o.Id);
+            }
+            _encounters.Completed += id =>
+            {
+                Debug.Log("[Avatar5.World] encounter " + id + " completed");
+                if (_service != null) _service.CompleteEncounter(id);
+            };
         }
 
         private void OnServerStopped(bool wasHost)
@@ -122,6 +138,8 @@ namespace Avatar5.Networking
             if (_service != null) _service.Changed -= OnWorldChanged;
             _service = null;
             _impactHooked = false;
+            _combatHooked = false;
+            _encounters = null;
         }
 
         private void OnClientStarted()
@@ -160,13 +178,36 @@ namespace Avatar5.Networking
                 combat.Simulation.ImpactRaised += impact => { if (_service != null) _service.ApplyImpact(impact); };
                 _impactHooked = true;
             }
+            if (!_combatHooked && combat != null && combat.Simulation != null && _encounters != null)
+            {
+                combat.Simulation.EventRaised += e =>
+                {
+                    if (e.ResultKind == (int)CombatEventKind.ActorDefeated && _encounters != null) _encounters.OnActorDefeated(e.TargetActorId);
+                };
+                _combatHooked = true;
+            }
             if (IsCompleted) return;
+            _livingPlayers.Clear();
+            var playerCount = 0;
             foreach (var avatar in FindObjectsByType<NetworkPlayerAvatar>(FindObjectsSortMode.None))
             {
-                if (!avatar.IsSpawned || (combat != null && combat.IsDefeated(avatar.ActorId))) continue;
+                if (!avatar.IsSpawned) continue;
+                playerCount++;
+                if (combat != null && combat.IsDefeated(avatar.ActorId)) continue;
                 var p = avatar.transform.position;
+                _livingPlayers.Add(new Float2(p.x, p.z));
                 _service.ServerTick = (uint)(Time.timeAsDouble * 20d);
                 _service.CheckGoal(avatar.ActorId, new Float2(p.x, p.z));
+            }
+            if (_encounters != null && combat != null)
+            {
+                foreach (var order in _encounters.Tick(_livingPlayers, playerCount))
+                {
+                    var actorId = combat.SpawnEnemy(order.EnemyTypeId, new Vector3(order.Position.X, 0f, order.Position.Y), order.HealthMultiplier);
+                    if (actorId != 0) _encounters.RegisterSpawned(order.EncounterId, actorId);
+                    Debug.Log("[Avatar5.World] encounter " + order.EncounterId + " spawns type " + order.EnemyTypeId
+                        + " x" + order.HealthMultiplier.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + " HP");
+                }
             }
         }
 

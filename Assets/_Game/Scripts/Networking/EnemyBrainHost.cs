@@ -30,6 +30,9 @@ namespace Avatar5.Networking
         public ulong Target { get { return _brain != null ? _brain.Target : 0; } }
         public int EnemyTypeId { get { return enemyTypeId; } }
 
+        /// <summary>Set by the spawner before Spawn() for prefabs shared by several archetypes.</summary>
+        public void Configure(int typeId) { enemyTypeId = typeId; }
+
         private void Awake()
         {
             _actor = GetComponent<NetworkCombatActor>();
@@ -43,7 +46,7 @@ namespace Avatar5.Networking
                 if (_agent != null) _agent.enabled = false;
                 return;
             }
-            var definition = EnemyCatalog.Get(enemyTypeId);
+            var definition = StarterEnemies.Get(enemyTypeId);
             _home = transform.position;
             _brain = new EnemyBrain(definition, new Float2(_home.x, _home.z));
             if (_agent != null)
@@ -93,6 +96,13 @@ namespace Avatar5.Networking
                 return;
             }
             _wasFrozen = false;
+            var state = _actor.CombatState;
+            if (state.MaxHealth > 0f && _brain.UpdatePhase(state.Health / state.MaxHealth))
+            {
+                host.Simulation.RaisePhaseChanged(_actor.ActorId, _brain.Phase);
+                if (_agent != null) _agent.speed = _brain.CurrentMoveSpeed;
+                Debug.Log("[Avatar5.Enemy] " + _brain.Definition.Key + " enters phase " + (_brain.Phase + 1));
+            }
             var output = _brain.Tick(Time.deltaTime, self, _candidates);
             host.ReportEnemyTarget(_actor.ActorId, output.TargetActorId);
 
@@ -102,12 +112,11 @@ namespace Avatar5.Networking
                 else if (_agent.hasPath) _agent.ResetPath();
             }
 
-            var definition = _brain.Definition;
             if (output.TelegraphStarted)
             {
                 FaceTowards(output.AttackAimPoint);
-                host.Simulation.RaiseTelegraph(_actor.ActorId, definition.AttackAbilityId, definition.TelegraphCueId,
-                    output.AttackOrigin, output.AttackAimPoint, definition.TelegraphDuration);
+                host.Simulation.RaiseTelegraph(_actor.ActorId, _brain.CurrentAttackAbilityId, _brain.CurrentTelegraphCueId,
+                    output.AttackOrigin, output.AttackAimPoint, _brain.CurrentTelegraphDuration);
             }
             if (output.ReleaseAttack)
             {
@@ -117,7 +126,7 @@ namespace Avatar5.Networking
                     aim = new Float2(output.AttackOrigin.X + transform.forward.x, output.AttackOrigin.Y + transform.forward.z);
                 host.Simulation.TryCast(new AbilityRequest
                 {
-                    ActorId = _actor.ActorId, SequenceId = ++_sequence, AbilityId = definition.AttackAbilityId, TargetOnGround = aim
+                    ActorId = _actor.ActorId, SequenceId = ++_sequence, AbilityId = _brain.CurrentAttackAbilityId, TargetOnGround = aim
                 });
             }
             var replicated = (byte)output.State;
@@ -131,16 +140,4 @@ namespace Avatar5.Networking
         }
     }
 
-    /// <summary>Runtime archetype lookup (until enemy definitions get their own assets with P04 S04-02).</summary>
-    public static class EnemyCatalog
-    {
-        public static EnemyDefinition Get(int enemyTypeId)
-        {
-            switch (enemyTypeId)
-            {
-                case StarterEnemies.BruteTypeId: return StarterEnemies.Brute();
-                default: throw new System.ArgumentException("Unknown enemy type " + enemyTypeId);
-            }
-        }
-    }
 }

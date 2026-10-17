@@ -197,6 +197,11 @@ namespace Avatar5.Gameplay.Combat
             RaiseCue(cueId, origin, direction);
         }
 
+        public void RaisePhaseChanged(ulong actorId, int phase)
+        {
+            Raise(CombatEventKind.BossPhaseChanged, actorId, 0, 0, phase, 0f);
+        }
+
         public bool IsDefeated(ulong actorId)
         {
             Actor actor;
