@@ -1,0 +1,6 @@
+{
+  "name": "Avatar5.Persistence",
+  "rootNamespace": "Avatar5.Persistence",
+  "references": ["Avatar5.Contracts", "Avatar5.Gameplay"],
+  "autoReferenced": true
+}

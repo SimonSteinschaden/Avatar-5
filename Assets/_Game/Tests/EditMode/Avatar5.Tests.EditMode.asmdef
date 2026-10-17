@@ -1,8 +1,16 @@
 {
   "name": "Avatar5.Tests.EditMode",
   "rootNamespace": "Avatar5.Tests.EditMode",
-  "references": ["Avatar5.Contracts", "Avatar5.Gameplay"],
-  "includePlatforms": ["Editor"],
-  "optionalUnityReferences": ["TestAssemblies"],
+  "references": [
+    "Avatar5.Contracts",
+    "Avatar5.Gameplay",
+    "Avatar5.Persistence"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
   "autoReferenced": false
 }
