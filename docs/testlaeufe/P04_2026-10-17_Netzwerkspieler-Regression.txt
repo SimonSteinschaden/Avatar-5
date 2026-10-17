@@ -1,0 +1,32 @@
+actors: host=a1 client1(+X)=a2 client2(-Z)=a3 client3(-X, hijack)=a4
+PASS  host sees 4 avatars  (21 reports with count=4)
+PASS  client1 avatar moved +X (host view)  (dx=8,52)
+PASS  client2 avatar moved -Z (host view)  (dz=-8,52)
+PASS  hijacker own commands moved it -X  (dx=-20,52)
+PASS  host avatar stayed in place  (moved 0,00 m)
+PASS  forged commands refused by host  (noauth total=3717)
+PASS  no rate-limit hits for normal clients  (rate total=0)
+PASS  client2 sees client1 avatar where host has it  (gap 0,00 m)
+
+--- client1 (last 3 reports)
+    A5PLAYER t=21.2 self=2 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=22.2 self=2 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=23.2 self=2 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=24.2 self=2 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+--- client2 (last 3 reports)
+    A5PLAYER t=19.2 self=3 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=20.2 self=3 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=21.2 self=3 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=22.2 self=3 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+--- client3 (last 3 reports)
+    A5PLAYER t=18.2 self=4 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=19.2 self=4 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=20.2 self=4 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+    A5PLAYER t=21.2 self=4 count=4 a1=-1.50,-8.00 a2=10.02,-8.00 a3=-1.50,-19.02 a4=-19.02,-6.54
+--- host (last 3 reports)
+    A5PLAYER t=25.2 self=1 count=4 a1=-1.50,-8.00[seq=1479,noauth=1059,rate=0] a2=10.02,-8.00[seq=1238,noauth=1059,rate=0] a3=-1.50,-19.02[seq=1141,noauth=1059,rate=0] a4=-19.02,-6.54[seq=1057,noauth=0,rate=0]
+    A5PLAYER t=26.2 self=1 count=4 a1=-1.50,-8.00[seq=1539,noauth=1119,rate=0] a2=10.02,-8.00[seq=1298,noauth=1119,rate=0] a3=-1.50,-19.02[seq=1201,noauth=1119,rate=0] a4=-19.02,-6.54[seq=1117,noauth=0,rate=0]
+    A5PLAYER t=27.2 self=1 count=4 a1=-1.50,-8.00[seq=1599,noauth=1179,rate=0] a2=10.02,-8.00[seq=1358,noauth=1179,rate=0] a3=-1.50,-19.02[seq=1261,noauth=1179,rate=0] a4=-19.02,-6.54[seq=1177,noauth=0,rate=0]
+    A5PLAYER t=28.2 self=1 count=4 a1=-1.50,-8.00[seq=1659,noauth=1239,rate=0] a2=10.02,-8.00[seq=1418,noauth=1239,rate=0] a3=-1.50,-19.02[seq=1321,noauth=1239,rate=0] a4=-19.02,-6.54[seq=1237,noauth=0,rate=0]
+
+8/8 checks passed

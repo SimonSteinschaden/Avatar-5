@@ -1,0 +1,36 @@
+PASS  host reported combat  ()
+PASS  casts accepted on host  (casts=53)
+PASS  Steam reaction happened  (steam=9)
+PASS  Extinguish reaction happened  (extinguish=9)
+PASS  two dummies present  (dummies=2)
+PASS  host: dummy 1002 damage events = HP lost  (lost 272,5, events 272,5)
+PASS  host: dummy 1001 damage events = HP lost  (lost 697,5, events 697,5)
+PASS  client1 received same number of events as host  (client=526 host=526)
+PASS  client1 no duplicate events  (dupes=0)
+PASS  client1 dummy 1002 health equals host  (client 4727,5 host 4727,5)
+PASS  client1 dummy 1002 damage events equal host  (client 272,5 host 272,5)
+PASS  client1 dummy 1001 health equals host  (client 4302,5 host 4302,5)
+PASS  client1 dummy 1001 damage events equal host  (client 697,5 host 697,5)
+PASS  client2 received same number of events as host  (client=526 host=526)
+PASS  client2 no duplicate events  (dupes=0)
+PASS  client2 dummy 1002 health equals host  (client 4727,5 host 4727,5)
+PASS  client2 dummy 1002 damage events equal host  (client 272,5 host 272,5)
+PASS  client2 dummy 1001 health equals host  (client 4302,5 host 4302,5)
+PASS  client2 dummy 1001 damage events equal host  (client 697,5 host 697,5)
+PASS  client3 received same number of events as host  (client=526 host=526)
+PASS  client3 no duplicate events  (dupes=0)
+PASS  client3 dummy 1002 health equals host  (client 4727,5 host 4727,5)
+PASS  client3 dummy 1002 damage events equal host  (client 272,5 host 272,5)
+PASS  client3 dummy 1001 health equals host  (client 4302,5 host 4302,5)
+PASS  client3 dummy 1001 damage events equal host  (client 697,5 host 697,5)
+
+--- client1
+    A5COMBAT t=29.2 self=3 events=526 casts=53 steam=9 extinguish=9 dupes=0 telegraphs=6 enemyCasts=4 enemyHits=13 enemyDefeats=1 playerDefeats=0 p1=46.0 p2=28.0 e1001=4302.5/5000|dmg=697.5|st=0 p4=46.0 e1003=120.0/160|dmg=200.0|st=0 p3=46.0 e1002=4727.5/5000|dmg=272.5|st=0
+--- client2
+    A5COMBAT t=29.2 self=2 events=526 casts=53 steam=9 extinguish=9 dupes=0 telegraphs=6 enemyCasts=4 enemyHits=13 enemyDefeats=1 playerDefeats=0 p4=46.0 e1001=4302.5/5000|dmg=697.5|st=0 p3=46.0 e1002=4727.5/5000|dmg=272.5|st=0 p1=46.0 p2=28.0 e1003=120.0/160|dmg=200.0|st=0
+--- client3
+    A5COMBAT t=29.2 self=4 events=526 casts=53 steam=9 extinguish=9 dupes=0 telegraphs=6 enemyCasts=4 enemyHits=13 enemyDefeats=1 playerDefeats=0 e1003=120.0/160|dmg=200.0|st=0 p4=46.0 p1=46.0 p3=46.0 e1001=4302.5/5000|dmg=697.5|st=0 e1002=4727.5/5000|dmg=272.5|st=0 p2=28.0
+--- host
+    A5COMBAT t=32.2 self=1 events=526 casts=53 steam=9 extinguish=9 dupes=0 telegraphs=6 enemyCasts=4 enemyHits=13 enemyDefeats=1 playerDefeats=0 p2=28.0 e1003=120.0/160|dmg=200.0|st=0 p1=46.0 p3=46.0 e1001=4302.5/5000|dmg=697.5|st=0 e1002=4727.5/5000|dmg=272.5|st=0 p4=46.0
+
+25/25 checks passed

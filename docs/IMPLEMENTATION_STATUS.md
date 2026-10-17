@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`)
 
 ## Implementiert / als Source vorhanden
 
@@ -68,6 +68,20 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 
 **Spielen:** wie oben in `P03_NetworkArena`; linke Maustaste Feuerball, rechte Maustaste Wasserwelle auf die Puppen vor dem Start. Erst Welle, dann Feuerball → „Dampf!“; erst Feuerball, dann Welle → „Gelöscht!“.
 
+### P04 Story S04-01 – Erster Gegner „Brute“ mit angekündigtem Bodenschlag (Branch `feature/p04-first-enemy`, baut auf S02-01 auf)
+
+| Baustein | Assembly | Inhalt |
+|---|---|---|
+| `EnemyBrain`, `EnemyDefinition`, `EnemyTargetCandidate`, `StarterEnemies` | `Avatar5.Gameplay` (engine-frei) | Zustände Idle/Approach/Telegraph/Attack/Recover/Return/Dead; Zielwahl mit Anti-Fokus und Hysterese; Leine 18 m; Angriff 0,9 s angekündigt, Zielpunkt eingefroren |
+| `RaiseTelegraph`, `TelegraphStarted`, `brute_slam` | P02-Kern | Bodenschlag = Kreis (Kegel 180°) 2,4 m, 18 Schaden, Rückstoß 1,5 m, über dieselben Kampfregeln |
+| `EnemyBrainHost`, `EnemyCatalog` | `Avatar5.Networking` | Host-only Entscheidung, NavMeshAgent-Bewegung, Zustand als NetworkVariable; Clients sehen nur Transform, Zustand, Cues |
+| `CombatHost` (erweitert) | `Avatar5.Networking` | Gegner-Spawns, Kandidatenliste mit Anti-Fokus, Wiederbelebung pro Actor, NavMesh-Bake beim Laden; besiegte Spieler laufen/zaubern nicht |
+| `CombatCueView` (erweitert) | `Avatar5.Presentation` | roter Bodenring, der sich bis zum Schlag füllt; brauner Schlag-Blitz |
+| `Enemy_Brute.prefab`, `brute_slam.asset`, `NavMeshSurface` an der Arena | Assets/Editor | Brute 12 m vor den Startpunkten (außerhalb der Aggro-Reichweite) |
+| `scripts/P04-EnemyTest.ps1` | – | Gegner-Mehrprozesstest |
+
+**Spielen:** in `P03_NetworkArena` Richtung Norden laufen; die Brute bemerkt Spieler ab 10 m, kündigt mit rotem Ring an und schlägt zu, wenn er voll ist. Rausgehen hilft.
+
 ### P07a – Toon-Shading und schwarze Konturen (Style-Prototyp)
 
 | Baustein | Ort | Inhalt |
@@ -82,6 +96,17 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P04 S04-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
+
+| Lauf | Ergebnis |
+|---|---|
+| EditMode | **124/124 bestanden** (neu: 8 Fälle Gegnerhirn und Bodenschlag) |
+| PlayMode | **34 bestanden, 2 übersprungen** (Paket-Tests); neu: Brute kündigt an, bevor der Schlag den Host trifft (genau 18 Schaden) |
+| `scripts/P04-EnemyTest.ps1` (Host + 2 Clients, Bots kämpfen gegen die Brute) | **18/18**: 4 Ankündigungen, 2 Schläge (jeder Schlag angekündigt; zweimal starb die Brute mitten in der Ankündigung), 4 Treffer auf Spieler, Brute 2× besiegt; jeder Client hat denselben Endstand wie der Host bei gleicher Ereigniszahl (245), 0 Duplikate, identische Spieler-Lebenspunkte |
+| Regression `P02-CombatTest.ps1` / `P03-NetworkPlayerTest.ps1` | **25/25** / **8/8** |
+
+Zwei Testprobleme wurden dabei behoben: Die Brute stand anfangs in Aggro-Reichweite und griff den Host an, bevor die Clients verbunden waren (Clients können frühere Ereignisse nicht kennen) – sie steht jetzt 12 m entfernt. Im Bewegungstest liefen zwei Bots je nach zufälliger Beitrittsreihenfolge ineinander; die Clients treten jetzt gestaffelt bei. Ergebnisse: `docs/testlaeufe/P04_2026-10-17_*`.
 
 ## Ausgeführte Prüfungen P02 S02-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
 
@@ -154,8 +179,9 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - P03: **Relay/Internet nicht getestet**, weil das Projekt noch nicht mit einem Unity-Cloud-Projekt verknüpft ist (`cloudProjectId` leer); der Relay-Adapter ist nur kompiliert. Kein Test über zwei PCs/Internetanschlüsse (M1-Abnahme), keine Latenz-/Verlustsimulation, keine Netzmetriken, kein Rejoin, kein Szenenwechsel. Keine manuelle Bedienung der Debug-Lobby durch eine Person.
 - Netzwerk-Spieler: keine Client-Prediction (eigene Figur reagiert mit einer Netzwerk-Rundreise Verzögerung; laut Architektur erst nach Latenzmessung entscheiden). Kein manueller Spieltest mit zwei Personen, keine Latenz-/Verlustsimulation. Dodge/Interact werden übertragen, aber noch nicht ausgeführt. Late Join nur, solange die Arena geladen ist; Szenenwechsel fehlt noch.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
-- P02: erst 2 von 24 Fähigkeiten, nur Feuer/Wasser; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Spieler können noch nicht besiegt werden, weil es keine Gegnerangriffe gibt (P04); Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
-- Gegner/Weltfortschritt/Persistenz.
+- P02: erst 2 von 24 Fähigkeiten, nur Feuer/Wasser; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
+- P04: ein Archetyp, kein EncounterDirector, keine Skalierung nach Spielerzahl, kein Boss; kein Stuck-Handling über das NavMesh hinaus; Gegner-Definition noch als Code (`EnemyCatalog`), Asset folgt mit S04-02. Spieler werden am Ort wiederbelebt (Checkpoint-Regel kommt mit P05/P06).
+- Weltfortschritt/Persistenz.
 - P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
 
 ## Technische Einschränkungen / Hinweise
@@ -168,4 +194,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P04 (erster Gegner mit Telegraph-Angriff über den Kampfkern), P05 Level 1, dann P02 auf 4 Elemente × 2 Fähigkeiten. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P05 S05-01 (LevelDefinition, WorldState, ein hostvalidiertes Interactable in Level 1), dann P04 S04-02 (weitere Archetypen + EncounterDirector), dann P02 auf 4 Elemente × 2 Fähigkeiten. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.

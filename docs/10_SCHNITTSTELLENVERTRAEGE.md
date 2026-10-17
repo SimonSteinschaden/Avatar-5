@@ -141,6 +141,24 @@ Belegung der `CombatEvent`-Felder: `EventId` streng steigend pro Session (Cues t
 - **Eingabe:** `PlayerCommand.Action = Cast`, `ActionRefId` = Slot (0 linke Maustaste/rechter Trigger, 1 rechte Maustaste/linker Trigger, neue Action `CastSecondary`). Der Host bildet daraus `AbilityRequest` (Ziel = Position + Zielrichtung × 5 m, ohne Zielrichtung die Blickrichtung).
 - **Ids:** Spieler-Actor 1–4 (`ActorIds`), Nicht-Spieler `1000 + NetworkObjectId` (nur Session-gültig, nie speichern).
 
+## 3e. Umgesetzte P04-Verträge (S04-01, `Avatar5.Gameplay.Enemies`)
+
+```csharp
+enum EnemyState : byte { Idle, Approach, Telegraph, Attack, Recover, Return, Dead }   // repliziert am Gegner
+sealed class EnemyDefinition { int EnemyTypeId; string Key; float MaxHealth, MoveSpeed, AggroRadius, LeashRadius,
+    AttackStartRange, TelegraphDuration (>= 0,3 s), RecoverDuration, RetargetHysteresis; int AttackAbilityId, TelegraphCueId; }
+struct EnemyTargetCandidate { ulong ActorId; Float2 Position; bool Alive; int ChasedByOthers; }
+sealed class EnemyBrain { EnemyBrainOutput Tick(float dt, Float2 self, IList<EnemyTargetCandidate>); void OnDefeated(); void OnRevived(); }
+// CombatSimulation (P02) ergänzt um:
+void RaiseTelegraph(ulong actorId, int abilityId, int cueId, Float2 origin, Float2 aimPoint, float seconds); // CombatEventKind.TelegraphStarted = 10
+bool IsDefeated(ulong actorId);
+```
+
+- Die KI schreibt nie HP: Am Telegraph-Ende wird ein normaler `AbilityRequest` an `CombatSimulation.TryCast` gestellt; dieselben Regeln (Team, Reichweite, einmaliger Treffer) wie für Spieler.
+- Zentrum und Richtung des Angriffs werden beim Telegraph-Start eingefroren; wer bis zum Ende aus dem Ring geht, wird nicht getroffen.
+- Zielwahl: nächster lebender Spieler im Aggro-Radius, je anderem Gegner auf demselben Ziel +4 m (Anti-Fokus), Wechsel nur bei ≥ 3 m Vorsprung; außerhalb des Leinenradius kehrt der Gegner heim.
+- Besiegte Spieler bewegen sich nicht und können nicht zaubern; der Host belebt nach `NetworkCombatActor.ReviveSeconds` wieder (Spieler 5 s, Brute 8 s am Startpunkt, Puppe 3 s).
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp
