@@ -58,3 +58,10 @@ Logs enthalten keine Tokens oder Spieler-Ids. Jeder Zustandswechsel steht als ei
 
 - Relay-Test über zwei PCs in verschiedenen Internetanschlüssen (M1-Abnahme) – braucht die Cloud-Verknüpfung.
 - Paketverlust/Latenz-Simulation, Netzmetriken (RTT, bytes/s), Rejoin, Szenenwechsel und Spieler-Actors folgen in den nächsten P03-Stories.
+
+## Netzwerk-Spieler (S03-02)
+
+- Szene `P03_NetworkArena.unity` (generiert über `Avatar5/Setup/Build P03 Network Arena`), Testplayer über `Avatar5/Build/P03 Network Arena Player` → `Artifacts/P03Arena/Avatar5_P03Arena.exe`.
+- Netzwerk-Tickrate 20/s (Architekturvorgabe). Prefab `NetworkPlayer` ist in `Assets/DefaultNetworkPrefabs.asset` registriert.
+- Mehrprozess-Test: `powershell -File scripts/P03-NetworkPlayerTest.ps1` (Host + 3 Clients, Bots bewegen sich, Client 3 versucht fremde Figuren zu steuern).
+- Zusätzliche Player-Argumente (nur Tests): `-a5-bot-move X,Z`, `-a5-bot-delay S`, `-a5-bot-hijack`, `-a5-report-players S`. Ohne diese Argumente steuert die eigene Figur über Tastatur/Maus/Gamepad.

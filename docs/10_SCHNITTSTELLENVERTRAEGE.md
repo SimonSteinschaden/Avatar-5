@@ -106,6 +106,15 @@ interface ISessionService {
 - **Versions-Handshake:** Der Client sendet mit der Verbindungsanfrage 12 Byte (`"AVA5"`, ProtocolVersion, ContentVersion, little-endian, `Avatar5.Gameplay.Session.ConnectionPayload`). Der Host prüft vor jedem Spawn (`SessionAdmission`): fehlende/fremde Daten oder andere Version → `VersionMismatch`, belegte Plätze ≥ `MaxPlayers` (max. 4, Host zählt mit) → `SessionFull`, Host fährt herunter → `HostEnded`. Der Ablehnungsgrund geht als `"A5:<SessionError>"` an den Client zurück.
 - **Join-Codes:** Relay-Codes werden getrimmt, ohne Leer-/Bindestriche, großgeschrieben, 4–16 ASCII-Buchstaben/Ziffern. Direktverbindung (LAN/Test): `IPv4[:Port]` oder `localhost[:Port]`, Standardport 7777.
 
+## 3c. P03-Netzwerkspieler (S03-02)
+
+- `RequestStatus` um `RejectedRateLimited` erweitert (am Ende, bestehende Werte unverändert).
+- **Actor-Id:** `ActorIds.ForClient(clientId) = clientId + 1` (Host = Actor 1). Gilt nur innerhalb einer Session, wird nie gespeichert.
+- **Command-Ingress:** Der Client schickt `PlayerCommand` ohne ActorId (`NetPlayerCommand`, RPC an den Server). Der Host leitet die ActorId aus der sendenden Verbindung ab (`HostCommandIngress`): fremder Sender → `RejectedNoAuthority`, mehr als 60 Befehle/s (Burst 20) → `RejectedRateLimited`, danach prüft das Motor-Gate Duplikate/alte Sequenzen (`Duplicate`).
+- **Sende-Drossel Client:** Aktionsflanken sofort, geänderte Absicht höchstens alle 1/30 s, unveränderte Absicht alle 0,2 s (`CommandSendThrottle`).
+- **Simulation:** Nur der Host bewegt `CharacterMotor`; Position/Yaw repliziert `NetworkTransform` (Server-Autorität, Interpolation, 20 Ticks/s). `LastProcessedSequenceId` und Zielrichtung kommen als NetworkVariable. Clients lesen `IPlayerPoseSource` von `NetworkPlayerAvatar`; die Geschwindigkeit wird dort aus der Transform-Änderung geschätzt.
+- Eine Streckenprüfung entfällt, weil der Client keine Positionen sendet, nur Absichten (Länge wird vom Motor auf ≤ 1 begrenzt).
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp

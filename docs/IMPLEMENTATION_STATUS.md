@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit:** P03 S03-01 Sessions (Branch `feature/p03-sessions`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit:** P03 S03-01 Sessions (`feature/p03-sessions`) und S03-02 Netzwerk-Spieler (`feature/p03-network-player`)
 
 ## Implementiert / als Source vorhanden
 
@@ -35,7 +35,22 @@
 | `P03_SessionTest.unity`, `Avatar5P03SessionSceneBuilder` | Assets/Editor | Testszene; Menü `Avatar5/Build/P03 Session Test Player` |
 | `scripts/P03-SessionTest.ps1` | – | Mehrprozess-Test Host + 5 Clients |
 
-Pakete neu: `com.unity.netcode.gameobjects` 2.13.3, `com.unity.transport` 2.7.4, `com.unity.services.multiplayer` 2.3.3 (Versionen = Empfehlung des installierten Editors). Betrieb/Fehlercodes: `docs/P03_SESSIONS_BETRIEB.md`. Noch keine Spieler-Actors im Netz (`CreatePlayerObject = false`), das ist Story S03-02.
+Pakete neu: `com.unity.netcode.gameobjects` 2.13.3, `com.unity.transport` 2.7.4, `com.unity.services.multiplayer` 2.3.3 (Versionen = Empfehlung des installierten Editors). Betrieb/Fehlercodes: `docs/P03_SESSIONS_BETRIEB.md`.
+
+### P03 Story S03-02 – Netzwerk-Spielerfiguren mit Ownership (Branch `feature/p03-network-player`, baut auf S03-01 auf)
+
+| Baustein | Assembly | Inhalt |
+|---|---|---|
+| `ActorIds`, `HostCommandIngress`, `CommandRateLimiter`, `CommandSendThrottle` | `Avatar5.Gameplay` (engine-frei) | ActorId aus Verbindung, Sender-/Ownership-Prüfung, Token-Bucket 60/s (Burst 20), Client-Drossel |
+| `NetworkPlayerAvatar`, `NetPlayerCommand`, `NetPoseExtras` | `Avatar5.Networking` | Owner schickt nur Absichten per RPC; Host simuliert `CharacterMotor`; `NetworkTransform` (Server-Autorität, Interpolation); Kamera/HUD/Zielmarker folgen der eigenen Figur |
+| `NetworkPlayerSpawner` | `Avatar5.Networking` | Host spawnt pro Verbindung eine Figur an einem freien von 4 Startpunkten; Despawn bei Verlassen durch NGO |
+| `SessionBot` | `Avatar5.Networking` | nur für Tests: `-a5-bot-move`, `-a5-bot-delay`, `-a5-bot-hijack`, `-a5-report-players` |
+| `NetworkPlayer.prefab`, `P03_NetworkArena.unity`, `Avatar5P03NetworkArenaBuilder` | Assets/Editor | aus P01-Platzhalter und P01-Arena generiert (P01-Dateien bleiben unverändert); Netzwerk-Tickrate 20 |
+| `scripts/P03-NetworkPlayerTest.ps1` | – | Mehrprozess-Test mit 4 Spielern |
+
+Kleine P01-Ergänzungen (nur Lese-Properties): `CharacterMotor.Definition`, `PlayerInputAdapter.Actions`, `AimIndicatorView.Marker`. `RequestStatus.RejectedRateLimited` neu (Contracts §3c).
+
+**Spielen (LAN/gleicher PC):** `P03_NetworkArena.unity` öffnen → Play → „Private Sitzung erstellen“. Zweite Instanz (Build `Avatar5/Build/P03 Network Arena Player`) → Code `127.0.0.1:7777` → Beitreten. Jede Instanz steuert nur ihre eigene Figur.
 
 ### P07a – Toon-Shading und schwarze Konturen (Style-Prototyp)
 
@@ -51,6 +66,18 @@ Pakete neu: `com.unity.netcode.gameobjects` 2.13.3, `com.unity.transport` 2.7.4,
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P03 S03-02 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
+
+| Lauf | Ergebnis |
+|---|---|
+| EditMode | **104/104 bestanden** (neu: 9 Fälle Ingress/Rate-Limit/Drossel) |
+| PlayMode | **32 bestanden, 2 übersprungen** (Paket-Tests); neu: Solo-Host-Figur wird gespawnt, gehört dem Host, bewegt sich durch Host-Befehle |
+| Windows-Player `P03_NetworkArena` | gebaut |
+| `scripts/P03-NetworkPlayerTest.ps1` (4 Prozesse, Direkt-UDP, 60 FPS) | **8/8**: Host sieht 4 Figuren; Client 1 bewegt sich +X (8,5 m), Client 2 −Z (8,5 m), Client 3 −X (20,5 m); Host-Figur bleibt stehen; >4000 gefälschte Befehle von Client 3 für fremde Figuren abgewiesen und ohne Wirkung; 0 Rate-Limit-Treffer bei normalen Clients; Client 2 sieht Client 1 an derselben Stelle wie der Host |
+| Regression `scripts/P03-SessionTest.ps1` | **11/11** weiterhin bestanden |
+
+Ergebnisse: `docs/testlaeufe/P03_2026-10-17_S03-02_*`.
 
 ## Ausgeführte Prüfungen P03 S03-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
 
@@ -98,7 +125,7 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - Lokale Occlusion-Behandlung der Kamera (Hindernisse vor dem Spieler ausblenden) fehlt; geplant mit P07-Outline/Fade.
 - Dodge/Cast/Interact werden nur als Absicht im `PlayerCommand` geliefert; Ausführung gehört zu P02.
 - P03: **Relay/Internet nicht getestet**, weil das Projekt noch nicht mit einem Unity-Cloud-Projekt verknüpft ist (`cloudProjectId` leer); der Relay-Adapter ist nur kompiliert. Kein Test über zwei PCs/Internetanschlüsse (M1-Abnahme), keine Latenz-/Verlustsimulation, keine Netzmetriken, kein Rejoin, kein Szenenwechsel. Keine manuelle Bedienung der Debug-Lobby durch eine Person.
-- Netzwerk-Spieler: `IPlayerCommandSink` über das Netz, Ownership und Host-Validierung der Strecke folgen in S03-02.
+- Netzwerk-Spieler: keine Client-Prediction (eigene Figur reagiert mit einer Netzwerk-Rundreise Verzögerung; laut Architektur erst nach Latenzmessung entscheiden). Kein manueller Spieltest mit zwei Personen, keine Latenz-/Verlustsimulation. Dodge/Cast/Interact werden übertragen, aber noch nicht ausgeführt (P02). Late Join nur, solange die Arena geladen ist; Szenenwechsel fehlt noch.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
 - Schaden/Fähigkeiten/Gegner/Weltfortschritt/Persistenz.
 - P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
@@ -113,4 +140,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen. Danach P03 S03-02: Netzwerk-Spieler mit Ownership in der P01-Arena (`IPlayerCommandSink`/`PlayerPose` über NGO), damit 2–4 Spieler sich gemeinsam bewegen (M1). Danach P02 (`fireball`, `water_wave` hostautoritativ), P04 (erste Gegner), P05 Level 1. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P02 (`fireball`, `water_wave` hostautoritativ), P04 (erste Gegner), P05 Level 1. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
