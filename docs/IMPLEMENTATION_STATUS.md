@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`) → P05 S05-01 Weltzustand + Level01-Greybox (`feature/p05-world-core`) → P06 S06-01 Spielstand (`feature/p06-save-core`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`) → P05 S05-01 Weltzustand + Level01-Greybox (`feature/p05-world-core`) → P06 S06-01 Spielstand (`feature/p06-save-core`) → P08 S08-01 Testlauf + spielbarer Build (`feature/p08-test-pipeline`)
 
 ## Implementiert / als Source vorhanden
 
@@ -94,6 +94,11 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 
 **Spielen:** `Level01.unity` öffnen → Play → Sitzung erstellen. Zum Hebel rechts vorne, **E** → Tor A öffnet sich; Brute besiegen; Feuerball auf die Schale rechts hinten → Tor B; ins grüne Ziel. Banner „Level geschafft!“.
 
+### P08 Story S08-01 – Ein Befehl für alle Tests, spielbarer Windows-Build (Branch `feature/p08-test-pipeline`)
+
+- `scripts/Run-AllTests.ps1`: Build aller Testplayer + spielbarer Build, EditMode, PlayMode, alle 6 Mehrprozess-Tests; Bericht `Artifacts/TestReport/report.md`/`report.json` (Commit, Unity-Version, Status/Dauer je Schritt). Details: `docs/P08_TESTLAUF.md`.
+- `Avatar5BuildAll` (Editor): Batch-Einstieg für alle Builds; Menü `Avatar5/Build/Playable Windows Build (Level01)` → `Artifacts/Windows/Avatar5.exe` (Development-Build, Level01 als Startszene, ca. 172 MB).
+
 ### P06 Story S06-01 – Spielstand SaveGameV1 (Branch `feature/p06-save-core`, baut auf S05-01 auf)
 
 | Baustein | Assembly | Inhalt |
@@ -122,6 +127,22 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P08 S08-01 (17.10.2026, `scripts/Run-AllTests.ps1`, separater Klon)
+
+| Schritt | Status | Ergebnis | Dauer |
+|---|---|---|---|
+| build | passed | exit=0, compiler errors=0 | 43.4 s |
+| EditMode | passed | 140/140 passed, 0 failed, 0 skipped | 14.1 s |
+| PlayMode | passed | 34/36 passed, 0 failed, 2 skipped | 26.3 s |
+| P03-SessionTest | passed | 11/11 checks passed | 75.7 s |
+| P03-NetworkPlayerTest | passed | 8/8 checks passed | 32.7 s |
+| P02-CombatTest | passed | 25/25 checks passed | 33.7 s |
+| P04-EnemyTest | passed | 18/18 checks passed | 43.4 s |
+| P05-Level01Test | passed | 11/11 checks passed | 159.4 s |
+| P06-SaveTest | passed | 10/10 checks passed | 41.8 s |
+
+Gesamtergebnis **PASSED**. Bericht: `docs/testlaeufe/P08_2026-10-17_report.md`/`.json`. Der spielbare Build `Artifacts/Windows/Avatar5.exe` wurde gebaut, aber nur automatisch (Bots) und nicht von einer Person gespielt.
 
 ## Ausgeführte Prüfungen P06 S06-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
 
@@ -222,7 +243,7 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 ## Nicht ausgeführt / offen
 
 - **Kein manueller Spieltest** mit echter Tastatur/Maus/Controller, kein Feel-Tuning der Werte (Tempo 6,5 m/s, Beschleunigung 55, Drehung 1080°/s, Kamera 40°/45°, Ortho-Größe 8).
-- **Kein Windows-Build** für diesen Stand erstellt.
+- Spielbarer Windows-Development-Build existiert seit S08-01 (`Artifacts/Windows/Avatar5.exe`), noch kein Release-Build und kein manueller Spieltest.
 - Lokale Occlusion-Behandlung der Kamera (Hindernisse vor dem Spieler ausblenden) fehlt; geplant mit P07-Outline/Fade.
 - Dodge/Cast/Interact werden nur als Absicht im `PlayerCommand` geliefert; Ausführung gehört zu P02.
 - P03: **Relay/Internet nicht getestet**, weil das Projekt noch nicht mit einem Unity-Cloud-Projekt verknüpft ist (`cloudProjectId` leer); der Relay-Adapter ist nur kompiliert. Kein Test über zwei PCs/Internetanschlüsse (M1-Abnahme), keine Latenz-/Verlustsimulation, keine Netzmetriken, kein Rejoin, kein Szenenwechsel. Keine manuelle Bedienung der Debug-Lobby durch eine Person.
