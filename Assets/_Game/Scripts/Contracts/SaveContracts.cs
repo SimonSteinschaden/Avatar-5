@@ -24,6 +24,8 @@ namespace Avatar5.Contracts
         public List<SaveWorldObject> worldObjects = new List<SaveWorldObject>();
         public List<SavePlayerRecord> playerRecords = new List<SavePlayerRecord>();
         public List<string> completedRewardIds = new List<string>();
+        /// <summary>Added 17.10.2026 (S06-02): "rewardId@slot" pairs already credited as XP; missing in older v1 files = none.</summary>
+        public List<string> progressionGrants = new List<string>();
     }
 
     [Serializable]
@@ -33,12 +35,40 @@ namespace Avatar5.Contracts
         public int state;
     }
 
-    /// <summary>Who took part at save time (session slot, not an account).</summary>
+    /// <summary>Who took part at save time (session slot, not an account) and that slot's progress.</summary>
     [Serializable]
     public sealed class SavePlayerRecord
     {
         public int slot;
         public float health;
+        /// <summary>Added 17.10.2026 (S06-02); missing in older v1 files = 0.</summary>
+        public int xp;
+        public List<SaveTalentRank> talents = new List<SaveTalentRank>();
+    }
+
+    [Serializable]
+    public sealed class SaveTalentRank
+    {
+        public int talent;
+        public int rank;
+    }
+
+    /// <summary>Readable progression of one player for HUD/menus (host-written, replicated).</summary>
+    [Serializable]
+    public struct PlayerProgressView
+    {
+        public int Level;
+        public int Xp;
+        public int XpForNextLevel;
+        public int FreePoints;
+        public int PowerRank;
+        public int FocusRank;
+        public int VigorRank;
+    }
+
+    public interface IProgressionSource
+    {
+        PlayerProgressView Progress { get; }
     }
 
     public enum SaveLoadError : byte

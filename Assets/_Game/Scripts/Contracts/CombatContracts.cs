@@ -85,6 +85,23 @@ namespace Avatar5.Contracts
         int[] Ids { get; }
     }
 
+    /// <summary>Effective modifiers of one actor (talents, later equipment). Neutral = no change.</summary>
+    [Serializable]
+    public struct ActorStats
+    {
+        public float DamageMultiplier;
+        public float CooldownMultiplier;
+        public float MaxHealthBonus;
+
+        public static ActorStats Neutral { get { return new ActorStats { DamageMultiplier = 1f, CooldownMultiplier = 1f }; } }
+    }
+
+    /// <summary>P06 → P02: effective stats, deterministic and UI-free.</summary>
+    public interface IStatProvider
+    {
+        ActorStats GetStats(ulong actorId);
+    }
+
     /// <summary>Host-only combat port. Clients never call this; they send AbilityRequests through P03.</summary>
     public interface ICombatService
     {

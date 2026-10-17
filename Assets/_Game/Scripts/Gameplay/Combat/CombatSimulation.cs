@@ -76,6 +76,24 @@ namespace Avatar5.Gameplay.Combat
         public int ActiveProjectiles { get { return _projectiles.Count; } }
         public AbilityCatalog Catalog { get { return _catalog; } }
 
+        /// <summary>Optional P06 stats (talents). Null = everyone neutral.</summary>
+        public IStatProvider Stats { get; set; }
+
+        private ActorStats StatsOf(ulong actorId)
+        {
+            return Stats != null ? Stats.GetStats(actorId) : ActorStats.Neutral;
+        }
+
+        /// <summary>Sets an actor's maximum health (talent changes); current health keeps its missing amount.</summary>
+        public void SetMaxHealth(ulong actorId, float maxHealth)
+        {
+            Actor actor;
+            if (!_actors.TryGetValue(actorId, out actor) || !(maxHealth > 0f)) return;
+            var missing = actor.State.MaxHealth - actor.State.Health;
+            actor.State.MaxHealth = maxHealth;
+            if (!actor.State.Defeated) actor.State.Health = Math.Max(1f, maxHealth - missing);
+        }
+
         // ---- actors ----------------------------------------------------------------------------
 
         public void RegisterActor(ulong actorId, TeamKind team, float maxHealth, float maxEnergy, float energyRegen, int[] loadout)
@@ -164,7 +182,7 @@ namespace Avatar5.Gameplay.Combat
             var direction = PlanarMath.Normalize(new Float2(request.TargetOnGround.X - origin.X, request.TargetOnGround.Y - origin.Y));
 
             actor.State.Energy -= ability.EnergyCost;
-            actor.ReadyAt[ability.Id] = Time + ability.Cooldown;
+            actor.ReadyAt[ability.Id] = Time + ability.Cooldown * StatsOf(request.ActorId).CooldownMultiplier;
             var castId = Raise(CombatEventKind.AbilityCastAccepted, request.ActorId, 0, ability.Id, 0, ability.EnergyCost);
             RaiseCue(ability.CueId, origin, direction);
 
@@ -356,7 +374,7 @@ namespace Avatar5.Gameplay.Combat
             // One cast damages one target at most once, whatever happens on the wire.
             if (!_appliedHits.Add((castId, targetId))) return;
 
-            var damage = ability.Damage;
+            var damage = ability.Damage * StatsOf(sourceId).DamageMultiplier;
             var reaction = _rules.Find(target.State.Status, ability.Element, ability.Id);
             if (reaction != null)
             {
