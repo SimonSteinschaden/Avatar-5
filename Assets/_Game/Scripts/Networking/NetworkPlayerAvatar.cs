@@ -200,6 +200,12 @@ namespace Avatar5.Networking
             var command = wire.ToCommand(0);
             var status = _ingress.Admit(sender, ref command, Time.unscaledTimeAsDouble);
             if (status != RequestStatus.Accepted) return status;
+            // Defeated players keep their sequence moving but neither walk nor act until revived.
+            if (CombatHost.Instance != null && CombatHost.Instance.IsDefeated(ActorId))
+            {
+                command.Move = new Float2(0f, 0f);
+                command.Action = PlayerActionKind.None;
+            }
             status = _motor.Submit(command);
             // Movement and casting share the command; the cast only runs once the motor accepted the sequence.
             if (status == RequestStatus.Accepted && command.Action == PlayerActionKind.Cast && CombatHost.Instance != null)

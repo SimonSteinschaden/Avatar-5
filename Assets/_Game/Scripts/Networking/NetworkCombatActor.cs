@@ -48,16 +48,20 @@ namespace Avatar5.Networking
         [SerializeField, Min(0f)] private float maxEnergy = 100f;
         [SerializeField, Min(0f)] private float energyRegenPerSecond = 15f;
         [SerializeField] private int[] loadout = new int[0];
+        /// <summary>Seconds until the host revives this actor after defeat; 0 = stays defeated.</summary>
+        [SerializeField, Min(0f)] private float reviveSeconds = 5f;
 
         private readonly NetworkVariable<NetCombatState> _state = new NetworkVariable<NetCombatState>();
         private NetworkPlayerAvatar _player;
         private CharacterController _controller;
+        private UnityEngine.AI.NavMeshAgent _agent;
 
         public TeamKind Team { get { return team; } }
         public float MaxHealth { get { return maxHealth; } }
         public float MaxEnergy { get { return maxEnergy; } }
         public float EnergyRegenPerSecond { get { return energyRegenPerSecond; } }
         public int[] Loadout { get { return loadout; } }
+        public float ReviveSeconds { get { return reviveSeconds; } }
 
         public ulong ActorId
         {
@@ -77,8 +81,9 @@ namespace Avatar5.Networking
             }
         }
 
-        public void Configure(TeamKind actorTeam, float health, float energy, float regen, int[] abilities)
+        public void Configure(TeamKind actorTeam, float health, float energy, float regen, int[] abilities, float revive = 5f)
         {
+            reviveSeconds = revive;
             team = actorTeam;
             maxHealth = health;
             maxEnergy = energy;
@@ -90,6 +95,7 @@ namespace Avatar5.Networking
         {
             _player = GetComponent<NetworkPlayerAvatar>();
             _controller = GetComponent<CharacterController>();
+            _agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         }
 
         public override void OnNetworkSpawn()
@@ -118,7 +124,8 @@ namespace Avatar5.Networking
         /// <summary>Host only: pushes the actor, respecting walls when it has a CharacterController.</summary>
         internal void ApplyKnockback(Vector3 displacement)
         {
-            if (_controller != null && _controller.enabled) _controller.Move(displacement);
+            if (_agent != null && _agent.enabled && _agent.isOnNavMesh) _agent.Move(displacement);
+            else if (_controller != null && _controller.enabled) _controller.Move(displacement);
             else transform.position += displacement;
         }
     }

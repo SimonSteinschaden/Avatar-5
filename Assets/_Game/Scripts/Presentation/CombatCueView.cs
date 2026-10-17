@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace Avatar5.Presentation
 {
-    public enum CueVisualKind { Projectile, Cone }
+    /// <summary>Telegraph: ground ring that fills during the announced time. Burst: short ring flash around the origin.</summary>
+    public enum CueVisualKind { Projectile, Cone, Telegraph, Burst }
 
     [Serializable]
     public struct CueVisual
@@ -17,6 +18,8 @@ namespace Avatar5.Presentation
         public float Speed;
         public float Range;
         public float ConeHalfAngleDegrees;
+        /// <summary>Telegraph length in seconds (matches the enemy definition).</summary>
+        public float Duration;
     }
 
     /// <summary>
@@ -44,6 +47,10 @@ namespace Avatar5.Presentation
             public Material Material;
             public Color Color;
             public float Age;
+            public float Lifetime = FadeSeconds;
+            /// <summary>Telegraphs grow an inner disc to show when the hit lands.</summary>
+            public Transform Fill;
+            public float FullScale;
         }
 
         private const float FadeSeconds = 0.35f;
@@ -84,6 +91,26 @@ namespace Avatar5.Presentation
                 body.localScale = Vector3.one * 0.45f;
                 body.position = origin;
                 _flying.Add(new Flying { CueId = cue.CueId, Body = body, Direction = direction, Speed = visual.Speed, Remaining = visual.Range });
+            }
+            else if (visual.Kind == CueVisualKind.Telegraph || visual.Kind == CueVisualKind.Burst)
+            {
+                Material material;
+                var body = CreatePrimitive(PrimitiveType.Cylinder, visual.Color, out material);
+                var diameter = visual.Range * 2f;
+                body.localScale = new Vector3(diameter, 0.02f, diameter);
+                body.position = new Vector3(origin.x, 0.05f, origin.z);
+                var fading = new Fading { Body = body, Material = material, Color = visual.Color };
+                if (visual.Kind == CueVisualKind.Telegraph)
+                {
+                    Material fillMaterial;
+                    var fill = CreatePrimitive(PrimitiveType.Cylinder, new Color(visual.Color.r, visual.Color.g * 0.3f, visual.Color.b * 0.3f, 1f), out fillMaterial);
+                    fill.SetParent(body, false);
+                    fill.localPosition = new Vector3(0f, 0.6f, 0f);
+                    fill.localScale = new Vector3(0.01f, 1f, 0.01f);
+                    fading.Fill = fill;
+                    fading.Lifetime = Mathf.Max(0.3f, visual.Duration);
+                }
+                _fading.Add(fading);
             }
             else
             {
@@ -132,10 +159,20 @@ namespace Avatar5.Presentation
             {
                 var f = _fading[i];
                 f.Age += dt;
-                var c = f.Color;
-                c.a = Mathf.Lerp(f.Color.a, 0f, f.Age / FadeSeconds);
-                f.Material.color = c;
-                if (f.Age >= FadeSeconds)
+                var progress = f.Age / f.Lifetime;
+                if (f.Fill != null)
+                {
+                    // Telegraph stays solid and fills up; the hit lands when the inner disc reaches the rim.
+                    var k = Mathf.Clamp01(progress);
+                    f.Fill.localScale = new Vector3(k, 1f, k);
+                }
+                else
+                {
+                    var c = f.Color;
+                    c.a = Mathf.Lerp(f.Color.a, 0f, progress);
+                    f.Material.color = c;
+                }
+                if (f.Age >= f.Lifetime)
                 {
                     Destroy(f.Material);
                     Destroy(f.Body.gameObject);

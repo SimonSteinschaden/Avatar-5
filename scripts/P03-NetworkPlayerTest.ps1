@@ -35,7 +35,10 @@ function Start-Instance([string] $name, [string[]] $extra) {
 Start-Instance 'host' @('-a5-session', 'host', '-a5-bot-move', '0,0', '-a5-quit-after', "$($Seconds + 4)")
 Start-Sleep -Seconds 4
 Start-Instance 'client1' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-move', '1,0', '-a5-quit-after', "$Seconds")
+# Staggered joins give a fixed slot order (slot 1..3), so the movers never walk into each other.
+Start-Sleep -Milliseconds 1500
 Start-Instance 'client2' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-move', '0,-1', '-a5-quit-after', "$Seconds")
+Start-Sleep -Milliseconds 1500
 Start-Instance 'client3' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-move', '-1,0', '-a5-bot-hijack', '-a5-quit-after', "$Seconds")
 
 $deadline = (Get-Date).AddSeconds($Seconds + 30)

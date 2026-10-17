@@ -243,6 +243,7 @@ MonoBehaviour:
   maxEnergy: 0
   energyRegenPerSecond: 0
   loadout: 
+  reviveSeconds: 3
 --- !u!114 &7408852494378680420
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -32,7 +32,7 @@ function Start-Instance([string] $name, [string[]] $extra) {
     $log = Join-Path $LogDir "$name.log"
     $args = @('-batchmode', '-nographics', '-logFile', $log, '-a5-mode', 'direct', '-a5-port', "$Port",
         '-a5-report-players', '1', '-a5-bot-move', '0,0', '-a5-bot-delay', "$delay", '-a5-bot-approach', '3.5',
-        '-a5-bot-cast-for', "$CastSeconds") + $extra
+        '-a5-bot-cast-for', "$CastSeconds", '-a5-bot-target', 'any') + $extra
     $script:processes[$name] = Start-Process -FilePath $Player -ArgumentList $args -PassThru -WindowStyle Hidden
 }
 
@@ -72,6 +72,8 @@ if ($hostR) {
     Check 'casts accepted on host' ($hostR.casts -ge 30) "casts=$($hostR.casts)"
     Check 'Steam reaction happened' ($hostR.steam -ge 1) "steam=$($hostR.steam)"
     Check 'Extinguish reaction happened' ($hostR.extinguish -ge 1) "extinguish=$($hostR.extinguish)"
+    # Since P04 the arena also holds a brute (revives, so its HP is not cumulative); compare the 5000 HP dummies only.
+    foreach ($k in @($hostR.Dummies.Keys)) { if ($hostR.Dummies[$k].Max -ne 5000) { $hostR.Dummies.Remove($k) } }
     Check 'two dummies present' ($hostR.Dummies.Count -eq 2) "dummies=$($hostR.Dummies.Count)"
     foreach ($id in $hostR.Dummies.Keys) {
         $d = $hostR.Dummies[$id]

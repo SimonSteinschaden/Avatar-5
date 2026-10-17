@@ -3,6 +3,8 @@ using Avatar5.Combat;
 using Avatar5.Contracts;
 using Avatar5.Foundation;
 using Avatar5.Gameplay.Combat;
+using Avatar5.Gameplay.Enemies;
+using Unity.AI.Navigation;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,12 +25,14 @@ namespace Avatar5.Networking
         [SerializeField] private AbilityDefinitionAsset[] abilities = new AbilityDefinitionAsset[0];
         [SerializeField] private NetworkObject dummyPrefab;
         [SerializeField] private Transform[] dummyPoints = new Transform[0];
-        [SerializeField, Min(0f)] private float dummyReviveSeconds = 3f;
+        [SerializeField] private NetworkObject enemyPrefab;
+        [SerializeField] private Transform[] enemyPoints = new Transform[0];
 
         private readonly Dictionary<ulong, NetworkCombatActor> _actors = new Dictionary<ulong, NetworkCombatActor>();
         private readonly List<CombatEvent> _pendingEvents = new List<CombatEvent>();
         private readonly List<PresentationCue> _pendingCues = new List<PresentationCue>();
         private readonly Dictionary<ulong, float> _reviveAt = new Dictionary<ulong, float>();
+        private readonly Dictionary<ulong, ulong> _enemyTargets = new Dictionary<ulong, ulong>();
         private readonly HashSet<Collider> _ignored = new HashSet<Collider>();
         private readonly RaycastHit[] _hits = new RaycastHit[16];
         private readonly CombatEventDeduplicator _received = new CombatEventDeduplicator();
@@ -47,6 +51,12 @@ namespace Avatar5.Networking
             dummyPoints = points ?? new Transform[0];
         }
 
+        public void ConfigureEnemies(NetworkObject enemy, Transform[] points)
+        {
+            enemyPrefab = enemy;
+            enemyPoints = points ?? new Transform[0];
+        }
+
         private void Awake()
         {
             Instance = this;
@@ -57,6 +67,11 @@ namespace Avatar5.Networking
                 if (asset != null) runtime.Add(asset.ToRuntime());
             }
             _catalog = new AbilityCatalog(runtime);
+            // Greybox levels bake their walkable area on load; it only takes milliseconds for an arena.
+            foreach (var surface in FindObjectsByType<NavMeshSurface>(FindObjectsSortMode.None))
+            {
+                if (surface.navMeshData == null) surface.BuildNavMesh();
+            }
         }
 
         private void OnEnable()
@@ -98,6 +113,7 @@ namespace Avatar5.Networking
                 if (actor.IsSpawned) Register(actor);
             }
             SpawnDummies();
+            SpawnAt(enemyPrefab, enemyPoints);
         }
 
         private void OnServerStopped(bool wasHost)
@@ -106,6 +122,7 @@ namespace Avatar5.Networking
             _simulation = null;
             _actors.Clear();
             _reviveAt.Clear();
+            _enemyTargets.Clear();
             _pendingEvents.Clear();
             _pendingCues.Clear();
         }
@@ -126,18 +143,55 @@ namespace Avatar5.Networking
         {
             if (_simulation != null) _simulation.RemoveActor(actor.ActorId);
             _actors.Remove(actor.ActorId);
+            _enemyTargets.Remove(actor.ActorId);
+            _reviveAt.Remove(actor.ActorId);
             foreach (var c in actor.GetComponentsInChildren<Collider>()) _ignored.Remove(c);
         }
 
         private void SpawnDummies()
         {
-            if (dummyPrefab == null) return;
-            foreach (var point in dummyPoints)
+            SpawnAt(dummyPrefab, dummyPoints);
+        }
+
+        private static void SpawnAt(NetworkObject prefab, Transform[] points)
+        {
+            if (prefab == null) return;
+            foreach (var point in points)
             {
                 if (point == null) continue;
-                var dummy = Instantiate(dummyPrefab, point.position, point.rotation);
-                dummy.Spawn(true);
+                Instantiate(prefab, point.position, point.rotation).Spawn(true);
             }
+        }
+
+        /// <summary>Living and defeated players as seen by enemy brains; includes how many other enemies chase each.</summary>
+        internal void CollectPlayerCandidates(ulong askingEnemy, List<EnemyTargetCandidate> into)
+        {
+            into.Clear();
+            foreach (var pair in _actors)
+            {
+                if (pair.Value == null || pair.Value.Team != TeamKind.Players) continue;
+                var chased = 0;
+                foreach (var target in _enemyTargets)
+                {
+                    if (target.Key != askingEnemy && target.Value == pair.Key) chased++;
+                }
+                var p = pair.Value.transform.position;
+                into.Add(new EnemyTargetCandidate
+                {
+                    ActorId = pair.Key, Position = new Float2(p.x, p.z), Alive = !_simulation.IsDefeated(pair.Key), ChasedByOthers = chased
+                });
+            }
+        }
+
+        internal void ReportEnemyTarget(ulong enemyId, ulong targetId)
+        {
+            if (targetId == 0) _enemyTargets.Remove(enemyId);
+            else _enemyTargets[enemyId] = targetId;
+        }
+
+        internal bool IsDefeated(ulong actorId)
+        {
+            return _simulation != null && _simulation.IsDefeated(actorId);
         }
 
         // ---- casting (called by NetworkPlayerAvatar on the host) --------------------------------
@@ -198,9 +252,9 @@ namespace Avatar5.Networking
             _pendingEvents.Add(e);
             NetworkCombatActor actor;
             if (e.ResultKind == (int)CombatEventKind.ActorDefeated && _actors.TryGetValue(e.TargetActorId, out actor)
-                && actor.Team == TeamKind.Enemies && dummyReviveSeconds > 0f)
+                && actor.ReviveSeconds > 0f)
             {
-                _reviveAt[e.TargetActorId] = Time.time + dummyReviveSeconds;
+                _reviveAt[e.TargetActorId] = Time.time + actor.ReviveSeconds;
             }
         }
 

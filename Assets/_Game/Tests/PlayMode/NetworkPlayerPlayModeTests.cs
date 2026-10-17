@@ -3,6 +3,7 @@ using System.Threading;
 using Avatar5.Combat;
 using Avatar5.Contracts;
 using Avatar5.Gameplay.Combat;
+using Avatar5.Gameplay.Enemies;
 using Avatar5.Networking;
 using NUnit.Framework;
 using Unity.Netcode;
@@ -20,6 +21,8 @@ namespace Avatar5.Tests.PlayMode
     {
         private const string PrefabPath = "Assets/_Game/Prefabs/NetworkPlayer.prefab";
         private const string DummyPath = "Assets/_Game/Prefabs/TrainingDummy.prefab";
+        private const string BrutePath = "Assets/_Game/Prefabs/Enemy_Brute.prefab";
+        private GameObject _brutePrefab;
         private GameObject _root;
         private GameObject _ground;
         private DirectSessionService _service;
@@ -30,10 +33,12 @@ namespace Avatar5.Tests.PlayMode
 #if UNITY_EDITOR
             var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
             var dummy = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(DummyPath);
+            _brutePrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(BrutePath);
             var abilities = new[]
             {
                 UnityEditor.AssetDatabase.LoadAssetAtPath<AbilityDefinitionAsset>("Assets/_Game/Data/Abilities/fireball.asset"),
-                UnityEditor.AssetDatabase.LoadAssetAtPath<AbilityDefinitionAsset>("Assets/_Game/Data/Abilities/water_wave.asset")
+                UnityEditor.AssetDatabase.LoadAssetAtPath<AbilityDefinitionAsset>("Assets/_Game/Data/Abilities/water_wave.asset"),
+                UnityEditor.AssetDatabase.LoadAssetAtPath<AbilityDefinitionAsset>("Assets/_Game/Data/Abilities/brute_slam.asset")
             };
 #else
             GameObject prefab = null, dummy = null;
@@ -51,6 +56,7 @@ namespace Avatar5.Tests.PlayMode
             manager.NetworkConfig = new NetworkConfig { NetworkTransport = transport, TickRate = 20 };
             manager.NetworkConfig.Prefabs.Add(new NetworkPrefab { Prefab = prefab });
             manager.NetworkConfig.Prefabs.Add(new NetworkPrefab { Prefab = dummy });
+            manager.NetworkConfig.Prefabs.Add(new NetworkPrefab { Prefab = _brutePrefab });
             var spawner = _root.AddComponent<NetworkPlayerSpawner>();
             var spawn = new GameObject("Spawn").transform;
             spawn.SetParent(_root.transform, false);
@@ -157,6 +163,38 @@ namespace Avatar5.Tests.PlayMode
             Assert.IsTrue((dummy.CombatState.Status & StatusFlags.Burning) != 0);
             var player = avatar.GetComponent<NetworkCombatActor>();
             Assert.Less(player.CombatState.Energy, player.CombatState.MaxEnergy, "energy was spent");
+        }
+
+        [UnityTest]
+        public IEnumerator Brute_TelegraphsBeforeItsSlamHitsTheHost()
+        {
+            var point = new GameObject("BrutePoint").transform;
+            point.SetParent(_root.transform, false);
+            point.position = new Vector3(0f, 0f, 1.5f); // already in attack range: no walking needed
+            _root.GetComponent<CombatHost>().ConfigureEnemies(_brutePrefab.GetComponent<NetworkObject>(), new[] { point });
+
+            var order = new System.Collections.Generic.List<CombatEventKind>();
+            System.Action<CombatEvent> listener = e =>
+            {
+                if (e.SourceActorId >= NetworkCombatActor.NonPlayerIdBase &&
+                    (e.ResultKind == (int)CombatEventKind.TelegraphStarted || e.ResultKind == (int)CombatEventKind.DamageApplied))
+                    order.Add((CombatEventKind)e.ResultKind);
+            };
+            Avatar5.Foundation.PresentationBus.CombatEventRaised += listener;
+
+            var create = _service.CreatePrivateAsync(SessionConfig.Default, CancellationToken.None);
+            while (!create.IsCompleted) yield return null;
+            Assert.IsTrue(create.Result.Success, create.Result.Detail);
+            var started = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup - started < 2.5f && !order.Contains(CombatEventKind.DamageApplied)) yield return null;
+            Avatar5.Foundation.PresentationBus.CombatEventRaised -= listener;
+
+            Assert.IsNotEmpty(order, "brute must act");
+            Assert.AreEqual(CombatEventKind.TelegraphStarted, order[0], "attack is announced before it lands");
+            Assert.Contains(CombatEventKind.DamageApplied, order);
+            var avatar = Object.FindAnyObjectByType<NetworkPlayerAvatar>();
+            var health = avatar.GetComponent<NetworkCombatActor>().CombatState.Health;
+            Assert.AreEqual(100f - StarterEnemies.BruteSlam().Damage, health, 0.01f);
         }
     }
 }

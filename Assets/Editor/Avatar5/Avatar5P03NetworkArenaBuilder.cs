@@ -4,6 +4,9 @@ using System.IO;
 using Avatar5.Combat;
 using Avatar5.Contracts;
 using Avatar5.Gameplay.Combat;
+using Avatar5.Gameplay.Enemies;
+using Unity.AI.Navigation;
+using UnityEngine.AI;
 using Avatar5.Networking;
 using Avatar5.Presentation;
 using Unity.Netcode;
@@ -26,6 +29,7 @@ namespace Avatar5.EditorTools
         public const string ScenePath = "Assets/_Game/Scenes/P03_NetworkArena.unity";
         public const string PrefabPath = "Assets/_Game/Prefabs/NetworkPlayer.prefab";
         public const string DummyPrefabPath = "Assets/_Game/Prefabs/TrainingDummy.prefab";
+        public const string BrutePrefabPath = "Assets/_Game/Prefabs/Enemy_Brute.prefab";
         public const string AbilityFolder = "Assets/_Game/Data/Abilities";
         private static readonly int[] PlayerLoadout = { StarterAbilities.FireballId, StarterAbilities.WaterWaveId };
         public const string NetworkPrefabsListPath = "Assets/DefaultNetworkPrefabs.asset";
@@ -42,8 +46,10 @@ namespace Avatar5.EditorTools
             var prefab = BuildPlayerPrefab();
             var dummy = BuildDummyPrefab();
             RegisterNetworkPrefab(dummy);
+            var brute = BuildBrutePrefab();
+            RegisterNetworkPrefab(brute);
             var prefabsList = RegisterNetworkPrefab(prefab);
-            BuildScene(prefab, dummy, abilities, prefabsList);
+            BuildScene(prefab, dummy, brute, abilities, prefabsList);
             AssetDatabase.SaveAssets();
             Debug.Log("Avatar5: P03 network arena generated at " + ScenePath);
         }
@@ -104,7 +110,7 @@ namespace Avatar5.EditorTools
             netTransform.SyncRotAngleZ = false;
             netTransform.SyncScaleX = netTransform.SyncScaleY = netTransform.SyncScaleZ = false;
             root.AddComponent<NetworkPlayerAvatar>();
-            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Players, 100f, 100f, 15f, PlayerLoadout);
+            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Players, 100f, 100f, 15f, PlayerLoadout, 5f);
             var bar = root.AddComponent<HealthBarView>();
             var body = root.transform.Find("Body");
             if (body != null) SetField(bar, "tintTarget", body.GetComponent<Renderer>());
@@ -129,7 +135,7 @@ namespace Avatar5.EditorTools
                 if (!AssetDatabase.IsValidFolder("Assets/_Game/Data")) AssetDatabase.CreateFolder("Assets/_Game", "Data");
                 AssetDatabase.CreateFolder("Assets/_Game/Data", "Abilities");
             }
-            var definitions = new[] { StarterAbilities.Fireball(), StarterAbilities.WaterWave() };
+            var definitions = new[] { StarterAbilities.Fireball(), StarterAbilities.WaterWave(), StarterEnemies.BruteSlam() };
             var assets = new AbilityDefinitionAsset[definitions.Length];
             for (var i = 0; i < definitions.Length; i++)
             {
@@ -170,11 +176,60 @@ namespace Avatar5.EditorTools
             netTransform.Interpolate = true;
             netTransform.SyncRotAngleX = netTransform.SyncRotAngleY = netTransform.SyncRotAngleZ = false;
             netTransform.SyncScaleX = netTransform.SyncScaleY = netTransform.SyncScaleZ = false;
-            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Enemies, 5000f, 0f, 0f, new int[0]);
+            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Enemies, 5000f, 0f, 0f, new int[0], 3f);
             var bar = root.AddComponent<HealthBarView>();
             SetField(bar, "tintTarget", body.GetComponent<Renderer>());
 
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, DummyPrefabPath);
+            UnityEngine.Object.DestroyImmediate(root);
+            return prefab;
+        }
+
+        private static GameObject BuildBrutePrefab()
+        {
+            var definition = StarterEnemies.Brute();
+            var root = new GameObject("Enemy_Brute");
+            var agent = root.AddComponent<NavMeshAgent>();
+            agent.radius = 0.6f;
+            agent.height = 2f;
+            agent.speed = definition.MoveSpeed;
+            agent.angularSpeed = 540f;
+            agent.acceleration = 20f;
+
+            var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            body.name = "Body";
+            UnityEngine.Object.DestroyImmediate(body.GetComponent<Collider>());
+            body.transform.SetParent(root.transform, false);
+            body.transform.localPosition = new Vector3(0f, 1f, 0f);
+            body.transform.localScale = new Vector3(1.2f, 1f, 1.2f);
+            var tint = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Game/Materials/Greybox_Wall.mat");
+            if (tint != null) body.GetComponent<Renderer>().sharedMaterial = tint;
+            var horn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            horn.name = "FacingMarker";
+            UnityEngine.Object.DestroyImmediate(horn.GetComponent<Collider>());
+            horn.transform.SetParent(body.transform, false);
+            horn.transform.localPosition = new Vector3(0f, 0.4f, 0.5f);
+            horn.transform.localScale = new Vector3(0.5f, 0.2f, 0.3f);
+
+            // Hit volume so projectiles and walls checks see the brute like any other actor.
+            var capsule = root.AddComponent<CapsuleCollider>();
+            capsule.center = new Vector3(0f, 1f, 0f);
+            capsule.radius = 0.6f;
+            capsule.height = 2f;
+
+            root.AddComponent<NetworkObject>();
+            var netTransform = root.AddComponent<NetworkTransform>();
+            netTransform.AuthorityMode = NetworkTransform.AuthorityModes.Server;
+            netTransform.Interpolate = true;
+            netTransform.SyncRotAngleX = netTransform.SyncRotAngleZ = false;
+            netTransform.SyncScaleX = netTransform.SyncScaleY = netTransform.SyncScaleZ = false;
+            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Enemies, definition.MaxHealth, 0f, 0f,
+                new[] { StarterEnemies.BruteSlamAbilityId }, 8f);
+            root.AddComponent<EnemyBrainHost>();
+            var bar = root.AddComponent<HealthBarView>();
+            SetField(bar, "tintTarget", body.GetComponent<Renderer>());
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(root, BrutePrefabPath);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;
         }
@@ -192,7 +247,7 @@ namespace Avatar5.EditorTools
             return list;
         }
 
-        private static void BuildScene(GameObject prefab, GameObject dummy, AbilityDefinitionAsset[] abilities, NetworkPrefabsList prefabsList)
+        private static void BuildScene(GameObject prefab, GameObject dummy, GameObject brute, AbilityDefinitionAsset[] abilities, NetworkPrefabsList prefabsList)
         {
             var scene = EditorSceneManager.OpenScene(Avatar5P01ArenaBuilder.ScenePath, OpenSceneMode.Single);
 
@@ -235,7 +290,23 @@ namespace Avatar5.EditorTools
                 point.rotation = Quaternion.Euler(0f, 180f, 0f);
                 dummyPoints.Add(point);
             }
-            session.AddComponent<CombatHost>().Configure(abilities, dummy.GetComponent<NetworkObject>(), dummyPoints.ToArray());
+            var combatHost = session.AddComponent<CombatHost>();
+            combatHost.Configure(abilities, dummy.GetComponent<NetworkObject>(), dummyPoints.ToArray());
+            var enemyPoint = new GameObject("Enemy_Brute_1").transform;
+            enemyPoint.SetParent(dummyRoot, false);
+            // 12 m from the spawn points: outside aggro range, so the brute waits until players walk up.
+            enemyPoint.position = center + new Vector3(0f, 0f, 12f);
+            enemyPoint.rotation = Quaternion.Euler(0f, 180f, 0f);
+            combatHost.ConfigureEnemies(brute.GetComponent<NetworkObject>(), new[] { enemyPoint });
+
+            // Walkable area is baked by the host on load (CombatHost); the surface only describes what to collect.
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                if (root.name != "Arena") continue;
+                var surface = root.GetComponent<NavMeshSurface>() ?? root.AddComponent<NavMeshSurface>();
+                surface.collectObjects = CollectObjects.Children;
+                surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+            }
 
             var views = new GameObject("CombatViews");
             views.AddComponent<CombatCueView>().Configure(new[]
@@ -243,7 +314,11 @@ namespace Avatar5.EditorTools
                 new CueVisual { CueId = StarterAbilities.FireballCue, Kind = CueVisualKind.Projectile, Color = new Color(1f, 0.45f, 0.05f, 1f),
                     Speed = StarterAbilities.Fireball().ProjectileSpeed, Range = StarterAbilities.Fireball().Range },
                 new CueVisual { CueId = StarterAbilities.WaterWaveCue, Kind = CueVisualKind.Cone, Color = new Color(0.2f, 0.55f, 1f, 0.8f),
-                    Range = StarterAbilities.WaterWave().Range, ConeHalfAngleDegrees = StarterAbilities.WaterWave().ConeHalfAngleDegrees }
+                    Range = StarterAbilities.WaterWave().Range, ConeHalfAngleDegrees = StarterAbilities.WaterWave().ConeHalfAngleDegrees },
+                new CueVisual { CueId = StarterEnemies.BruteTelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(0.95f, 0.15f, 0.1f, 1f),
+                    Range = StarterEnemies.BruteSlam().Range, Duration = StarterEnemies.Brute().TelegraphDuration },
+                new CueVisual { CueId = StarterEnemies.BruteSlamCue, Kind = CueVisualKind.Burst, Color = new Color(0.55f, 0.35f, 0.15f, 0.9f),
+                    Range = StarterEnemies.BruteSlam().Range }
             });
             views.AddComponent<CombatFeedbackView>();
 

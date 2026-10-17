@@ -16,6 +16,8 @@ namespace Avatar5.Networking
     /// <c>-a5-bot-cast SLOT:INTERVAL[,SLOT:INTERVAL]</c>: casts the ability slot every INTERVAL seconds at the nearest enemy.
     /// <c>-a5-bot-cast-for S</c>: stops casting S seconds after moving starts (default: never).
     /// <c>-a5-bot-approach D</c>: walks toward the nearest enemy until it is closer than D metres.
+    /// <c>-a5-bot-after-move X,Z</c>: once casting time is over, walk in this direction instead (e.g. to leave an enemy's leash).
+    /// <c>-a5-bot-target any|brute</c>: which enemies count as targets for aiming and approaching (default any).
     /// <c>-a5-bot-hijack</c>: additionally tries to drive every foreign avatar (the host must refuse).
     /// <c>-a5-report-players S</c>: logs all avatar positions every S seconds as "A5PLAYER ..." lines.
     /// Only active when those arguments are present; never part of normal play.
@@ -29,6 +31,14 @@ namespace Avatar5.Networking
         private static int _steam;
         private static int _extinguish;
         private static int _castsAccepted;
+        private static int _telegraphs;
+        private static int _enemyCasts;
+        private static int _enemyHits;
+        private static int _enemyDefeats;
+        private static int _playerDefeats;
+        private bool _onlyBrutes;
+        private bool _hasAfterMove;
+        private Float2 _afterMove;
 
         private NetworkPlayerAvatar _avatar;
         private PlayerCommandSequencer _sequencer;
@@ -78,6 +88,8 @@ namespace Avatar5.Networking
                     }
                 }
             }
+            if (TryArg("-a5-bot-after-move", out value)) { _afterMove = ParseVector(value); _hasAfterMove = true; }
+            _onlyBrutes = TryArg("-a5-bot-target", out value) && string.Equals(value, "brute", StringComparison.OrdinalIgnoreCase);
             float approach;
             if (TryArg("-a5-bot-approach", out value) && float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out approach)) _approach = approach;
             float castFor;
@@ -89,7 +101,8 @@ namespace Avatar5.Networking
             if (_avatar == null || !_avatar.IsSpawned) return;
             _tick++;
             var move = Time.unscaledTime >= _startTime ? _move : new Float2(0f, 0f);
-            if (_approach > 0f && Time.unscaledTime >= _startTime)
+            if (_hasAfterMove && Time.unscaledTime >= _castUntil) move = _afterMove;
+            else if (_approach > 0f && Time.unscaledTime >= _startTime)
             {
                 float distance;
                 var toEnemy = AimAtNearestEnemy(out distance);
@@ -131,6 +144,8 @@ namespace Avatar5.Networking
             foreach (var actor in FindObjectsByType<NetworkCombatActor>(FindObjectsSortMode.None))
             {
                 if (actor.Team != TeamKind.Enemies) continue;
+                if (_onlyBrutes && actor.GetComponent<EnemyBrainHost>() == null) continue;
+                if (actor.CombatState.Defeated) continue;
                 var offset = actor.transform.position - _avatar.transform.position;
                 offset.y = 0f;
                 var d = offset.sqrMagnitude;
@@ -176,7 +191,18 @@ namespace Avatar5.Networking
                 if (e.EffectId == (int)ReactionKind.Steam) _steam++;
                 else if (e.EffectId == (int)ReactionKind.Extinguish) _extinguish++;
             }
-            else if (e.ResultKind == (int)CombatEventKind.AbilityCastAccepted) _castsAccepted++;
+            else if (e.ResultKind == (int)CombatEventKind.AbilityCastAccepted)
+            {
+                _castsAccepted++;
+                if (e.SourceActorId >= NetworkCombatActor.NonPlayerIdBase) _enemyCasts++;
+            }
+            else if (e.ResultKind == (int)CombatEventKind.TelegraphStarted) _telegraphs++;
+            else if (e.ResultKind == (int)CombatEventKind.ActorDefeated)
+            {
+                if (e.TargetActorId >= NetworkCombatActor.NonPlayerIdBase) _enemyDefeats++;
+                else _playerDefeats++;
+            }
+            if (e.ResultKind == (int)CombatEventKind.DamageApplied && e.SourceActorId >= NetworkCombatActor.NonPlayerIdBase) _enemyHits++;
         }
 
         private static void OnSpawnStateChanged(NetworkPlayerAvatar avatar, bool spawned)
@@ -227,10 +253,17 @@ namespace Avatar5.Networking
             line.Append(" events=").Append(_eventsSeen).Append(" casts=").Append(_castsAccepted);
             line.Append(" steam=").Append(_steam).Append(" extinguish=").Append(_extinguish);
             line.Append(" dupes=").Append(CombatHost.Instance != null ? CombatHost.Instance.DuplicateEventsDropped : -1);
+            line.Append(" telegraphs=").Append(_telegraphs).Append(" enemyCasts=").Append(_enemyCasts).Append(" enemyHits=").Append(_enemyHits);
+            line.Append(" enemyDefeats=").Append(_enemyDefeats).Append(" playerDefeats=").Append(_playerDefeats);
             foreach (var actor in FindObjectsByType<NetworkCombatActor>(FindObjectsSortMode.None))
             {
-                if (!actor.IsSpawned || actor.Team != TeamKind.Enemies) continue;
+                if (!actor.IsSpawned) continue;
                 var state = actor.CombatState;
+                if (actor.Team == TeamKind.Players)
+                {
+                    line.Append(" p").Append(actor.ActorId).Append('=').Append(state.Health.ToString("0.0", CultureInfo.InvariantCulture));
+                    continue;
+                }
                 float dealt;
                 DamageReceived.TryGetValue(actor.ActorId, out dealt);
                 line.Append(" e").Append(actor.ActorId).Append('=')
