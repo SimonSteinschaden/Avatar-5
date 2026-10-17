@@ -14,7 +14,8 @@ namespace Avatar5.Contracts
         RejectedInvalidState,
         RejectedVersion,
         Duplicate,
-        TimedOut
+        TimedOut,
+        RejectedRateLimited
     }
 
     [Serializable]
