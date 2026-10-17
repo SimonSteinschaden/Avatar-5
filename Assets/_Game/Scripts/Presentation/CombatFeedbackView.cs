@@ -20,6 +20,8 @@ namespace Avatar5.Presentation
         private const float PopupSeconds = 1.1f;
         private readonly List<Popup> _popups = new List<Popup>();
         private ICombatStateSource _local;
+        private string _banner;
+        private float _bannerUntil;
         private GUIStyle _style;
 
         public void SetLocalPlayer(ICombatStateSource local)
@@ -30,11 +32,25 @@ namespace Avatar5.Presentation
         private void OnEnable()
         {
             PresentationBus.CombatEventRaised += OnCombatEvent;
+            PresentationBus.WorldEventRaised += OnWorldEvent;
+        }
+
+        private void OnWorldEvent(WorldEvent e)
+        {
+            if (e.StateCode == WorldStateCodes.LevelCompletedCode) Show("Level geschafft!", 8f);
+            else if (e.StateCode == WorldStateCodes.On) Show("Etwas hat sich geöffnet …", 2f);
+        }
+
+        private void Show(string text, float seconds)
+        {
+            _banner = text;
+            _bannerUntil = Time.time + seconds;
         }
 
         private void OnDisable()
         {
             PresentationBus.CombatEventRaised -= OnCombatEvent;
+            PresentationBus.WorldEventRaised -= OnWorldEvent;
         }
 
         private void OnCombatEvent(CombatEvent e)
@@ -85,12 +101,18 @@ namespace Avatar5.Presentation
                 }
             }
 
+            if (!string.IsNullOrEmpty(_banner) && Time.time < _bannerUntil)
+            {
+                _style.normal.textColor = Color.white;
+                GUI.Label(new Rect(0f, Screen.height * 0.18f, Screen.width, 40f), _banner, _style);
+            }
+
             if (_local == null) return;
             var s = _local.CombatState;
             GUILayout.BeginArea(new Rect(Screen.width - 260f, Screen.height - 110f, 240f, 90f), GUI.skin.box);
             GUILayout.Label("Leben: " + Mathf.CeilToInt(s.Health) + " / " + Mathf.RoundToInt(s.MaxHealth));
             GUILayout.Label("Energie: " + Mathf.FloorToInt(s.Energy) + " / " + Mathf.RoundToInt(s.MaxEnergy));
-            GUILayout.Label("LMB Feuerball · RMB Wasserwelle" + (s.Status != StatusFlags.None ? " · " + s.Status : string.Empty));
+            GUILayout.Label("LMB Feuerball · RMB Wasserwelle · E Benutzen" + (s.Status != StatusFlags.None ? " · " + s.Status : string.Empty));
             GUILayout.EndArea();
         }
     }

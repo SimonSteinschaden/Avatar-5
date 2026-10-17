@@ -18,6 +18,7 @@ namespace Avatar5.Networking
     /// <c>-a5-bot-approach D</c>: walks toward the nearest enemy until it is closer than D metres.
     /// <c>-a5-bot-after-move X,Z</c>: once casting time is over, walk in this direction instead (e.g. to leave an enemy's leash).
     /// <c>-a5-bot-target any|brute</c>: which enemies count as targets for aiming and approaching (default any).
+    /// <c>-a5-bot-route "W:x:z;I;K;F:x:z;..."</c>: scripted level run (Walk to point, Interact, Kill enemies near, Fire at point).
     /// <c>-a5-bot-hijack</c>: additionally tries to drive every foreign avatar (the host must refuse).
     /// <c>-a5-report-players S</c>: logs all avatar positions every S seconds as "A5PLAYER ..." lines.
     /// Only active when those arguments are present; never part of normal play.
@@ -39,6 +40,12 @@ namespace Avatar5.Networking
         private bool _onlyBrutes;
         private bool _hasAfterMove;
         private Float2 _afterMove;
+
+        private struct RouteStep { public char Kind; public Float2 Point; }
+        private List<RouteStep> _route;
+        private int _routeIndex;
+        private float _stepTimer;
+        private float _nextRouteCast;
 
         private NetworkPlayerAvatar _avatar;
         private PlayerCommandSequencer _sequencer;
@@ -88,6 +95,7 @@ namespace Avatar5.Networking
                     }
                 }
             }
+            if (TryArg("-a5-bot-route", out value)) _route = ParseRoute(value);
             if (TryArg("-a5-bot-after-move", out value)) { _afterMove = ParseVector(value); _hasAfterMove = true; }
             _onlyBrutes = TryArg("-a5-bot-target", out value) && string.Equals(value, "brute", StringComparison.OrdinalIgnoreCase);
             float approach;
@@ -100,6 +108,12 @@ namespace Avatar5.Networking
         {
             if (_avatar == null || !_avatar.IsSpawned) return;
             _tick++;
+            if (_route != null)
+            {
+                if (Time.unscaledTime >= _startTime) RouteTick();
+                else _avatar.Submit(_sequencer.Next(++_tick, new Float2(0f, 0f), new Float2(0f, 0f), PlayerActionKind.None, 0));
+                return;
+            }
             var move = Time.unscaledTime >= _startTime ? _move : new Float2(0f, 0f);
             if (_hasAfterMove && Time.unscaledTime >= _castUntil) move = _afterMove;
             else if (_approach > 0f && Time.unscaledTime >= _startTime)
@@ -134,6 +148,85 @@ namespace Avatar5.Networking
                 forged.SequenceId += 1000000;
                 other.SendForeignCommandForTest(forged);
             }
+        }
+
+        private void RouteTick()
+        {
+            _tick++;
+            var move = new Float2(0f, 0f);
+            var aim = new Float2(0f, 0f);
+            var action = PlayerActionKind.None;
+            var slot = 0;
+            var self = new Float2(_avatar.transform.position.x, _avatar.transform.position.z);
+            if (_routeIndex >= _route.Count)
+            {
+                _avatar.Submit(_sequencer.Next(_tick, move, aim, action, slot));
+                return;
+            }
+            var step = _route[_routeIndex];
+            _stepTimer += Time.deltaTime;
+            var done = false;
+            switch (step.Kind)
+            {
+                case 'W':
+                    var offset = new Float2(step.Point.X - self.X, step.Point.Y - self.Y);
+                    var length = Mathf.Sqrt(offset.X * offset.X + offset.Y * offset.Y);
+                    if (length < 0.6f) done = true;
+                    else move = new Float2(offset.X / length, offset.Y / length);
+                    break;
+                case 'I':
+                    action = PlayerActionKind.Interact;
+                    done = true;
+                    break;
+                case 'F':
+                    if (Time.unscaledTime >= _nextRouteCast)
+                    {
+                        var to = new Float2(step.Point.X - self.X, step.Point.Y - self.Y);
+                        var l = Mathf.Max(1e-3f, Mathf.Sqrt(to.X * to.X + to.Y * to.Y));
+                        aim = new Float2(to.X / l, to.Y / l);
+                        action = PlayerActionKind.Cast;
+                        _nextRouteCast = Time.unscaledTime + 1f;
+                        done = true;
+                    }
+                    break;
+                case 'K':
+                    float distance;
+                    var toEnemy = AimAtNearestEnemy(out distance);
+                    if (distance > 14f) { done = _stepTimer > 1f; break; }
+                    _stepTimer = 0f;
+                    move = distance > 3.5f ? toEnemy : new Float2(0f, 0f);
+                    if (distance <= 9f && Time.unscaledTime >= _nextRouteCast)
+                    {
+                        aim = toEnemy;
+                        action = PlayerActionKind.Cast;
+                        slot = (_tick % 3 == 0) ? 1 : 0;
+                        _nextRouteCast = Time.unscaledTime + 0.9f;
+                    }
+                    break;
+            }
+            _avatar.Submit(_sequencer.Next(_tick, move, aim, action, slot));
+            if (!done) return;
+            _routeIndex++;
+            _stepTimer = 0f;
+            Debug.Log("A5ROUTE step=" + _routeIndex + "/" + _route.Count + (_routeIndex >= _route.Count ? " done" : string.Empty)
+                + " at=" + self.X.ToString("0.0", CultureInfo.InvariantCulture) + "," + self.Y.ToString("0.0", CultureInfo.InvariantCulture));
+        }
+
+        private static List<RouteStep> ParseRoute(string value)
+        {
+            var steps = new List<RouteStep>();
+            foreach (var raw in value.Split(';'))
+            {
+                var parts = raw.Trim().Split(':');
+                if (parts.Length == 0 || parts[0].Length == 0) continue;
+                var step = new RouteStep { Kind = char.ToUpperInvariant(parts[0][0]) };
+                float x, z;
+                if (parts.Length == 3 && float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out x)
+                    && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out z))
+                    step.Point = new Float2(x, z);
+                steps.Add(step);
+            }
+            return steps;
         }
 
         private Float2 AimAtNearestEnemy(out float distance)
@@ -242,7 +335,21 @@ namespace Avatar5.Networking
                 }
                 Debug.Log(line.ToString());
                 Debug.Log(CombatLine(manager));
+                if (WorldHost.Instance != null && WorldHost.Instance.LevelId > 0) Debug.Log(WorldLine());
             }
+        }
+
+        private static string WorldLine()
+        {
+            var world = WorldHost.Instance;
+            var line = new StringBuilder("A5WORLD");
+            line.Append(" t=").Append(Time.unscaledTime.ToString("0.0", CultureInfo.InvariantCulture));
+            line.Append(" level=").Append(world.LevelId).Append(" completed=").Append(world.IsCompleted ? 1 : 0);
+            var ids = new List<int>(world.States.Keys);
+            ids.Sort();
+            line.Append(" states=");
+            for (var i = 0; i < ids.Count; i++) line.Append(i == 0 ? "" : ",").Append(ids[i]).Append(':').Append(world.States[ids[i]]);
+            return line.ToString();
         }
 
         private static string CombatLine(NetworkManager manager)

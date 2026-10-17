@@ -41,6 +41,7 @@ namespace Avatar5.Networking
         private AbilityCatalog _catalog;
 
         public static CombatHost Instance { get; private set; }
+        public AbilityDefinitionAsset[] Abilities { get { return abilities; } }
         public CombatSimulation Simulation { get { return _simulation; } }
         public int DuplicateEventsDropped { get { return _received.Dropped; } }
 

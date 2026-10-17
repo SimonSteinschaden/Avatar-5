@@ -13,6 +13,13 @@ namespace Avatar5.Foundation
     {
         public static event Action<CombatEvent> CombatEventRaised;
         public static event Action<PresentationCue> CueRaised;
+        public static event Action<WorldEvent> WorldEventRaised;
+
+        public static void Publish(in WorldEvent worldEvent)
+        {
+            var handler = WorldEventRaised;
+            if (handler != null) handler(worldEvent);
+        }
 
         public static void Publish(in CombatEvent combatEvent)
         {
@@ -31,6 +38,7 @@ namespace Avatar5.Foundation
         {
             CombatEventRaised = null;
             CueRaised = null;
+            WorldEventRaised = null;
             ActorRegistry.Clear();
         }
     }

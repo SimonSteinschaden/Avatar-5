@@ -210,6 +210,8 @@ namespace Avatar5.Networking
             // Movement and casting share the command; the cast only runs once the motor accepted the sequence.
             if (status == RequestStatus.Accepted && command.Action == PlayerActionKind.Cast && CombatHost.Instance != null)
                 CombatHost.Instance.HandleCastCommand(ActorId, command, transform);
+            if (status == RequestStatus.Accepted && command.Action == PlayerActionKind.Interact && WorldHost.Instance != null)
+                WorldHost.Instance.HandleInteract(ActorId, transform.position);
             return status;
         }
 
