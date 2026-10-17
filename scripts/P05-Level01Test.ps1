@@ -14,14 +14,14 @@ param(
     [string] $Player = (Join-Path $PSScriptRoot '..\Artifacts\Level01\Avatar5_Level01.exe'),
     [string] $LogDir = (Join-Path $PSScriptRoot '..\Artifacts\Level01\logs'),
     [int] $Port = 7789,
-    [int] $Seconds = 75
+    [int] $Seconds = 150
 )
 $ErrorActionPreference = 'Stop'
 $Player = (Resolve-Path $Player).Path
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 Get-ChildItem $LogDir -Filter '*.log' -ErrorAction SilentlyContinue | Remove-Item -Force
 
-$route = 'W:4:6.3;I;W:0:9;W:0:15;K;W:3:29;F:7:32;F:7:32;F:7:32;W:0:33;W:0:39;W:0:43'
+$route = 'W:4:6.3;I;W:0:9;W:0:15;K;W:0:15;W:3:29;F:7:32;F:7:32;F:7:32;W:0:33;W:0:38.5;K;W:0:40.5;W:0:45.5'
 $results = @()
 function Check([string] $name, [bool] $ok, [string] $detail) { $script:results += ,@{ Name = $name; Ok = $ok; Detail = $detail } }
 
@@ -61,7 +61,7 @@ foreach ($class in 'fire', 'water', 'earth', 'air') {
     Check "solo ${class}: class applied" ([string]$plays -match "plays $class") "$plays"
     Check "solo ${class}: route finished" ((Lines $log 'A5ROUTE' | Where-Object { $_ -like '*done*' }).Count -ge 1) ''
     Check "solo ${class}: level completed" ($soloWorld -and $soloWorld.Completed) $(if ($soloWorld) { $soloWorld.Line } else { 'no world report' })
-    Check "solo ${class}: lever, gates and shrine on" ($soloWorld -and $soloWorld.States -eq '1001:1,1101:1,2001:1,2101:1,9001:0') $(if ($soloWorld) { $soloWorld.States } else { '' })
+    Check "solo ${class}: lever, gates and shrine on" ($soloWorld -and $soloWorld.States -eq '1001:1,1101:1,2001:1,2101:1,3001:1,3101:1,9001:0') $(if ($soloWorld) { $soloWorld.States } else { '' })
 }
 
 # ---- co-op with a late joiner ------------------------------------------------------------------

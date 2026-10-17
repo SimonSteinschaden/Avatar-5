@@ -137,7 +137,7 @@ namespace Avatar5.EditorTools
                 AssetDatabase.CreateFolder("Assets/_Game/Data", "Abilities");
             }
             var list = new List<AbilityDefinition>(StarterAbilities.All());
-            list.Add(StarterEnemies.BruteSlam());
+            list.AddRange(StarterEnemies.AllAttacks());
             var definitions = list.ToArray();
             var assets = new AbilityDefinitionAsset[definitions.Length];
             for (var i = 0; i < definitions.Length; i++)
@@ -149,6 +149,12 @@ namespace Avatar5.EditorTools
                     asset = ScriptableObject.CreateInstance<AbilityDefinitionAsset>();
                     asset.CopyFrom(definitions[i]);
                     AssetDatabase.CreateAsset(asset, path);
+                }
+                else
+                {
+                    // Code values (StarterAbilities) are the balancing source until a designer owns the assets.
+                    asset.CopyFrom(definitions[i]);
+                    EditorUtility.SetDirty(asset);
                 }
                 assets[i] = asset;
             }
@@ -188,13 +194,38 @@ namespace Avatar5.EditorTools
             return prefab;
         }
 
+        public const string SkirmisherPrefabPath = "Assets/_Game/Prefabs/Enemy_Skirmisher.prefab";
+        public const string CasterPrefabPath = "Assets/_Game/Prefabs/Enemy_Caster.prefab";
+        public const string WardenPrefabPath = "Assets/_Game/Prefabs/Boss_Warden.prefab";
+
         private static GameObject BuildBrutePrefab()
         {
-            var definition = StarterEnemies.Brute();
-            var root = new GameObject("Enemy_Brute");
+            return BuildEnemyPrefab(StarterEnemies.BruteTypeId, "Enemy_Brute", BrutePrefabPath, 1f, "Greybox_Wall", new[] { StarterEnemies.BruteSlamAbilityId }, 8f);
+        }
+
+        /// <summary>Skirmisher, caster and warden prefabs plus the type → prefab table for encounters.</summary>
+        public static CombatHost.EnemyPrefabEntry[] BuildEncounterPrefabs(GameObject brute)
+        {
+            var skirmisher = BuildEnemyPrefab(StarterEnemies.SkirmisherTypeId, "Enemy_Skirmisher", SkirmisherPrefabPath, 0.75f, "Placeholder_Aim", new[] { StarterEnemies.SkirmisherSlashId }, 0f);
+            var caster = BuildEnemyPrefab(StarterEnemies.CasterTypeId, "Enemy_Caster", CasterPrefabPath, 0.8f, "Greybox_Ground", new[] { StarterEnemies.CasterBoltId }, 0f);
+            var warden = BuildEnemyPrefab(StarterEnemies.WardenTypeId, "Boss_Warden", WardenPrefabPath, 1.7f, "Greybox_Obstacle", new[] { StarterEnemies.WardenSlamId, StarterEnemies.WardenShockwaveId }, 0f);
+            foreach (var p in new[] { skirmisher, caster, warden }) RegisterNetworkPrefab(p);
+            return new[]
+            {
+                new CombatHost.EnemyPrefabEntry { EnemyTypeId = StarterEnemies.BruteTypeId, Prefab = brute.GetComponent<NetworkObject>() },
+                new CombatHost.EnemyPrefabEntry { EnemyTypeId = StarterEnemies.SkirmisherTypeId, Prefab = skirmisher.GetComponent<NetworkObject>() },
+                new CombatHost.EnemyPrefabEntry { EnemyTypeId = StarterEnemies.CasterTypeId, Prefab = caster.GetComponent<NetworkObject>() },
+                new CombatHost.EnemyPrefabEntry { EnemyTypeId = StarterEnemies.WardenTypeId, Prefab = warden.GetComponent<NetworkObject>() }
+            };
+        }
+
+        private static GameObject BuildEnemyPrefab(int typeId, string name, string path, float scale, string materialName, int[] loadout, float revive)
+        {
+            var definition = StarterEnemies.Get(typeId);
+            var root = new GameObject(name);
             var agent = root.AddComponent<NavMeshAgent>();
-            agent.radius = 0.6f;
-            agent.height = 2f;
+            agent.radius = 0.6f * scale;
+            agent.height = 2f * scale;
             agent.speed = definition.MoveSpeed;
             agent.angularSpeed = 540f;
             agent.acceleration = 20f;
@@ -203,9 +234,9 @@ namespace Avatar5.EditorTools
             body.name = "Body";
             UnityEngine.Object.DestroyImmediate(body.GetComponent<Collider>());
             body.transform.SetParent(root.transform, false);
-            body.transform.localPosition = new Vector3(0f, 1f, 0f);
-            body.transform.localScale = new Vector3(1.2f, 1f, 1.2f);
-            var tint = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Game/Materials/Greybox_Wall.mat");
+            body.transform.localPosition = new Vector3(0f, 1f * scale, 0f);
+            body.transform.localScale = new Vector3(1.2f * scale, 1f * scale, 1.2f * scale);
+            var tint = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Game/Materials/" + materialName + ".mat");
             if (tint != null) body.GetComponent<Renderer>().sharedMaterial = tint;
             var horn = GameObject.CreatePrimitive(PrimitiveType.Cube);
             horn.name = "FacingMarker";
@@ -216,9 +247,9 @@ namespace Avatar5.EditorTools
 
             // Hit volume so projectiles and walls checks see the brute like any other actor.
             var capsule = root.AddComponent<CapsuleCollider>();
-            capsule.center = new Vector3(0f, 1f, 0f);
-            capsule.radius = 0.6f;
-            capsule.height = 2f;
+            capsule.center = new Vector3(0f, 1f * scale, 0f);
+            capsule.radius = 0.6f * scale;
+            capsule.height = 2f * scale;
 
             root.AddComponent<NetworkObject>();
             var netTransform = root.AddComponent<NetworkTransform>();
@@ -226,13 +257,13 @@ namespace Avatar5.EditorTools
             netTransform.Interpolate = true;
             netTransform.SyncRotAngleX = netTransform.SyncRotAngleZ = false;
             netTransform.SyncScaleX = netTransform.SyncScaleY = netTransform.SyncScaleZ = false;
-            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Enemies, definition.MaxHealth, 0f, 0f,
-                new[] { StarterEnemies.BruteSlamAbilityId }, 8f);
-            root.AddComponent<EnemyBrainHost>();
+            root.AddComponent<NetworkCombatActor>().Configure(TeamKind.Enemies, definition.MaxHealth, 0f, 0f, loadout, revive);
+            root.AddComponent<EnemyBrainHost>().Configure(typeId);
             var bar = root.AddComponent<HealthBarView>();
             SetField(bar, "tintTarget", body.GetComponent<Renderer>());
+            if (scale > 1.2f) SetFloat(bar, "height", 2.3f * scale);
 
-            var prefab = PrefabUtility.SaveAsPrefabAsset(root, BrutePrefabPath);
+            var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;
         }
@@ -301,6 +332,7 @@ namespace Avatar5.EditorTools
             enemyPoint.position = center + new Vector3(0f, 0f, 12f);
             enemyPoint.rotation = Quaternion.Euler(0f, 180f, 0f);
             combatHost.ConfigureEnemies(brute.GetComponent<NetworkObject>(), new[] { enemyPoint });
+            combatHost.ConfigureEnemyPrefabs(BuildEncounterPrefabs(brute));
 
             // Walkable area is baked by the host on load (CombatHost); the surface only describes what to collect.
             foreach (var root in scene.GetRootGameObjects())
@@ -325,7 +357,19 @@ namespace Avatar5.EditorTools
                 new CueVisual { CueId = StarterEnemies.BruteTelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(0.95f, 0.15f, 0.1f, 1f),
                     Range = StarterEnemies.BruteSlam().Range, Duration = StarterEnemies.Brute().TelegraphDuration },
                 new CueVisual { CueId = StarterEnemies.BruteSlamCue, Kind = CueVisualKind.Burst, Color = new Color(0.55f, 0.35f, 0.15f, 0.9f),
-                    Range = StarterEnemies.BruteSlam().Range }
+                    Range = StarterEnemies.BruteSlam().Range },
+                new CueVisual { CueId = StarterEnemies.SkirmisherTelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(0.95f, 0.5f, 0.1f, 1f),
+                    Range = StarterEnemies.SkirmisherSlash().Range, Duration = StarterEnemies.Skirmisher().TelegraphDuration },
+                Area(StarterEnemies.SkirmisherSlash(), new Color(0.9f, 0.6f, 0.2f, 0.8f)),
+                new CueVisual { CueId = StarterEnemies.CasterTelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(0.8f, 0.2f, 0.9f, 1f),
+                    Range = 0.8f, Duration = StarterEnemies.Caster().TelegraphDuration },
+                Projectile(StarterEnemies.CasterBolt(), new Color(0.8f, 0.2f, 0.9f, 1f)),
+                new CueVisual { CueId = StarterEnemies.WardenTelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(0.95f, 0.1f, 0.1f, 1f),
+                    Range = StarterEnemies.WardenSlam().Range, Duration = StarterEnemies.Warden().TelegraphDuration },
+                new CueVisual { CueId = StarterEnemies.WardenSlamCue, Kind = CueVisualKind.Burst, Color = new Color(0.5f, 0.3f, 0.15f, 0.9f), Range = StarterEnemies.WardenSlam().Range },
+                new CueVisual { CueId = StarterEnemies.WardenPhase2TelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(1f, 0f, 0.4f, 1f),
+                    Range = StarterEnemies.WardenShockwave().Range, Duration = StarterEnemies.Warden().Phases[0].TelegraphDuration },
+                new CueVisual { CueId = StarterEnemies.WardenShockwaveCue, Kind = CueVisualKind.Burst, Color = new Color(0.6f, 0.2f, 0.3f, 0.9f), Range = StarterEnemies.WardenShockwave().Range }
             });
             views.AddComponent<CombatFeedbackView>();
 
@@ -349,6 +393,13 @@ namespace Avatar5.EditorTools
         private static CueVisual Area(AbilityDefinition a, Color color)
         {
             return new CueVisual { CueId = a.CueId, Kind = CueVisualKind.Cone, Color = color, Range = a.Range, ConeHalfAngleDegrees = a.ConeHalfAngleDegrees };
+        }
+
+        private static void SetFloat(UnityEngine.Object target, string field, float value)
+        {
+            var serialized = new SerializedObject(target);
+            serialized.FindProperty(field).floatValue = value;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void SetField(UnityEngine.Object target, string field, UnityEngine.Object value)

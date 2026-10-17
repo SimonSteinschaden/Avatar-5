@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Avatar5.Contracts;
+using Avatar5.Gameplay.Enemies;
 using Avatar5.Networking;
 using Avatar5.World;
 using Unity.AI.Navigation;
@@ -24,6 +25,7 @@ namespace Avatar5.EditorTools
         public const string PlayerOutput = "Artifacts/Level01/Avatar5_Level01.exe";
 
         public const int LeverId = 1001, GateAId = 1101, BrazierId = 2001, GateBId = 2101, GoalId = 9001;
+        public const int EncounterArenaId = 3001, EncounterBossId = 3101;
 
         [MenuItem("Avatar5/Setup/Build Level01 Greybox")]
         public static void Build()
@@ -64,13 +66,24 @@ namespace Avatar5.EditorTools
             Box("Crate_2", t, new Vector3(6f, 0.75f, 18f), new Vector3(1.5f, 1.5f, 1.5f), materials["Obstacle"]);
             Brazier(t, new Vector3(7f, 0f, 32f), materials);
             Divider("Divider_B", t, 36f, materials["Wall"]);
-            Gate("GateB", t, 36f, GateBId, new[] { BrazierId, GateAId }, materials["Obstacle"]);
+            Encounter("Encounter_Arena", t, EncounterArenaId, new Vector3(0f, 0f, 22f), 9f, new[]
+            {
+                Spawn(StarterEnemies.BruteTypeId, new Vector3(0f, 0f, 25f), 1),
+                Spawn(StarterEnemies.SkirmisherTypeId, new Vector3(-4f, 0f, 26f), 1),
+                Spawn(StarterEnemies.CasterTypeId, new Vector3(5f, 0f, 29f), 2),
+                Spawn(StarterEnemies.SkirmisherTypeId, new Vector3(3f, 0f, 24f), 3)
+            });
+            Gate("GateB", t, 36f, GateBId, new[] { BrazierId, GateAId, EncounterArenaId }, materials["Obstacle"]);
+            Encounter("Encounter_Boss", t, EncounterBossId, new Vector3(0f, 0f, 41f), 5f, new[]
+            {
+                Spawn(StarterEnemies.WardenTypeId, new Vector3(0f, 0f, 43f), 1)
+            });
 
             // Section 3: the exit.
             var goal = new GameObject("Goal");
             goal.transform.SetParent(t, false);
-            goal.transform.position = new Vector3(0f, 0f, 43f);
-            goal.AddComponent<WorldObjectAuthoring>().Configure(GoalId, WorldObjectKind.Goal, 2.5f, new[] { GateBId }, null);
+            goal.transform.position = new Vector3(0f, 0f, 45.5f);
+            goal.AddComponent<WorldObjectAuthoring>().Configure(GoalId, WorldObjectKind.Goal, 2.5f, new[] { GateBId, EncounterBossId }, null);
             var disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             disc.name = "GoalMarker";
             UnityEngine.Object.DestroyImmediate(disc.GetComponent<Collider>());
@@ -89,18 +102,15 @@ namespace Avatar5.EditorTools
                 s.position = p;
                 spawns.Add(s);
             }
-            var enemyRoot = new GameObject("EnemyPoints").transform;
-            var brutePoint = new GameObject("Enemy_Brute_1").transform;
-            brutePoint.SetParent(enemyRoot, false);
-            brutePoint.position = new Vector3(0f, 0f, 24f);
-            brutePoint.rotation = Quaternion.Euler(0f, 180f, 0f);
+
 
             var session = UnityEngine.Object.FindAnyObjectByType<SessionRuntime>().gameObject;
             var spawner = session.GetComponent<NetworkPlayerSpawner>();
             spawner.Configure(spawner.PlayerPrefab, spawns.ToArray());
             var combat = session.GetComponent<CombatHost>();
             combat.Configure(combat.Abilities, null, new Transform[0]);
-            combat.ConfigureEnemies(AssetDatabase.LoadAssetAtPath<GameObject>(Avatar5P03NetworkArenaBuilder.BrutePrefabPath).GetComponent<NetworkObject>(), new[] { brutePoint });
+            // Enemies now come from encounters (WorldHost + EncounterDirector), no free-standing spawns.
+            combat.ConfigureEnemies(null, new Transform[0]);
             if (session.GetComponent<WorldHost>() == null) session.AddComponent<WorldHost>();
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath)) throw new InvalidOperationException("Failed to save " + ScenePath);
@@ -138,6 +148,33 @@ namespace Avatar5.EditorTools
             {
                 Debug.LogException(exception);
                 EditorApplication.Exit(1);
+            }
+        }
+
+        private static EncounterSpawnPoint Spawn(int typeId, Vector3 position, int minPlayers)
+        {
+            return new EncounterSpawnPoint { TypeId = typeId, Position = position, MinPlayers = minPlayers };
+        }
+
+        private struct EncounterSpawnPoint
+        {
+            public int TypeId;
+            public Vector3 Position;
+            public int MinPlayers;
+        }
+
+        private static void Encounter(string name, Transform parent, int id, Vector3 center, float radius, EncounterSpawnPoint[] spawns)
+        {
+            var encounter = new GameObject(name);
+            encounter.transform.SetParent(parent, false);
+            encounter.transform.position = center;
+            encounter.AddComponent<WorldObjectAuthoring>().Configure(id, WorldObjectKind.Encounter, radius, new int[0], null);
+            foreach (var s in spawns)
+            {
+                var marker = new GameObject("Spawn_Type" + s.TypeId).transform;
+                marker.SetParent(encounter.transform, false);
+                marker.position = s.Position;
+                marker.gameObject.AddComponent<EncounterSpawnMarker>().Configure(s.TypeId, s.MinPlayers);
             }
         }
 

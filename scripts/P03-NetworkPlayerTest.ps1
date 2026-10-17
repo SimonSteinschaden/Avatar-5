@@ -35,10 +35,18 @@ function Start-Instance([string] $name, [string[]] $extra) {
 Start-Instance 'host' @('-a5-session', 'host', '-a5-bot-move', '0,0', '-a5-quit-after', "$($Seconds + 4)")
 Start-Sleep -Seconds 4
 Start-Instance 'client1' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-move', '1,0', '-a5-quit-after', "$Seconds")
-# Staggered joins give a fixed slot order (slot 1..3), so the movers never walk into each other.
-Start-Sleep -Milliseconds 1500
+# Each client joins only after the previous one is connected: fixed slot order (1..3), so the movers never collide.
+function Wait-Joined([string] $name) {
+    $log = Join-Path $LogDir "$name.log"
+    $until = (Get-Date).AddSeconds(20)
+    while ((Get-Date) -lt $until) {
+        if ((Test-Path $log) -and (Select-String -Path $log -Pattern "A5SESSION result=ok" -Quiet)) { return }
+        Start-Sleep -Milliseconds 250
+    }
+}
+Wait-Joined 'client1'
 Start-Instance 'client2' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-move', '0,-1', '-a5-quit-after', "$Seconds")
-Start-Sleep -Milliseconds 1500
+Wait-Joined 'client2'
 Start-Instance 'client3' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-move', '-1,0', '-a5-bot-hijack', '-a5-quit-after', "$Seconds")
 
 $deadline = (Get-Date).AddSeconds($Seconds + 30)

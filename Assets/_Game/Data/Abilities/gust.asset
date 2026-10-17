@@ -22,7 +22,7 @@ MonoBehaviour:
   coneHalfAngleDegrees: 30
   projectileSpeed: 0
   projectileRadius: 0
-  damage: 6
+  damage: 10
   knockback: 4
   appliesStatus: 0
   statusDuration: 0
