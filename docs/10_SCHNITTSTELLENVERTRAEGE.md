@@ -224,6 +224,22 @@ struct SaveLoadResult { SaveLoadError Error; string Detail; bool UsedBackup; Sav
 - **Checkpoints:** Host speichert, wenn ein Tor aufgeht und wenn das Level geschafft ist. Belohnungen laufen über `RewardLedger` mit stabilen `RewardGrantId`s (`level:<id>:completed`), jede höchstens einmal.
 - **Fortsetzen:** Host mit „Spielstand fortsetzen“ (Lobby) bzw. `-a5-continue` stellt den Weltzustand vor dem ersten Spieler wieder her; Clients erhalten ihn per Snapshot. Ein unbrauchbarer Stand wird nie überschrieben: Der Host speichert dann unter `campaign-new` weiter.
 
+### 3g-2. Progression (S06-02)
+
+```csharp
+struct ActorStats { float DamageMultiplier; float CooldownMultiplier; float MaxHealthBonus; static ActorStats Neutral; }
+interface IStatProvider { ActorStats GetStats(ulong actorId); }          // CombatSimulation.Stats (optional)
+struct PlayerProgressView { int Level, Xp, XpForNextLevel, FreePoints, PowerRank, FocusRank, VigorRank; }
+interface IProgressionSource { PlayerProgressView Progress { get; } }  // NetworkPlayerAvatar, für HUD/Menüs
+enum TalentId : byte { Power = 1, Focus = 2, Vigor = 3 }                // Avatar5.Gameplay.Progression
+// SaveGameV1 additiv erweitert (weiter Schema 1, ältere Dateien laden mit 0/leer):
+SavePlayerRecord.xp; SavePlayerRecord.talents : List<SaveTalentRank{talent, rank}>; SaveGameV1.progressionGrants : List<string>
+```
+
+- XP: Stufe n → n+1 kostet 100 × n (Stufe 3 bei 300 XP, max. 10). Belohnungen: Encounter 60, Boss-Encounter 150, Level geschafft 100 – jede `RewardGrantId` höchstens einmal **pro Spieler-Slot** (`"<rewardId>@<slot>"` wird gespeichert), Gutschrift an alle Spieler, die beim Abschluss in der Session sind.
+- Talente: pro Stufe ab 2 ein Punkt, je Talent max. Rang 3: Kraft +12 % Schaden/Rang, Fokus −10 % Abklingzeit/Rang (min. ×0,5), Zähigkeit +15 max. LP/Rang. Wahl per RPC, der Host prüft Punkte und Rang.
+- Besitzregel bleibt v1: Fortschritt gehört dem Host-Spielstand und hängt am Session-Slot (1–4), nicht an einem Konto.
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp
