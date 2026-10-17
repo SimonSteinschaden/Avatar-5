@@ -58,6 +58,8 @@ namespace Avatar5.Gameplay.Combat
 
         public event Action<CombatEvent> EventRaised;
         public event Action<PresentationCue> CueRaised;
+        /// <summary>Where an element touched the world (projectile end, cone area) — for element puzzles (P05).</summary>
+        public event Action<ElementImpact> ImpactRaised;
 
         public CombatSimulation(AbilityCatalog catalog, CombatRules rules, ICombatWorld world)
         {
@@ -165,6 +167,7 @@ namespace Avatar5.Gameplay.Combat
             else
             {
                 ResolveCone(castId, actor, ability, origin, direction);
+                RaiseImpact(request.ActorId, ability.Element, PlanarMath.Add(origin, PlanarMath.Scale(direction, ability.Range * 0.5f)), ability.Range * 0.5f);
             }
             return new AbilityCastResult { Status = RequestStatus.Accepted, CastId = castId };
         }
@@ -298,6 +301,7 @@ namespace Avatar5.Gameplay.Combat
             var p = _projectiles[index];
             _projectiles.RemoveAt(index);
             Raise(CombatEventKind.ProjectileEnded, p.Owner, 0, p.Ability.Id, (int)p.CastId, 0f);
+            RaiseImpact(p.Owner, p.Ability.Element, at, p.Ability.ProjectileRadius + 0.3f);
             RaiseCue(-p.Ability.CueId, at, p.Direction);
         }
 
@@ -403,6 +407,12 @@ namespace Avatar5.Gameplay.Combat
             var handler = EventRaised;
             if (handler != null) handler(evt);
             return evt.EventId;
+        }
+
+        private void RaiseImpact(ulong source, ElementKind element, Float2 at, float radius)
+        {
+            var handler = ImpactRaised;
+            if (handler != null) handler(new ElementImpact { SourceActorId = source, Element = element, Position = at, Radius = radius });
         }
 
         private void RaiseCue(int cueId, Float2 at, Float2 direction)
