@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01, P07a, P03 S03-01/S03-02, P02 S02-01/S02-02, P04 S04-01, P05 S05-01, P06 S06-01, P08 S08-01 (alle gemerged) · **In Arbeit:** P04 S04-02 Encounters/Mini-Boss (`feature/p04-encounters`, unfertig)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01, P07a, P03 S03-01/S03-02, P02 S02-01/S02-02, P04 S04-01, P05 S05-01, P06 S06-01, P08 S08-01, P04 S04-02 (alle gemerged)
 
 ## Implementiert / als Source vorhanden
 
@@ -94,6 +94,21 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 
 **Spielen:** `Level01.unity` öffnen → Play → Sitzung erstellen. Zum Hebel rechts vorne, **E** → Tor A öffnet sich; Brute besiegen; Feuerball auf die Schale rechts hinten → Tor B; ins grüne Ziel. Banner „Level geschafft!“.
 
+### P04 Story S04-02 – Drei Archetypen, Mini-Boss, Encounters (Branch `feature/p04-encounters`)
+
+| Gegner | Rolle | Werte |
+|---|---|---|
+| Brute | Nahkampf, Bodenschlag-Kreis | 160 LP, Ankündigung 0,9 s |
+| Flinker | schnell, kurzer Hieb-Kegel | 70 LP, 5 m/s, Ankündigung 0,55 s |
+| Fernkämpfer | Projektil aus bis 9 m, weicht unter 4 m aus | 60 LP |
+| Wärter (Mini-Boss) | Phase 1 Schlag 3,5 m; Phase 2 ab 50 % Schockwelle 5 m, schneller | 450 LP |
+
+- `EncounterDirector` (engine-frei): startet bei Spielernähe, skaliert +35 % LP je weiterem Spieler und schaltet Zusatzgegner ab 2/3 Spielern frei, meldet den Abschluss genau einmal; Encounter-Gegner werden nicht wiederbelebt und verschwinden nach 2 s.
+- `WorldObjectKind.Encounter`: Abschluss öffnet Tore, ist Ziel-Bedingung, wird gespeichert und nach „Fortsetzen“ nicht erneut gespawnt.
+- Level01: Arena-Encounter (Brute + Flinker, ab 2 Spielern Fernkämpfer, ab 3 ein zweiter Flinker) → Tor B braucht Schrein, Tor A und Arena; Mini-Boss-Encounter vor dem Ziel → Ziel braucht Tor B und Boss.
+- Balance: Windklinge 11 → 16 Schaden, Böe 6 → 10 (Luft schaffte den Boss allein nicht). Fähigkeiten-Assets werden beim Generieren jetzt aus den Code-Werten aktualisiert.
+- Testbot spielt wie ein vorsichtiger Spieler: hält ~5 m Abstand und geht nur während einer Ankündigung aus dem Ring.
+
 ### P02 Story S02-02 – Vier Elementklassen mit je 2 Fähigkeiten (Branch `feature/p02-element-classes`, Designentscheidung A)
 
 | Klasse | Slot 0 (Projektil, LMB) | Slot 1 (Fläche, RMB) |
@@ -141,6 +156,22 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P04 S04-02 (17.10.2026, `scripts/Run-AllTests.ps1`, separater Klon)
+
+| Schritt | Status | Ergebnis | Dauer |
+|---|---|---|---|
+| build | passed | exit=0, compiler errors=0 | 47.5 s |
+| EditMode | passed | 155/155 passed, 0 failed, 0 skipped | 15.2 s |
+| PlayMode | passed | 34/36 passed, 0 failed, 2 skipped | 25.2 s |
+| P03-SessionTest | passed | 11/11 checks passed | 75.8 s |
+| P03-NetworkPlayerTest | passed | 8/8 checks passed | 31.7 s |
+| P02-CombatTest | passed | 26/26 checks passed | 38.9 s |
+| P04-EnemyTest | passed | 18/18 checks passed | 43.5 s |
+| P05-Level01Test | passed | 24/24 checks passed | 763.7 s |
+| P06-SaveTest | passed | 10/10 checks passed | 42.2 s |
+
+Gesamtergebnis **PASSED**. Neu: EditMode +9 Fälle (Archetypen/Angriffe gültig, Encounter-Aktivierung, Skalierung, einmaliger Abschluss, gespeicherter Abschluss, Solo-Validierung, Boss-Phase, Fernkämpfer weicht aus, Encounter öffnet Tor). Level01 mit Encountern und Mini-Boss **allein mit allen 4 Klassen** und **zu dritt + Nachzügler** geschafft (Koop: Gegner mit ×1,70 bzw. Boss ×2,05 LP). Gefundene Probleme unterwegs: Luft zu schwach gegen den Boss (Balance angepasst), der Bot lief beim Ausweichen aus dem Levelabschnitt bzw. stand im Schlag (Bot-Verhalten verbessert), zufällige Beitrittsreihenfolge im Bewegungstest (Clients treten jetzt nacheinander bei). Bericht: `docs/testlaeufe/P04b_2026-10-17_report.md`.
 
 ## Ausgeführte Prüfungen P02 S02-02 (17.10.2026, `scripts/Run-AllTests.ps1`, separater Klon)
 
@@ -280,7 +311,7 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - Netzwerk-Spieler: keine Client-Prediction (eigene Figur reagiert mit einer Netzwerk-Rundreise Verzögerung; laut Architektur erst nach Latenzmessung entscheiden). Kein manueller Spieltest mit zwei Personen, keine Latenz-/Verlustsimulation. Dodge/Interact werden übertragen, aber noch nicht ausgeführt. Late Join nur, solange die Arena geladen ist; Szenenwechsel fehlt noch.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
 - P02: 8 von 24 Fähigkeiten (M2-Ziel 4 × 2 erreicht, Balance ungeprüft); Klassen sind frei wählbar, aber noch ohne eigenes Klassenmenü/Charaktermodell; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
-- P04: ein Archetyp, kein EncounterDirector, keine Skalierung nach Spielerzahl, kein Boss; kein Stuck-Handling über das NavMesh hinaus; Gegner-Definition noch als Code (`EnemyCatalog`), Asset folgt mit S04-02. Spieler werden am Ort wiederbelebt (Checkpoint-Regel kommt mit P05/P06).
+- P04: 3 Archetypen + 1 Mini-Boss (M2-Umfang), noch keine Encounter-Rücksetzung bei Gruppen-Niederlage, kein Stuck-Handling über das NavMesh hinaus, Gegner-Definitionen noch als Code (`StarterEnemies`), keine Gegner-Animationen/-Modelle. Spieler werden am Ort wiederbelebt (Checkpoint-Regel kommt mit P05/P06).
 - P05: Level01 ist ein Greybox-Gerüst von wenigen Minuten, nicht das M2-Level (15–30 min, 1–2 Elementrätsel, 3 Gegnertypen, Mini-Boss). Kein Hub, keine Levelübergänge/Szenenwechsel im Netz, kein Checkpoint-Neustart (Snapshot/Restore existiert, wird aber noch nicht genutzt), kein QuestGraph. Bots laufen gerade Linien; ein echter Spieltest fehlt.
 - P06: noch keine Progression (XP, Talente, `IStatProvider`), keine Checkpoint-Spawnpunkte (Spieler starten nach Fortsetzen am Levelstart), Spieler-Lebenspunkte werden gespeichert, aber noch nicht wiederhergestellt; nur ein Kampagnen-Slot; keine Rotation über mehr als ein Backup; Text zur Besitzregel steht nur in der Doku, noch nicht im Spiel.
 - P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
@@ -295,4 +326,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P04 S04-02 (2 weitere Archetypen, Mini-Boss, EncounterDirector), Level01 auf M2-Umfang (15–30 min, 2 Elementrätsel), P06 S06-02 (XP, Talente), P04 S04-02 (weitere Archetypen + EncounterDirector), P02 auf 4 Elemente × 2 Fähigkeiten und Level01 auf M2-Umfang. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P06 S06-02 (XP, Talente, `IStatProvider`), P07b (Toon-Look für Level01, HUD/Lobby-UI, Audio), Level01 auf M2-Länge (15–30 min, 2. Elementrätsel) (weitere Archetypen + EncounterDirector), P02 auf 4 Elemente × 2 Fähigkeiten und Level01 auf M2-Umfang. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.

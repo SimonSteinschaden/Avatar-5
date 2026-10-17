@@ -167,6 +167,27 @@ bool IsDefeated(ulong actorId);
 - Zielwahl: nächster lebender Spieler im Aggro-Radius, je anderem Gegner auf demselben Ziel +4 m (Anti-Fokus), Wechsel nur bei ≥ 3 m Vorsprung; außerhalb des Leinenradius kehrt der Gegner heim.
 - Besiegte Spieler bewegen sich nicht und können nicht zaubern; der Host belebt nach `NetworkCombatActor.ReviveSeconds` wieder (Spieler 5 s, Brute 8 s am Startpunkt, Puppe 3 s).
 
+### 3e-2. Archetypen, Boss-Phasen, Encounters (S04-02)
+
+```csharp
+sealed class EnemyPhase { float HealthFraction; float TelegraphDuration, RecoverDuration; int AttackAbilityId, TelegraphCueId;
+    float MoveSpeedMultiplier; float AttackStartRange; }          // EnemyDefinition.Phases, nur absteigend
+EnemyDefinition.PreferredMinRange                                 // Fernkämpfer weichen aus statt nah anzugreifen
+CombatEventKind.BossPhaseChanged = 11                             // EffectId = Phase (0 = erste)
+enum EncounterState { Dormant, Active, Completed }
+sealed class EncounterDefinition { int Id /* = WorldObjectId (Kind Encounter) */; Float2 Center; float ActivationRadius;
+    float HealthBonusPerExtraPlayer = 0.35f; List<EncounterSpawn> Spawns; }
+sealed class EncounterSpawn { int EnemyTypeId; Float2 Position; int MinPlayers = 1; }
+sealed class EncounterDirector { List<EncounterSpawnOrder> Tick(IList<Float2> livingPlayers, int playerCount);
+    void RegisterSpawned(int encounterId, ulong actorId); void OnActorDefeated(ulong actorId); void MarkCompleted(int id);
+    event Action<int> Completed; }
+WorldObjectKind.Encounter; WorldStateService.CompleteEncounter(int id)
+```
+
+- Archetypen: Brute (1), Flinker (2, schnell, kurze Ankündigung 0,55 s), Fernkämpfer (3, Projektil aus 9 m, weicht unter 4 m aus), Mini-Boss Wärter (10, 600 LP, Phase 2 ab 50 %: Schockwelle 5 m, schneller).
+- Encounter starten, sobald ein lebender Spieler im Aktivierungsradius ist; Skalierung: +35 % LP je weiterem Spieler, zusätzliche Gegner über `MinPlayers` (nicht „LP × 4“). Jede Encounter-Konfiguration muss allein schaffbar sein (Validierung).
+- Encounter-Gegner werden nicht wiederbelebt und verschwinden 2 s nach der Niederlage; der Abschluss wird genau einmal gemeldet und setzt das Weltobjekt auf An (öffnet Tore, ist Ziel-Bedingung, landet im Spielstand). Abgeschlossene Encounter spawnen nach „Fortsetzen“ nicht erneut.
+
 ## 3f. Umgesetzte P05-Weltverträge (S05-01, `Avatar5.Contracts/WorldContracts.cs`)
 
 ```csharp
