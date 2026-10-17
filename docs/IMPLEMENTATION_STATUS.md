@@ -1,13 +1,13 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit:** P03 S03-01 Sessions (Branch `feature/p03-sessions`)
 
 ## Implementiert / als Source vorhanden
 
 - Architektur- und Spezifikationsdokumente P00–P08, Schnittstellenverträge, Agentenregeln
 - Git-Hygiene (.gitignore/.gitattributes), reproduzierbare lokale Git-Historie
 - Unity 6.3 LTS (6000.3.26f1) URP-Projekt mit Starter-Szenen (Commit `96135bb`)
-- Unity-unabhängige C#-Contracts: ElementKind, PlayerCommand, AbilityRequest, CombatEvent, WorldEvent, PresentationCue, VersionContracts, **PlayerPose, IPlayerCommandSink, IPlayerPoseSource (P01)**
+- Unity-unabhängige C#-Contracts: ElementKind, PlayerCommand, AbilityRequest, CombatEvent, WorldEvent, PresentationCue, VersionContracts, **PlayerPose, IPlayerCommandSink, IPlayerPoseSource (P01)**, **SessionConfig, SessionState, SessionError, ISessionService (P03)**
 - Gameplay-Infrastruktur: pro-Actor SequenceDeduplicator
 - MonoBehaviour-Bootstrap, einfaches Entwicklungsmenü, Editor-Setup für Starter-Szenen, Windows-Development-Build-Befehl
 
@@ -25,6 +25,18 @@
 
 **Spielen:** `Assets/_Game/Scenes/P01_TestArena.unity` öffnen → Play. WASD/linker Stick bewegen, Maus/rechter Stick zielen, Mausrad zoomt, Esc/Start pausiert die Eingabe.
 
+### P03 Story S03-01 – Private Session erstellen, beitreten, verlassen (Branch `feature/p03-sessions`)
+
+| Baustein | Assembly | Inhalt |
+|---|---|---|
+| `SessionConfig`, `SessionState`, `SessionError`, `SessionJoinResult`, `ISessionService` | `Avatar5.Contracts` | Session-Port, siehe `10_SCHNITTSTELLENVERTRAEGE.md` §3b |
+| `ConnectionPayload`, `SessionAdmission`, `AdmissionReasonCodec`, `JoinCodes` | `Avatar5.Gameplay` (engine-frei) | Versions-Handshake (Protokoll + Content), max. 4 Plätze, Ablehnungsgrund an Client, Code-Normalisierung, `IP:Port`-Parser |
+| `NetcodeSessionServiceBase`, `DirectSessionService`, `RelaySessionService`, `SessionRuntime`, `SessionDebugLobby` | `Avatar5.Networking` (neu) | NGO-Approval vor jedem Spawn, Spielerzahl per Named Message an Clients, Host-Ende mit Grund „HostEnded“, Direkt-UDP (LAN/Test), Unity Sessions + Relay, OnGUI-Lobby mit Code/Status/Slots/deutschen Fehlertexten, Kommandozeilen-Automation |
+| `P03_SessionTest.unity`, `Avatar5P03SessionSceneBuilder` | Assets/Editor | Testszene; Menü `Avatar5/Build/P03 Session Test Player` |
+| `scripts/P03-SessionTest.ps1` | – | Mehrprozess-Test Host + 5 Clients |
+
+Pakete neu: `com.unity.netcode.gameobjects` 2.13.3, `com.unity.transport` 2.7.4, `com.unity.services.multiplayer` 2.3.3 (Versionen = Empfehlung des installierten Editors). Betrieb/Fehlercodes: `docs/P03_SESSIONS_BETRIEB.md`. Noch keine Spieler-Actors im Netz (`CreatePlayerObject = false`), das ist Story S03-02.
+
 ### P07a – Toon-Shading und schwarze Konturen (Style-Prototyp)
 
 | Baustein | Ort | Inhalt |
@@ -39,6 +51,18 @@
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P03 S03-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
+
+| Lauf | Ergebnis |
+|---|---|
+| Frischer Import mit neuen Paketen, Kompilierung | Exit 0, keine Compilerfehler |
+| EditMode (`-runTests -testPlatform EditMode`) | **95/95 bestanden** (64 Avatar5.Tests.EditMode inkl. 30 neue Session-Regel-Fälle, 31 Rendering) |
+| PlayMode (`-runTests -testPlatform PlayMode`) | **31 bestanden, 2 übersprungen** (Paket-eigene Input-System-Tests); neu: Solo-Host verbunden 1/4 und verlassen, zweites Erstellen abgewiesen, ungültiger Code, niemand unter der Adresse → `SessionNotFound` |
+| Windows-x64-Development-Player (nur `P03_SessionTest`) | gebaut |
+| Mehrprozess-Test `scripts/P03-SessionTest.ps1` (6 Prozesse, Direkt-UDP auf einem PC) | **11/11**: Host 4/4, Client sieht 4/4, 5. Spieler `SessionFull`, Protokoll 99 `VersionMismatch`, Verlassen → 3/4, Host beendet → Clients `HostEnded` |
+
+Ergebnisse: `docs/testlaeufe/P03_2026-10-17_*`. Der erste Mehrprozess-Lauf (7/11) fand zwei echte Fehler, beide behoben: gleichzeitige Beitritte wurden doppelt gezählt (3. Spieler fälschlich „voll“), und Clients sahen beim Host-Ende nur „Verbindung verloren“.
 
 ## Ausgeführte Prüfungen P07a (16./17.10.2026, Unity 6000.3.26f1, Windows 11, RTX 4060, Batchmode mit GPU)
 
@@ -73,7 +97,8 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - **Kein Windows-Build** für diesen Stand erstellt.
 - Lokale Occlusion-Behandlung der Kamera (Hindernisse vor dem Spieler ausblenden) fehlt; geplant mit P07-Outline/Fade.
 - Dodge/Cast/Interact werden nur als Absicht im `PlayerCommand` geliefert; Ausführung gehört zu P02.
-- Netzwerk: kein NGO-Code. `IPlayerCommandSink` ist der Andockpunkt für P03; Host-Validierung der maximalen Strecke und Connection-Ownership folgen dort.
+- P03: **Relay/Internet nicht getestet**, weil das Projekt noch nicht mit einem Unity-Cloud-Projekt verknüpft ist (`cloudProjectId` leer); der Relay-Adapter ist nur kompiliert. Kein Test über zwei PCs/Internetanschlüsse (M1-Abnahme), keine Latenz-/Verlustsimulation, keine Netzmetriken, kein Rejoin, kein Szenenwechsel. Keine manuelle Bedienung der Debug-Lobby durch eine Person.
+- Netzwerk-Spieler: `IPlayerCommandSink` über das Netz, Ownership und Host-Validierung der Strecke folgen in S03-02.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
 - Schaden/Fähigkeiten/Gegner/Weltfortschritt/Persistenz.
 - P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
@@ -88,4 +113,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-P03 (Online-Sessions mit NGO, Ziel M1: 2–4 Spieler auf zwei echten PCs) auf Basis von `IPlayerCommandSink`/`PlayerPose`. Danach P02 (`fireball`, `water_wave` hostautoritativ), P04 (erste Gegner), P05 Level 1. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen. Danach P03 S03-02: Netzwerk-Spieler mit Ownership in der P01-Arena (`IPlayerCommandSink`/`PlayerPose` über NGO), damit 2–4 Spieler sich gemeinsam bewegen (M1). Danach P02 (`fireball`, `water_wave` hostautoritativ), P04 (erste Gegner), P05 Level 1. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.

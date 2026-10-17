@@ -82,6 +82,30 @@ Semantik von `PlayerCommand` ab P01:
 - `IPlayerCommandSink.Submit` liefert `Accepted`, `RejectedNoAuthority` (fremde ActorId) oder `Duplicate` (gleiche/ältere SequenceId). In P01 ist der lokale `CharacterMotor` die Senke; P03 schaltet eine Netzwerk-Senke davor und prüft zusätzlich die Connection-Ownership.
 - Für `IPlayerCommandSink` ersetzt `RequestStatus` die `CommandResult`-Skizze aus §4.
 
+## 3b. Umgesetzte P03-Session-Verträge (`Avatar5.Contracts/SessionContracts.cs`)
+
+```csharp
+enum SessionPhase { Offline, Creating, Joining, Connected, Leaving, Failed }
+enum SessionRole  { None, Host, Client }
+enum SessionError { None, InvalidCode, SessionNotFound, SessionFull, VersionMismatch, TimedOut, Cancelled,
+                    AlreadyInSession, ServicesUnavailable, TransportFailed, ConnectionLost, HostEnded, Kicked, Unknown }
+struct SessionConfig { int MaxPlayers; int ProtocolVersion; int ContentVersion; }   // Default: 4 / VersionContracts
+struct SessionState  { SessionPhase Phase; SessionRole Role; string JoinCode; int PlayerCount; int MaxPlayers;
+                       ulong LocalPlayerId; SessionError LastError; bool IsActive; }
+struct SessionJoinResult { bool Success; SessionError Error; string Detail; SessionState State; }
+interface ISessionService {
+    SessionState State { get; }  event Action<SessionState> StateChanged;
+    Task<SessionJoinResult> CreatePrivateAsync(SessionConfig config, CancellationToken token);
+    Task<SessionJoinResult> JoinAsync(string joinCode, SessionConfig config, CancellationToken token);
+    Task LeaveAsync(CancellationToken token); }
+```
+
+- Abweichung zur Skizze in §4: `JoinAsync` erhält zusätzlich die `SessionConfig`, weil der Client seine eigene Protokoll-/Content-Version im Handshake mitschickt. `JoinResult` heißt `SessionJoinResult`.
+- `SessionState` wird nur vom Session-Service geschrieben. `LocalPlayerId` ist die Transport-Client-Id **dieser** Session, keine dauerhafte Identität (§2 `PlayerId`).
+- `Detail` ist nur für Logs (ohne Tokens/persönliche Ids); die UI zeigt einen Text pro `SessionError`.
+- **Versions-Handshake:** Der Client sendet mit der Verbindungsanfrage 12 Byte (`"AVA5"`, ProtocolVersion, ContentVersion, little-endian, `Avatar5.Gameplay.Session.ConnectionPayload`). Der Host prüft vor jedem Spawn (`SessionAdmission`): fehlende/fremde Daten oder andere Version → `VersionMismatch`, belegte Plätze ≥ `MaxPlayers` (max. 4, Host zählt mit) → `SessionFull`, Host fährt herunter → `HostEnded`. Der Ablehnungsgrund geht als `"A5:<SessionError>"` an den Client zurück.
+- **Join-Codes:** Relay-Codes werden getrimmt, ohne Leer-/Bindestriche, großgeschrieben, 4–16 ASCII-Buchstaben/Ziffern. Direktverbindung (LAN/Test): `IPv4[:Port]` oder `localhost[:Port]`, Standardport 7777.
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp
@@ -95,7 +119,7 @@ public interface IWorldStateService { WorldState GetCurrent(); InteractResult Tr
 public interface IStatProvider { ActorStats GetStats(ulong actorId); }
 public interface IProgressionService { RewardResult Apply(RewardEvent reward); TalentResult Choose(TalentChoice choice); }
 public interface ISaveService { SaveResult Save(CheckpointSnapshot snapshot); LoadResult Load(string saveId); }
-public interface ISessionService { Task<JoinResult> CreatePrivateAsync(SessionConfig config, CancellationToken token); Task<JoinResult> JoinAsync(string code, CancellationToken token); Task LeaveAsync(CancellationToken token); }
+public interface ISessionService { /* umgesetzt, siehe §3b */ }
 public interface IPresentationEventSink { void Present(in PresentationCue cue); }
 ```
 

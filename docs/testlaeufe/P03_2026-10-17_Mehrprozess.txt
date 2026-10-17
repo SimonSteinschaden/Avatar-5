@@ -1,0 +1,60 @@
+PASS  host created session
+PASS  host reached 4/4
+PASS  host back to 3/4 after leave
+PASS  client1 joined
+PASS  client1 left cleanly
+PASS  client2 sees 4 players
+PASS  client3 joined
+PASS  fifth player rejected (full)
+PASS  other version rejected
+PASS  client2 told host ended
+PASS  client3 told host ended
+
+--- client_full
+    A5SESSION mode=Direct phase=Joining role=Client players=0/4 code=- error=None
+    A5SESSION mode=Direct phase=Failed role=None players=0/0 code=- error=SessionFull
+    A5SESSION result=fail error=SessionFull detail=join 127.0.0.1:7781
+    A5SESSION quit
+--- client_version
+    A5SESSION mode=Direct phase=Joining role=Client players=0/4 code=- error=None
+    A5SESSION mode=Direct phase=Failed role=None players=0/0 code=- error=VersionMismatch
+    A5SESSION result=fail error=VersionMismatch detail=join 127.0.0.1:7781
+    A5SESSION quit
+--- client1
+    A5SESSION mode=Direct phase=Joining role=Client players=0/4 code=- error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=0/4 code=127.0.0.1:7781 error=None
+    A5SESSION result=ok error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=4/4 code=127.0.0.1:7781 error=None
+    A5SESSION mode=Direct phase=Leaving role=Client players=0/4 code=127.0.0.1:7781 error=None
+    A5SESSION mode=Direct phase=Offline role=None players=0/0 code=- error=None
+    A5SESSION left
+    A5SESSION quit
+--- client2
+    A5SESSION mode=Direct phase=Joining role=Client players=0/4 code=- error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=0/4 code=127.0.0.1:7781 error=None
+    A5SESSION result=ok error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=4/4 code=127.0.0.1:7781 error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=3/4 code=127.0.0.1:7781 error=None
+    A5SESSION mode=Direct phase=Offline role=None players=0/0 code=- error=HostEnded
+    A5SESSION quit
+--- client3
+    A5SESSION mode=Direct phase=Joining role=Client players=0/4 code=- error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=0/4 code=127.0.0.1:7781 error=None
+    A5SESSION result=ok error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=4/4 code=127.0.0.1:7781 error=None
+    A5SESSION mode=Direct phase=Connected role=Client players=3/4 code=127.0.0.1:7781 error=None
+    A5SESSION mode=Direct phase=Offline role=None players=0/0 code=- error=HostEnded
+    A5SESSION quit
+--- host
+    A5SESSION mode=Direct phase=Creating role=Host players=0/4 code=- error=None
+    A5SESSION mode=Direct phase=Connected role=Host players=1/4 code=<LAN-IP>:7781 error=None
+    A5SESSION result=ok error=None
+    A5SESSION mode=Direct phase=Connected role=Host players=4/4 code=<LAN-IP>:7781 error=None
+    A5SESSION mode=Direct phase=Connected role=Host players=3/4 code=<LAN-IP>:7781 error=None
+    A5SESSION quit
+    A5SESSION mode=Direct phase=Leaving role=Host players=0/4 code=<LAN-IP>:7781 error=None
+    A5SESSION mode=Direct phase=Leaving role=Host players=2/4 code=<LAN-IP>:7781 error=None
+    A5SESSION mode=Direct phase=Leaving role=Host players=1/4 code=<LAN-IP>:7781 error=None
+    A5SESSION mode=Direct phase=Offline role=None players=0/0 code=- error=None
+
+11/11 checks passed
