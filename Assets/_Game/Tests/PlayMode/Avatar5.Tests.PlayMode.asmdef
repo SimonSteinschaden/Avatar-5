@@ -8,6 +8,8 @@
     "Avatar5.Player",
     "Avatar5.Input",
     "Avatar5.Presentation",
+    "Avatar5.Networking",
+    "Unity.Netcode.Runtime",
     "Unity.InputSystem",
     "Unity.InputSystem.TestFramework",
     "Unity.Cinemachine"

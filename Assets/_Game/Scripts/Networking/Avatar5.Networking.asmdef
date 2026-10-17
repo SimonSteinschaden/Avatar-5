@@ -1,0 +1,15 @@
+{
+  "name": "Avatar5.Networking",
+  "rootNamespace": "Avatar5.Networking",
+  "references": [
+    "Avatar5.Contracts",
+    "Avatar5.Gameplay",
+    "Unity.Netcode.Runtime",
+    "Unity.Networking.Transport",
+    "Unity.Collections",
+    "Unity.Services.Core",
+    "Unity.Services.Authentication",
+    "Unity.Services.Multiplayer"
+  ],
+  "autoReferenced": true
+}
