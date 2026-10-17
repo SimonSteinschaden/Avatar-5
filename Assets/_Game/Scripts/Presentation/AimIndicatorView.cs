@@ -14,6 +14,8 @@ namespace Avatar5.Presentation
 
         private IPlayerPoseSource _poseSource;
 
+        public Transform Marker { get { return marker; } }
+
         public void Configure(IPlayerPoseSource poseSource, Transform markerTransform)
         {
             _poseSource = poseSource;

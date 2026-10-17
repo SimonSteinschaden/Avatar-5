@@ -53,6 +53,7 @@ namespace Avatar5.Input
         public PlayerCommand LastCommand { get; private set; }
         public RequestStatus LastStatus { get; private set; }
         public InputActionAsset RuntimeActions { get { return _runtimeActions; } }
+        public InputActionAsset Actions { get { return actions; } }
 
         public IPlayerCommandSink CommandSink
         {

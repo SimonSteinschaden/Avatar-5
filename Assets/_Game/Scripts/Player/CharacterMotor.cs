@@ -28,6 +28,7 @@ namespace Avatar5.Player
         public event Action<Vector3> Teleported;
 
         public ulong ActorId { get { return actorId; } }
+        public PlayerMovementDefinition Definition { get { return definition; } }
         public PlayerMotorCore Core { get { EnsureInitialized(); return _core; } }
         public bool SimulateInUpdate { get { return simulateInUpdate; } set { simulateInUpdate = value; } }
         public bool IsGrounded { get { return _controller != null && _controller.isGrounded; } }
