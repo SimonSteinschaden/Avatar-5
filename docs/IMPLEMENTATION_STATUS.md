@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`) → P05 S05-01 Weltzustand + Level01-Greybox (`feature/p05-world-core`)
 
 ## Implementiert / als Source vorhanden
 
@@ -80,7 +80,21 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 | `Enemy_Brute.prefab`, `brute_slam.asset`, `NavMeshSurface` an der Arena | Assets/Editor | Brute 12 m vor den Startpunkten (außerhalb der Aggro-Reichweite) |
 | `scripts/P04-EnemyTest.ps1` | – | Gegner-Mehrprozesstest |
 
-**Spielen:** in `P03_NetworkArena` Richtung Norden laufen; die Brute bemerkt Spieler ab 10 m, kündigt mit rotem Ring an und schlägt zu, wenn er voll ist. Rausgehen hilft.
+### P05 Story S05-01 – Weltzustand und Level01-Greybox (Branch `feature/p05-world-core`, baut auf S04-01 auf)
+
+| Baustein | Assembly | Inhalt |
+|---|---|---|
+| `WorldObjectKind`, `WorldStateCodes`, `ElementImpact`, `IWorldStateService` | `Avatar5.Contracts` | Verträge §3f |
+| `LevelDefinition`, `WorldObjectDefinition`, `WorldStateService` | `Avatar5.Gameplay` (engine-frei) | Validierung (eindeutige Ids, Verweise, genau ein Ziel); Hebel mit Host-Reichweitenprüfung; verkettete Tore; Feuerschale per Element-Einschlag; Ziel → `LevelCompleted` genau einmal; Snapshot/Restore ohne Ereignisse |
+| `ImpactRaised` | P02-Kern | Projektil-Ende und Kegelbereich melden, wo ein Element die Welt trifft |
+| `LevelAuthoring`, `WorldObjectAuthoring` | `Avatar5.World` (neu) | Szenen-Authoring mit stabilen Ids; Darstellung (Hebel kippt, Tor senkt sich und gibt Collider/NavMesh frei, Flamme an) |
+| `WorldHost` | `Avatar5.Networking` | Host-Weltzustand, Interagieren (E), Einschläge aus dem Kampf, Zielprüfung; Änderungen an alle, Snapshot für Nachzügler |
+| `Level01.unity`, `Avatar5P05Level01Builder` | Assets/Editor | Start mit Hebel → Tor A; Brute-Bereich mit Deckung; Feuerschale → Tor B (braucht auch Tor A); Ziel. Menü `Avatar5/Build/Level01 Player` |
+| `SessionBot`-Route, `scripts/P05-Level01Test.ps1` | – | Bots spielen das Level per Wegpunkt-Route (laufen, benutzen, kämpfen, auf Punkt feuern) |
+
+**Spielen:** `Level01.unity` öffnen → Play → Sitzung erstellen. Zum Hebel rechts vorne, **E** → Tor A öffnet sich; Brute besiegen; Feuerball auf die Schale rechts hinten → Tor B; ins grüne Ziel. Banner „Level geschafft!“.
+
+**Spielen (Brute):** in `P03_NetworkArena` Richtung Norden laufen; die Brute bemerkt Spieler ab 10 m, kündigt mit rotem Ring an und schlägt zu, wenn er voll ist. Rausgehen hilft.
 
 ### P07a – Toon-Shading und schwarze Konturen (Style-Prototyp)
 
@@ -96,6 +110,18 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P05 S05-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
+
+| Lauf | Ergebnis |
+|---|---|
+| EditMode | **131/131 bestanden** (neu: 7 Fälle Weltzustand) |
+| PlayMode | **34 bestanden, 2 übersprungen** (Paket-Tests) |
+| Windows-Player `Level01` | gebaut |
+| `scripts/P05-Level01Test.ps1` | **11/11**: **allein** komplett durchgespielt (Hebel, Tor A, Brute, Schale, Tor B, Ziel); **zu dritt** durchgespielt, alle 3 Routen am Ziel; ein 4. Client, der erst nach dem Hebel beitrat, sah sofort Tor A offen (Snapshot) und am Ende denselben Weltzustand wie der Host |
+| Regression `P04-EnemyTest.ps1` / `P03-NetworkPlayerTest.ps1` | **18/18** / **8/8** |
+
+Ergebnisse: `docs/testlaeufe/P05_2026-10-17_*`.
 
 ## Ausgeführte Prüfungen P04 S04-01 (17.10.2026, Unity 6000.3.26f1, Windows 11, Batchmode, separater Klon)
 
@@ -181,7 +207,8 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
 - P02: erst 2 von 24 Fähigkeiten, nur Feuer/Wasser; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
 - P04: ein Archetyp, kein EncounterDirector, keine Skalierung nach Spielerzahl, kein Boss; kein Stuck-Handling über das NavMesh hinaus; Gegner-Definition noch als Code (`EnemyCatalog`), Asset folgt mit S04-02. Spieler werden am Ort wiederbelebt (Checkpoint-Regel kommt mit P05/P06).
-- Weltfortschritt/Persistenz.
+- P05: Level01 ist ein Greybox-Gerüst von wenigen Minuten, nicht das M2-Level (15–30 min, 1–2 Elementrätsel, 3 Gegnertypen, Mini-Boss). Kein Hub, keine Levelübergänge/Szenenwechsel im Netz, kein Checkpoint-Neustart (Snapshot/Restore existiert, wird aber noch nicht genutzt), kein QuestGraph. Bots laufen gerade Linien; ein echter Spieltest fehlt.
+- Persistenz (P06).
 - P07a: kein manueller Sichttest durch eine Person, keine Flimmermessung bei Kamerabewegung, keine Messung auf schwächerer GPU (Mittelklasse-Referenz noch festzulegen). Transparente Objekte ohne Screen-Space-Konturen. P01-Spieler und P01-Arena nutzen noch Greybox-Materialien ohne Ink-Volume.
 
 ## Technische Einschränkungen / Hinweise
@@ -194,4 +221,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P05 S05-01 (LevelDefinition, WorldState, ein hostvalidiertes Interactable in Level 1), dann P04 S04-02 (weitere Archetypen + EncounterDirector), dann P02 auf 4 Elemente × 2 Fähigkeiten. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P06 S06-01 (versioniertes SaveGameV1, atomisches Speichern + Backup, Checkpoint mit Welt-Snapshot), dann P04 S04-02 (weitere Archetypen + EncounterDirector), P02 auf 4 Elemente × 2 Fähigkeiten und Level01 auf M2-Umfang. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.

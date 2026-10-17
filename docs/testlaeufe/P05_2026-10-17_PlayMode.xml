@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="36" result="Skipped:Ignored" total="36" passed="34" failed="0" inconclusive="0" skipped="2" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:19Z" duration="11,539112">
+  <test-suite type="TestSuite" id="1052" name="Avatar5-URP-Template" fullname="Avatar5-URP-Template" runstate="Runnable" testcasecount="36" result="Skipped" label="Ignored" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:19Z" duration="11.539112" total="36" passed="34" failed="0" inconclusive="0" skipped="2" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <reason>
+      <message><![CDATA[One or more child tests were ignored]]></message>
+    </reason>
+    <test-suite type="Assembly" id="1039" name="Avatar5.Tests.PlayMode.dll" fullname="C:/A5W/p03/Library/ScriptAssemblies/Avatar5.Tests.PlayMode.dll" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:19Z" duration="11.523478" total="32" passed="32" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="22524" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1040" name="Avatar5" fullname="Avatar5" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:19Z" duration="11.522647" total="32" passed="32" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1041" name="Tests" fullname="Avatar5.Tests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:19Z" duration="11.522151" total="32" passed="32" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1042" name="PlayMode" fullname="Avatar5.Tests.PlayMode" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:19Z" duration="11.521652" total="32" passed="32" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="CharacterMotorPlayModeTests" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.067662" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="DiagonalIntoWall_SlidesAlongIt" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.DiagonalIntoWall_SlidesAlongIt" methodname="DiagonalIntoWall_SlidesAlongIt" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="934104803" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.028908" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="EightDirections_CoverEqualDistance_OnOpenGround" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.EightDirections_CoverEqualDistance_OnOpenGround" methodname="EightDirections_CoverEqualDistance_OnOpenGround" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="1277232598" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.014018" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1006" name="Facing_FollowsAim_WhileMovingSideways" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.Facing_FollowsAim_WhileMovingSideways" methodname="Facing_FollowsAim_WhileMovingSideways" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="1320035888" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.001780" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="ForeignActorCommand_IsRejected_AndDoesNotMove" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.ForeignActorCommand_IsRejected_AndDoesNotMove" methodname="ForeignActorCommand_IsRejected_AndDoesNotMove" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="1187206603" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.002355" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1004" name="FrameDrop_DoesNotTunnelThroughThinWall" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.FrameDrop_DoesNotTunnelThroughThinWall" methodname="FrameDrop_DoesNotTunnelThroughThinWall" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="506499522" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.002180" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="Teleport_HaltsAndRaisesEvent" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.Teleport_HaltsAndRaisesEvent" methodname="Teleport_HaltsAndRaisesEvent" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="323106076" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.002569" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="Wall_StopsMovement" fullname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests.Wall_StopsMovement" methodname="Wall_StopsMovement" classname="Avatar5.Tests.PlayMode.CharacterMotorPlayModeTests" runstate="Runnable" seed="1128688006" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:07Z" duration="0.002313" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1009" name="IsometricCameraPlayModeTests" fullname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" classname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:10Z" duration="3.042639" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1011" name="Camera_FollowsMovingPlayer" fullname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests.Camera_FollowsMovingPlayer" methodname="Camera_FollowsMovingPlayer" classname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" runstate="Runnable" seed="1197794332" result="Passed" start-time="2026-10-17 01:09:07Z" end-time="2026-10-17 01:09:10Z" duration="3.030393" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="Camera_SnapsToPlayer_AfterRespawnTeleport" fullname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests.Camera_SnapsToPlayer_AfterRespawnTeleport" methodname="Camera_SnapsToPlayer_AfterRespawnTeleport" classname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" runstate="Runnable" seed="1311968462" result="Passed" start-time="2026-10-17 01:09:10Z" end-time="2026-10-17 01:09:10Z" duration="0.003360" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="Camera_StaysCentred_At16x9And21x9" fullname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests.Camera_StaysCentred_At16x9And21x9" methodname="Camera_StaysCentred_At16x9And21x9" classname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" runstate="Runnable" seed="59471922" result="Passed" start-time="2026-10-17 01:09:10Z" end-time="2026-10-17 01:09:10Z" duration="0.003025" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1010" name="Camera_UsesLockedIsometricAngle" fullname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests.Camera_UsesLockedIsometricAngle" methodname="Camera_UsesLockedIsometricAngle" classname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" runstate="Runnable" seed="1608792262" result="Passed" start-time="2026-10-17 01:09:10Z" end-time="2026-10-17 01:09:10Z" duration="0.002552" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="Zoom_IsClampedToProfileLimits" fullname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests.Zoom_IsClampedToProfileLimits" methodname="Zoom_IsClampedToProfileLimits" classname="Avatar5.Tests.PlayMode.IsometricCameraPlayModeTests" runstate="Runnable" seed="1301026646" result="Passed" start-time="2026-10-17 01:09:10Z" end-time="2026-10-17 01:09:10Z" duration="0.002080" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1015" name="NetworkPlayerPlayModeTests" fullname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests" classname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-17 01:09:10Z" end-time="2026-10-17 01:09:13Z" duration="2.782674" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1018" name="Brute_TelegraphsBeforeItsSlamHitsTheHost" fullname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests.Brute_TelegraphsBeforeItsSlamHitsTheHost" methodname="Brute_TelegraphsBeforeItsSlamHitsTheHost" classname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests" runstate="Runnable" seed="1265641558" result="Passed" start-time="2026-10-17 01:09:10Z" end-time="2026-10-17 01:09:11Z" duration="1.157902" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Failed to create agent because there is no valid NavMesh
+Failed to create agent because there is no valid NavMesh
+[Avatar5.Session] Spawned actor 1 in slot 0
+]]></output>
+              </test-case>
+              <test-case id="1016" name="HostAvatar_SpawnsOwnedAndMovesFromHostCommands" fullname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests.HostAvatar_SpawnsOwnedAndMovesFromHostCommands" methodname="HostAvatar_SpawnsOwnedAndMovesFromHostCommands" classname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests" runstate="Runnable" seed="1131340098" result="Passed" start-time="2026-10-17 01:09:11Z" end-time="2026-10-17 01:09:12Z" duration="0.611814" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Avatar5.Session] Spawned actor 1 in slot 0
+]]></output>
+              </test-case>
+              <test-case id="1017" name="HostFireball_DamagesDummyOnceThroughCombatHost" fullname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests.HostFireball_DamagesDummyOnceThroughCombatHost" methodname="HostFireball_DamagesDummyOnceThroughCombatHost" classname="Avatar5.Tests.PlayMode.NetworkPlayerPlayModeTests" runstate="Runnable" seed="1813057464" result="Passed" start-time="2026-10-17 01:09:12Z" end-time="2026-10-17 01:09:13Z" duration="1.012029" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Avatar5.Session] Spawned actor 1 in slot 0
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1019" name="PlayerInputAdapterTests" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.162904" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1028" name="ActionButtons_MapToPlayerActions" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.ActionButtons_MapToPlayerActions" methodname="ActionButtons_MapToPlayerActions" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1646336903" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.114807" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="BindingOverrides_RoundTripAsJson" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.BindingOverrides_RoundTripAsJson" methodname="BindingOverrides_RoundTripAsJson" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1127517430" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.009722" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="EightKeyboardDirections_AllHaveUnitSpeed" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.EightKeyboardDirections_AllHaveUnitSpeed" methodname="EightKeyboardDirections_AllHaveUnitSpeed" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1666946093" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.005589" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="GamepadLeftStick_MovesCameraRelative" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.GamepadLeftStick_MovesCameraRelative" methodname="GamepadLeftStick_MovesCameraRelative" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1994405261" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.005078" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="GamepadRightStick_AimsIndependentlyOfMovement" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.GamepadRightStick_AimsIndependentlyOfMovement" methodname="GamepadRightStick_AimsIndependentlyOfMovement" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1078365697" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003870" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="Mouse_AimsAtGroundPoint" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.Mouse_AimsAtGroundPoint" methodname="Mouse_AimsAtGroundPoint" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1132656629" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.004843" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="MouseOutsideView_KeepsLastAim" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.MouseOutsideView_KeepsLastAim" methodname="MouseOutsideView_KeepsLastAim" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1328864696" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003333" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1029" name="Pause_SuppressesMovement" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.Pause_SuppressesMovement" methodname="Pause_SuppressesMovement" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="120829153" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003488" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="SequenceIds_IncreaseEveryTick" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.SequenceIds_IncreaseEveryTick" methodname="SequenceIds_IncreaseEveryTick" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="722450812" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003281" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="W_MovesAlongCameraForward" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.W_MovesAlongCameraForward" methodname="W_MovesAlongCameraForward" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1772982759" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003423" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="WD_DiagonalIsUnitLengthAndCameraRelative" fullname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests.WD_DiagonalIsUnitLengthAndCameraRelative" methodname="WD_DiagonalIsUnitLengthAndCameraRelative" classname="Avatar5.Tests.PlayMode.PlayerInputAdapterTests" runstate="Runnable" seed="1404803288" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003363" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1031" name="SessionPlayModeTests" fullname="Avatar5.Tests.PlayMode.SessionPlayModeTests" classname="Avatar5.Tests.PlayMode.SessionPlayModeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:16Z" duration="3.037124" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1034" name="Join_MalformedCode_FailsWithoutTouchingNetwork" fullname="Avatar5.Tests.PlayMode.SessionPlayModeTests.Join_MalformedCode_FailsWithoutTouchingNetwork" methodname="Join_MalformedCode_FailsWithoutTouchingNetwork" classname="Avatar5.Tests.PlayMode.SessionPlayModeTests" runstate="Runnable" seed="1525125288" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:13Z" duration="0.003377" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="Join_NobodyListening_ReportsNotFoundAfterTimeout" fullname="Avatar5.Tests.PlayMode.SessionPlayModeTests.Join_NobodyListening_ReportsNotFoundAfterTimeout" methodname="Join_NobodyListening_ReportsNotFoundAfterTimeout" classname="Avatar5.Tests.PlayMode.SessionPlayModeTests" runstate="Runnable" seed="425063489" result="Passed" start-time="2026-10-17 01:09:13Z" end-time="2026-10-17 01:09:16Z" duration="3.014734" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Avatar5.Session] SessionNotFound: join 127.0.0.1:7792
+]]></output>
+              </test-case>
+              <test-case id="1033" name="SecondCreate_WhileActive_IsRejected" fullname="Avatar5.Tests.PlayMode.SessionPlayModeTests.SecondCreate_WhileActive_IsRejected" methodname="SecondCreate_WhileActive_IsRejected" classname="Avatar5.Tests.PlayMode.SessionPlayModeTests" runstate="Runnable" seed="1515738049" result="Passed" start-time="2026-10-17 01:09:16Z" end-time="2026-10-17 01:09:16Z" duration="0.008040" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="SoloHost_IsConnectedWithOnePlayer_ThenLeaves" fullname="Avatar5.Tests.PlayMode.SessionPlayModeTests.SoloHost_IsConnectedWithOnePlayer_ThenLeaves" methodname="SoloHost_IsConnectedWithOnePlayer_ThenLeaves" classname="Avatar5.Tests.PlayMode.SessionPlayModeTests" runstate="Runnable" seed="1032410416" result="Passed" start-time="2026-10-17 01:09:16Z" end-time="2026-10-17 01:09:16Z" duration="0.009458" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1036" name="TestArenaSmokeTests" fullname="Avatar5.Tests.PlayMode.TestArenaSmokeTests" classname="Avatar5.Tests.PlayMode.TestArenaSmokeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-17 01:09:16Z" end-time="2026-10-17 01:09:19Z" duration="2.427032" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1037" name="Arena_LoadsWithPlayerCameraAndObstacles" fullname="Avatar5.Tests.PlayMode.TestArenaSmokeTests.Arena_LoadsWithPlayerCameraAndObstacles" methodname="Arena_LoadsWithPlayerCameraAndObstacles" classname="Avatar5.Tests.PlayMode.TestArenaSmokeTests" runstate="Runnable" seed="1105465803" result="Passed" start-time="2026-10-17 01:09:16Z" end-time="2026-10-17 01:09:16Z" duration="0.212462" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="Arena_PlayerWalksIntoCrate_StopsAndCameraFollows" fullname="Avatar5.Tests.PlayMode.TestArenaSmokeTests.Arena_PlayerWalksIntoCrate_StopsAndCameraFollows" methodname="Arena_PlayerWalksIntoCrate_StopsAndCameraFollows" classname="Avatar5.Tests.PlayMode.TestArenaSmokeTests" runstate="Runnable" seed="1456382905" result="Passed" start-time="2026-10-17 01:09:16Z" end-time="2026-10-17 01:09:19Z" duration="2.213850" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1048" name="Unity.InputSystem.IntegrationTests.dll" fullname="C:/A5W/p03/Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll" runstate="Runnable" testcasecount="4" result="Skipped" label="Ignored" start-time="2026-10-17 01:09:19Z" end-time="2026-10-17 01:09:19Z" duration="0.008106" total="4" passed="2" failed="0" inconclusive="0" skipped="2" asserts="0">
+      <properties>
+        <property name="_PID" value="22524" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <reason>
+        <message><![CDATA[One or more child tests were ignored]]></message>
+      </reason>
+      <test-suite type="TestFixture" id="1043" name="IntegrationTests" fullname="IntegrationTests" classname="IntegrationTests" runstate="Runnable" testcasecount="4" result="Skipped" label="Ignored" start-time="2026-10-17 01:09:19Z" end-time="2026-10-17 01:09:19Z" duration="0.007719" total="4" passed="2" failed="0" inconclusive="0" skipped="2" asserts="0">
+        <properties />
+        <reason>
+          <message><![CDATA[One or more child tests were ignored]]></message>
+        </reason>
+        <test-case id="1045" name="Integration_CanChangeInputBackendPlayerSettingInEditor" fullname="IntegrationTests.Integration_CanChangeInputBackendPlayerSettingInEditor" methodname="Integration_CanChangeInputBackendPlayerSettingInEditor" classname="IntegrationTests" runstate="Runnable" seed="300805968" result="Passed" start-time="2026-10-17 01:09:19Z" end-time="2026-10-17 01:09:19Z" duration="0.003441" asserts="0">
+          <properties>
+            <property name="Category" value="Integration" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1044" name="Integration_CanSendAndReceiveEvents" fullname="IntegrationTests.Integration_CanSendAndReceiveEvents" methodname="Integration_CanSendAndReceiveEvents" classname="IntegrationTests" runstate="Runnable" seed="1835155040" result="Passed" start-time="2026-10-17 01:09:19Z" end-time="2026-10-17 01:09:19Z" duration="0.003068" asserts="0">
+          <properties>
+            <property name="Category" value="Integration" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1047" name="WindowsInput_MouseMovements_AreDetected" fullname="IntegrationTests.WindowsInput_MouseMovements_AreDetected" methodname="WindowsInput_MouseMovements_AreDetected" classname="IntegrationTests" runstate="Ignored" seed="1775100364" result="Skipped" label="Ignored" start-time="2026-10-17 01:09:19Z" end-time="2026-10-17 01:09:19Z" duration="0.000175" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="Integration" />
+            <property name="_SKIPREASON" value="Unstable due to 1252825" />
+          </properties>
+          <reason>
+            <message><![CDATA[Unstable due to 1252825]]></message>
+          </reason>
+        </test-case>
+        <test-case id="1046" name="WindowsInput_RemoteDesktopMouseMovements_AreDetected" fullname="IntegrationTests.WindowsInput_RemoteDesktopMouseMovements_AreDetected" methodname="WindowsInput_RemoteDesktopMouseMovements_AreDetected" classname="IntegrationTests" runstate="Ignored" seed="196781154" result="Skipped" label="Ignored" start-time="2026-10-17 01:09:19Z" end-time="2026-10-17 01:09:19Z" duration="0.000001" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="Integration" />
+            <property name="_SKIPREASON" value="Unstable due to 1252825" />
+          </properties>
+          <reason>
+            <message><![CDATA[Unstable due to 1252825]]></message>
+          </reason>
+          <output><![CDATA[Saving results to: <USERPROFILE>/AppData/LocalLow/DefaultCompany/Avatar5-URP-Template\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

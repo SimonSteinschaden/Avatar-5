@@ -1,0 +1,27 @@
+PASS  host reported combat  ()
+PASS  brute telegraphed attacks  (telegraphs=4)
+PASS  every slam was telegraphed first  (telegraphs=4 slams=2)
+PASS  slams hit players  (hits=4)
+PASS  players defeated the brute  (enemyDefeats=2)
+PASS  three players present  (players=3)
+PASS  client1 final state matches a host state with the same event count  (client events=189)
+PASS  client1 no duplicate events  (dupes=0)
+PASS  client1 saw same telegraphs/slams/hits  (client=4/2/4 host=4/2/4)
+PASS  client1 player 2 health equals host  (client 82 host 82)
+PASS  client1 player 1 health equals host  (client 64 host 64)
+PASS  client1 player 3 health equals host  (client 82 host 82)
+PASS  client2 final state matches a host state with the same event count  (client events=189)
+PASS  client2 no duplicate events  (dupes=0)
+PASS  client2 saw same telegraphs/slams/hits  (client=4/2/4 host=4/2/4)
+PASS  client2 player 2 health equals host  (client 82 host 82)
+PASS  client2 player 1 health equals host  (client 64 host 64)
+PASS  client2 player 3 health equals host  (client 82 host 82)
+
+--- client1
+    A5COMBAT t=39.2 self=2 events=189 casts=56 steam=2 extinguish=1 dupes=0 telegraphs=4 enemyCasts=2 enemyHits=4 enemyDefeats=2 playerDefeats=0 e1003=160.0/160|dmg=320.0|st=0 e1002=4990.0/5000|dmg=10.0|st=0 p2=82.0 p3=82.0 e1001=4935.0/5000|dmg=65.0|st=0 p1=64.0
+--- client2
+    A5COMBAT t=39.2 self=3 events=189 casts=56 steam=2 extinguish=1 dupes=0 telegraphs=4 enemyCasts=2 enemyHits=4 enemyDefeats=2 playerDefeats=0 p3=82.0 e1002=4990.0/5000|dmg=10.0|st=0 e1003=160.0/160|dmg=320.0|st=0 p1=64.0 p2=82.0 e1001=4935.0/5000|dmg=65.0|st=0
+--- host
+    A5COMBAT t=42.2 self=1 events=189 casts=56 steam=2 extinguish=1 dupes=0 telegraphs=4 enemyCasts=2 enemyHits=4 enemyDefeats=2 playerDefeats=0 p1=64.0 e1002=4990.0/5000|dmg=10.0|st=0 e1001=4935.0/5000|dmg=65.0|st=0 e1003=160.0/160|dmg=320.0|st=0
+
+18/18 checks passed

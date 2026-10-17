@@ -159,6 +159,24 @@ bool IsDefeated(ulong actorId);
 - Zielwahl: nächster lebender Spieler im Aggro-Radius, je anderem Gegner auf demselben Ziel +4 m (Anti-Fokus), Wechsel nur bei ≥ 3 m Vorsprung; außerhalb des Leinenradius kehrt der Gegner heim.
 - Besiegte Spieler bewegen sich nicht und können nicht zaubern; der Host belebt nach `NetworkCombatActor.ReviveSeconds` wieder (Spieler 5 s, Brute 8 s am Startpunkt, Puppe 3 s).
 
+## 3f. Umgesetzte P05-Weltverträge (S05-01, `Avatar5.Contracts/WorldContracts.cs`)
+
+```csharp
+enum WorldObjectKind : byte { Lever, Gate, Brazier, Goal }
+static class WorldStateCodes { const int Off = 0, On = 1, LevelCompletedCode = 100; }   // WorldEvent.StateCode
+struct ElementImpact { ulong SourceActorId; ElementKind Element; Float2 Position; float Radius; }
+interface IWorldStateService { int LevelId { get; } bool IsCompleted { get; } int GetState(int worldObjectId);
+    RequestStatus TryInteract(ulong actorId, int worldObjectId, Float2 actorPosition); void ApplyImpact(in ElementImpact impact);
+    event Action<WorldEvent> Changed; }
+// CombatSimulation (P02) ergänzt um: event Action<ElementImpact> ImpactRaised;  // Projektil-Ende, Kegelbereich
+```
+
+- `WorldStateService` (Avatar5.Gameplay.World, engine-frei) ist die einzige Stelle, die Weltzustand schreibt. `LevelDefinition.Validate` prüft eindeutige `WorldObjectId`s, Verweise, Tor-Bedingungen und genau ein Ziel.
+- Hebel: Host misst die Entfernung (nicht der Client); bereits aktiv → `Duplicate`, zu weit → `RejectedRange`. Der Client schickt nur `PlayerActionKind.Interact`; der Host wählt den nächsten Hebel in Reichweite.
+- Tore öffnen sich, sobald alle `Requires` an sind (auch verkettet); Feuerschalen reagieren auf `ElementImpact` ihres Elements in Reichweite; das Ziel meldet `LevelCompleted` genau einmal, wenn ein lebender Spieler drinsteht und die Bedingungen erfüllt sind.
+- Transport: jede Änderung als Named Message `A5.World` (ReliableSequenced), beim Beitritt ein vollständiger Snapshot `A5.WorldSnapshot`; Clients deduplizieren über EventId. Darstellung (`WorldObjectAuthoring.Apply`) schaltet bei Toren auch Collider und NavMeshObstacle.
+- `Snapshot()`/`Restore()` liefern den Checkpoint-/Rejoin-Zustand ohne Ereignisse (Grundlage für P06).
+
 ## 4. Ports der Domain (Implementierung über Interface)
 
 ```csharp

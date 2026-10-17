@@ -1,0 +1,908 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="131" result="Passed" total="131" passed="131" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:54Z" duration="4,0413376">
+  <test-suite type="TestSuite" id="1000" name="Avatar5-URP-Template" fullname="Avatar5-URP-Template" runstate="Runnable" testcasecount="131" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:54Z" duration="4.041338" total="131" passed="131" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1116" name="Avatar5.Tests.EditMode.dll" fullname="C:/A5W/p03/Library/ScriptAssemblies/Avatar5.Tests.EditMode.dll" runstate="Runnable" testcasecount="100" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.130459" total="100" passed="100" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="7524" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1117" name="Avatar5" fullname="Avatar5" runstate="Runnable" testcasecount="100" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.129628" total="100" passed="100" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1118" name="Tests" fullname="Avatar5.Tests" runstate="Runnable" testcasecount="100" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.128958" total="100" passed="100" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1119" name="EditMode" fullname="Avatar5.Tests.EditMode" runstate="Runnable" testcasecount="100" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.128232" total="100" passed="100" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="CombatSimulationTests" fullname="Avatar5.Tests.EditMode.CombatSimulationTests" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.047976" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1004" name="Burning_DealsDamageOverTimeThenExpires" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Burning_DealsDamageOverTimeThenExpires" methodname="Burning_DealsDamageOverTimeThenExpires" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="1831057622" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.023248" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="Catalog_RejectsInvalidAndDuplicateDefinitions" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Catalog_RejectsInvalidAndDuplicateDefinitions" methodname="Catalog_RejectsInvalidAndDuplicateDefinitions" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="374042352" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.002277" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="Cooldown_EnergyAndDuplicatesAreRejected" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Cooldown_EnergyAndDuplicatesAreRejected" methodname="Cooldown_EnergyAndDuplicatesAreRejected" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="697327027" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000781" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="Defeat_IsRaisedExactlyOnceAndBlocksFurtherDamage" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Defeat_IsRaisedExactlyOnceAndBlocksFurtherDamage" methodname="Defeat_IsRaisedExactlyOnceAndBlocksFurtherDamage" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="590149763" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001733" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="Fireball_TravelsHitsOnceAndIgnites" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Fireball_TravelsHitsOnceAndIgnites" methodname="Fireball_TravelsHitsOnceAndIgnites" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="1730587318" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000390" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="ManyCasts_ProduceUniqueOrderedEventsAndConsistentHealth" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.ManyCasts_ProduceUniqueOrderedEventsAndConsistentHealth" methodname="ManyCasts_ProduceUniqueOrderedEventsAndConsistentHealth" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="550245360" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.004769" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1010" name="Projectile_StopsAtWall" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Projectile_StopsAtWall" methodname="Projectile_StopsAtWall" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="2055995913" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000274" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="Reaction_ExtinguishOnBurningTargetLeavesItWet" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Reaction_ExtinguishOnBurningTargetLeavesItWet" methodname="Reaction_ExtinguishOnBurningTargetLeavesItWet" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="1521894988" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000403" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1006" name="Reaction_SteamOnWetTargetAddsBonusAndDoesNotIgnite" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Reaction_SteamOnWetTargetAddsBonusAndDoesNotIgnite" methodname="Reaction_SteamOnWetTargetAddsBonusAndDoesNotIgnite" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="1934134596" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000483" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="Requests_FromUnknownDefeatedOrWithoutDirection_AreRejected" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.Requests_FromUnknownDefeatedOrWithoutDirection_AreRejected" methodname="Requests_FromUnknownDefeatedOrWithoutDirection_AreRejected" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="652777835" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000234" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="SameInputs_GiveIdenticalEventLogs" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.SameInputs_GiveIdenticalEventLogs" methodname="SameInputs_GiveIdenticalEventLogs" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="794558547" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000856" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="WaterWave_HitsConeOnlyWetsAndPushes" fullname="Avatar5.Tests.EditMode.CombatSimulationTests.WaterWave_HitsConeOnlyWetsAndPushes" methodname="WaterWave_HitsConeOnlyWetsAndPushes" classname="Avatar5.Tests.EditMode.CombatSimulationTests" runstate="Runnable" seed="1500493838" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000591" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1014" name="ContractsSmokeTests" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.002216" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1018" name="CommandSequences_AreIndependentPerActor" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.CommandSequences_AreIndependentPerActor" methodname="CommandSequences_AreIndependentPerActor" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="1459440216" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000341" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1017" name="DuplicateCommands_AreRejectedForSameActor" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.DuplicateCommands_AreRejectedForSameActor" methodname="DuplicateCommands_AreRejectedForSameActor" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="760803406" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000144" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1015" name="NetworkProtocol_AcceptsMatchingVersion" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.NetworkProtocol_AcceptsMatchingVersion" methodname="NetworkProtocol_AcceptsMatchingVersion" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="2065554855" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000271" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1016" name="NetworkProtocol_RejectsMismatchedVersion" fullname="Avatar5.Tests.EditMode.ContractsSmokeTests.NetworkProtocol_RejectsMismatchedVersion" methodname="NetworkProtocol_RejectsMismatchedVersion" classname="Avatar5.Tests.EditMode.ContractsSmokeTests" runstate="Runnable" seed="1845402924" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000103" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1019" name="EnemyBrainTests" fullname="Avatar5.Tests.EditMode.EnemyBrainTests" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.005548" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1025" name="AntiFocus_PrefersPlayersNobodyChases" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.AntiFocus_PrefersPlayersNobodyChases" methodname="AntiFocus_PrefersPlayersNobodyChases" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="208961285" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001504" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="ApproachTelegraphAttackRecover_WithLockedAim" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.ApproachTelegraphAttackRecover_WithLockedAim" methodname="ApproachTelegraphAttackRecover_WithLockedAim" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="253709851" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000855" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="Dead_DoesNothingUntilRevived" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.Dead_DoesNothingUntilRevived" methodname="Dead_DoesNothingUntilRevived" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="2092094287" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000319" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="Definition_RejectsUnreadableTelegraphAndMissingAttack" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.Definition_RejectsUnreadableTelegraphAndMissingAttack" methodname="Definition_RejectsUnreadableTelegraphAndMissingAttack" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="1232985279" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000235" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="IgnoresDefeatedPlayersAndKeepsTargetWithHysteresis" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.IgnoresDefeatedPlayersAndKeepsTargetWithHysteresis" methodname="IgnoresDefeatedPlayersAndKeepsTargetWithHysteresis" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="1423096060" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000279" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="LeashesBackHomeAndForgetsTarget" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.LeashesBackHomeAndForgetsTarget" methodname="LeashesBackHomeAndForgetsTarget" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="1206309983" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000284" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="SlamThroughCombatCore_HitsPlayersAroundButNotOtherEnemies" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.SlamThroughCombatCore_HitsPlayersAroundButNotOtherEnemies" methodname="SlamThroughCombatCore_HitsPlayersAroundButNotOtherEnemies" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="1892266931" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000807" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="StaysIdleUntilAPlayerEntersAggroRange" fullname="Avatar5.Tests.EditMode.EnemyBrainTests.StaysIdleUntilAPlayerEntersAggroRange" methodname="StaysIdleUntilAPlayerEntersAggroRange" classname="Avatar5.Tests.EditMode.EnemyBrainTests" runstate="Runnable" seed="1409511934" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000217" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1028" name="HostCommandIngressTests" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.003065" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1029" name="ActorIds_HostClientControlsActorOne" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.ActorIds_HostClientControlsActorOne" methodname="ActorIds_HostClientControlsActorOne" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="1450801533" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000114" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="Ingress_AcceptsOwnerAndStampsAuthoritativeActorId" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Ingress_AcceptsOwnerAndStampsAuthoritativeActorId" methodname="Ingress_AcceptsOwnerAndStampsAuthoritativeActorId" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="687309705" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000401" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="Ingress_RateLimitsFloodAndRecovers" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Ingress_RateLimitsFloodAndRecovers" methodname="Ingress_RateLimitsFloodAndRecovers" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="1754645906" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000203" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1031" name="Ingress_RejectsForeignSenderEvenWithMatchingActorId" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Ingress_RejectsForeignSenderEvenWithMatchingActorId" methodname="Ingress_RejectsForeignSenderEvenWithMatchingActorId" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="768460661" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000141" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1033" name="RateLimiter_SustainedRateMatchesConfiguration" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.RateLimiter_SustainedRateMatchesConfiguration" methodname="RateLimiter_SustainedRateMatchesConfiguration" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="756762058" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000153" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1037" name="Throttle_144HzClientStaysUnderHostLimit" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Throttle_144HzClientStaysUnderHostLimit" methodname="Throttle_144HzClientStaysUnderHostLimit" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="1601790531" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000500" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1036" name="Throttle_ChangedIntentWaitsForMinInterval" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Throttle_ChangedIntentWaitsForMinInterval" methodname="Throttle_ChangedIntentWaitsForMinInterval" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="1297549724" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000150" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1034" name="Throttle_SendsActionEdgesImmediately" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Throttle_SendsActionEdgesImmediately" methodname="Throttle_SendsActionEdgesImmediately" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="1309812805" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000105" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="Throttle_UnchangedIntentOnlyAsHeartbeat" fullname="Avatar5.Tests.EditMode.HostCommandIngressTests.Throttle_UnchangedIntentOnlyAsHeartbeat" methodname="Throttle_UnchangedIntentOnlyAsHeartbeat" classname="Avatar5.Tests.EditMode.HostCommandIngressTests" runstate="Runnable" seed="1578453326" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000119" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1038" name="MovementCoreTests" fullname="Avatar5.Tests.EditMode.MovementCoreTests" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" testcasecount="26" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.046334" total="26" passed="26" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1062" name="AimDirection_IsUnitLength_AndZeroOnActor" fullname="Avatar5.Tests.EditMode.MovementCoreTests.AimDirection_IsUnitLength_AndZeroOnActor" methodname="AimDirection_IsUnitLength_AndZeroOnActor" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1758403295" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000363" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="CommandGate_RejectsForeignActorAndDuplicates" fullname="Avatar5.Tests.EditMode.MovementCoreTests.CommandGate_RejectsForeignActorAndDuplicates" methodname="CommandGate_RejectsForeignActorAndDuplicates" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1473649583" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001049" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1048" name="EightDirections_ReachSameTopSpeedAndDistance" fullname="Avatar5.Tests.EditMode.MovementCoreTests.EightDirections_ReachSameTopSpeedAndDistance" methodname="EightDirections_ReachSameTopSpeedAndDistance" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1192206556" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001494" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1052" name="Facing_FollowsAim_IndependentOfMovement" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Facing_FollowsAim_IndependentOfMovement" methodname="Facing_FollowsAim_IndependentOfMovement" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="335083476" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000248" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1053" name="Facing_FollowsMovement_WhenNoAim" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Facing_FollowsMovement_WhenNoAim" methodname="Facing_FollowsMovement_WhenNoAim" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1410379523" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000172" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="Facing_RespectsTurnSpeed" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Facing_RespectsTurnSpeed" methodname="Facing_RespectsTurnSpeed" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="116436644" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000162" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1046" name="ForwardInput_FollowsCameraYaw" fullname="Avatar5.Tests.EditMode.MovementCoreTests.ForwardInput_FollowsCameraYaw" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000827" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1042" name="ForwardInput_FollowsCameraYaw(0.0f,0.0f,1.0f)" fullname="Avatar5.Tests.EditMode.MovementCoreTests.ForwardInput_FollowsCameraYaw(0.0f,0.0f,1.0f)" methodname="ForwardInput_FollowsCameraYaw" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1898759380" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000256" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1043" name="ForwardInput_FollowsCameraYaw(90.0f,1.0f,0.0f)" fullname="Avatar5.Tests.EditMode.MovementCoreTests.ForwardInput_FollowsCameraYaw(90.0f,1.0f,0.0f)" methodname="ForwardInput_FollowsCameraYaw" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="676539205" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000048" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1044" name="ForwardInput_FollowsCameraYaw(45.0f,0.7071f,0.7071f)" fullname="Avatar5.Tests.EditMode.MovementCoreTests.ForwardInput_FollowsCameraYaw(45.0f,0.7071f,0.7071f)" methodname="ForwardInput_FollowsCameraYaw" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="320315101" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000039" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1045" name="ForwardInput_FollowsCameraYaw(180.0f,0.0f,-1.0f)" fullname="Avatar5.Tests.EditMode.MovementCoreTests.ForwardInput_FollowsCameraYaw(180.0f,0.0f,-1.0f)" methodname="ForwardInput_FollowsCameraYaw" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="600678650" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000029" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1050" name="FrameHitch_IsTruncated_SoActorNeverTeleports" fullname="Avatar5.Tests.EditMode.MovementCoreTests.FrameHitch_IsTruncated_SoActorNeverTeleports" methodname="FrameHitch_IsTruncated_SoActorNeverTeleports" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1174768910" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000326" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1065" name="Halt_ClearsVelocityAndIntent" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Halt_ClearsVelocityAndIntent" methodname="Halt_ClearsVelocityAndIntent" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1107142507" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000227" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1064" name="InvalidSettings_AreRejected" fullname="Avatar5.Tests.EditMode.MovementCoreTests.InvalidSettings_AreRejected" methodname="InvalidSettings_AreRejected" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1301143978" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000235" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1039" name="KeyboardDiagonal_IsNotFasterThanAxial" fullname="Avatar5.Tests.EditMode.MovementCoreTests.KeyboardDiagonal_IsNotFasterThanAxial" methodname="KeyboardDiagonal_IsNotFasterThanAxial" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1780540706" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000192" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1049" name="Motor_AcceleratesAndDecelerates_WithoutOvershoot" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Motor_AcceleratesAndDecelerates_WithoutOvershoot" methodname="Motor_AcceleratesAndDecelerates_WithoutOvershoot" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="934903130" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000357" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1058" name="OversizedMoveIntent_IsClampedByMotor" fullname="Avatar5.Tests.EditMode.MovementCoreTests.OversizedMoveIntent_IsClampedByMotor" methodname="OversizedMoveIntent_IsClampedByMotor" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="773329129" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000211" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1041" name="PartialStick_KeepsAnalogMagnitude" fullname="Avatar5.Tests.EditMode.MovementCoreTests.PartialStick_KeepsAnalogMagnitude" methodname="PartialStick_KeepsAnalogMagnitude" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="802678144" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000146" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1061" name="PointerRay_ProjectsOntoGroundPlane" fullname="Avatar5.Tests.EditMode.MovementCoreTests.PointerRay_ProjectsOntoGroundPlane" methodname="PointerRay_ProjectsOntoGroundPlane" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="5358382" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000306" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1056" name="PrebuiltCommandSequence_IsDeterministic" fullname="Avatar5.Tests.EditMode.MovementCoreTests.PrebuiltCommandSequence_IsDeterministic" methodname="PrebuiltCommandSequence_IsDeterministic" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1872265538" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000602" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1047" name="RightInput_IsPerpendicularToForward_ForIsometricYaw" fullname="Avatar5.Tests.EditMode.MovementCoreTests.RightInput_IsPerpendicularToForward_ForIsometricYaw" methodname="RightInput_IsPerpendicularToForward_ForIsometricYaw" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="258468389" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1059" name="Sequencer_ProducesStrictlyIncreasingIds" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Sequencer_ProducesStrictlyIncreasingIds" methodname="Sequencer_ProducesStrictlyIncreasingIds" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1672342850" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000280" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1063" name="StickAim_IsCameraRelativeUnitVector" fullname="Avatar5.Tests.EditMode.MovementCoreTests.StickAim_IsCameraRelativeUnitVector" methodname="StickAim_IsCameraRelativeUnitVector" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="347382403" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000229" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1040" name="StickInsideDeadZone_ProducesNoMovement" fullname="Avatar5.Tests.EditMode.MovementCoreTests.StickInsideDeadZone_ProducesNoMovement" methodname="StickInsideDeadZone_ProducesNoMovement" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1999415729" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000110" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1060" name="TickClock_RunsAtTwentyHertz" fullname="Avatar5.Tests.EditMode.MovementCoreTests.TickClock_RunsAtTwentyHertz" methodname="TickClock_RunsAtTwentyHertz" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="1187547026" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000157" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1051" name="TinyFrameTimes_StillIntegrate" fullname="Avatar5.Tests.EditMode.MovementCoreTests.TinyFrameTimes_StillIntegrate" methodname="TinyFrameTimes_StillIntegrate" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="844545316" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.035625" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="Wall_AbsorbsBlockedVelocity_AndAllowsSliding" fullname="Avatar5.Tests.EditMode.MovementCoreTests.Wall_AbsorbsBlockedVelocity_AndAllowsSliding" methodname="Wall_AbsorbsBlockedVelocity_AndAllowsSliding" classname="Avatar5.Tests.EditMode.MovementCoreTests" runstate="Runnable" seed="215970998" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000433" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1066" name="SessionRulesTests" fullname="Avatar5.Tests.EditMode.SessionRulesTests" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="34" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.008428" total="34" passed="34" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1072" name="Admission_AcceptsMatchingVersionWithFreeSlot" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_AcceptsMatchingVersionWithFreeSlot" methodname="Admission_AcceptsMatchingVersionWithFreeSlot" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1980744207" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000625" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1076" name="Admission_FourthPlayerFitsFifthIsRejected" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_FourthPlayerFitsFifthIsRejected" methodname="Admission_FourthPlayerFitsFifthIsRejected" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="284801365" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000199" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1077" name="Admission_MaxPlayersIsClampedToFour" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_MaxPlayersIsClampedToFour" methodname="Admission_MaxPlayersIsClampedToFour" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="155030819" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000169" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1074" name="Admission_RejectsContentMismatch" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_RejectsContentMismatch" methodname="Admission_RejectsContentMismatch" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1230755296" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000115" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1075" name="Admission_RejectsMissingPayloadAsVersionMismatch" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_RejectsMissingPayloadAsVersionMismatch" methodname="Admission_RejectsMissingPayloadAsVersionMismatch" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1242858358" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000089" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1073" name="Admission_RejectsProtocolMismatchBeforeSpawn" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_RejectsProtocolMismatchBeforeSpawn" methodname="Admission_RejectsProtocolMismatchBeforeSpawn" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1263893453" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000109" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1078" name="Admission_RejectsWhenHostIsShuttingDown" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Admission_RejectsWhenHostIsShuttingDown" methodname="Admission_RejectsWhenHostIsShuttingDown" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1116426693" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000111" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1100" name="DirectCode_Parses" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_Parses" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001097" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1097" name="DirectCode_Parses(&quot;127.0.0.1:7777&quot;,&quot;127.0.0.1&quot;,7777)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_Parses(&quot;127.0.0.1:7777&quot;,&quot;127.0.0.1&quot;,7777)" methodname="DirectCode_Parses" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1802196301" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000607" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1098" name="DirectCode_Parses(&quot; 192.168.0.12 &quot;,&quot;192.168.0.12&quot;,7777)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_Parses(&quot; 192.168.0.12 &quot;,&quot;192.168.0.12&quot;,7777)" methodname="DirectCode_Parses" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1603336309" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000047" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1099" name="DirectCode_Parses(&quot;localhost:9000&quot;,&quot;127.0.0.1&quot;,9000)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_Parses(&quot;localhost:9000&quot;,&quot;127.0.0.1&quot;,9000)" methodname="DirectCode_Parses" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="177141007" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000041" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1107" name="DirectCode_RejectsInvalid" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000840" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1101" name="DirectCode_RejectsInvalid(&quot;&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid(&quot;&quot;)" methodname="DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1606156516" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000174" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1102" name="DirectCode_RejectsInvalid(&quot;300.1.1.1&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid(&quot;300.1.1.1&quot;)" methodname="DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1363875922" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000044" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1103" name="DirectCode_RejectsInvalid(&quot;1.2.3&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid(&quot;1.2.3&quot;)" methodname="DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1771031641" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000032" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1104" name="DirectCode_RejectsInvalid(&quot;127.0.0.1:0&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid(&quot;127.0.0.1:0&quot;)" methodname="DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="56658213" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000030" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1105" name="DirectCode_RejectsInvalid(&quot;127.0.0.1:70000&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid(&quot;127.0.0.1:70000&quot;)" methodname="DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1021787500" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000026" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1106" name="DirectCode_RejectsInvalid(&quot;example.com:7777&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.DirectCode_RejectsInvalid(&quot;example.com:7777&quot;)" methodname="DirectCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1095653914" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000028" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1071" name="Payload_RejectsGarbage" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Payload_RejectsGarbage" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000473" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1068" name="Payload_RejectsGarbage(null)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Payload_RejectsGarbage(null)" methodname="Payload_RejectsGarbage" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1679429133" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000112" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1069" name="Payload_RejectsGarbage(System.Byte[])" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Payload_RejectsGarbage(System.Byte[])" methodname="Payload_RejectsGarbage" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1517516390" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000035" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1070" name="Payload_RejectsGarbage(System.Byte[])" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Payload_RejectsGarbage(System.Byte[])" methodname="Payload_RejectsGarbage" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1545663841" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000014" asserts="0">
+                  <properties>
+                    <property name="childIndex" value="2" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1067" name="Payload_RoundTrips" fullname="Avatar5.Tests.EditMode.SessionRulesTests.Payload_RoundTrips" methodname="Payload_RoundTrips" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="472936755" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000140" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1081" name="ReasonCodec_RoundTrips" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_RoundTrips" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000712" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1079" name="ReasonCodec_RoundTrips(SessionFull)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_RoundTrips(SessionFull)" methodname="ReasonCodec_RoundTrips" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1273264879" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000364" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1080" name="ReasonCodec_RoundTrips(VersionMismatch)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_RoundTrips(VersionMismatch)" methodname="ReasonCodec_RoundTrips" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="85011359" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000056" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1086" name="ReasonCodec_UnknownTextUsesFallback" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_UnknownTextUsesFallback" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000627" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1082" name="ReasonCodec_UnknownTextUsesFallback(null)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_UnknownTextUsesFallback(null)" methodname="ReasonCodec_UnknownTextUsesFallback" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1800482451" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000104" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1083" name="ReasonCodec_UnknownTextUsesFallback(&quot;&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_UnknownTextUsesFallback(&quot;&quot;)" methodname="ReasonCodec_UnknownTextUsesFallback" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1005609252" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000039" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1084" name="ReasonCodec_UnknownTextUsesFallback(&quot;Disconnected by server&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_UnknownTextUsesFallback(&quot;Disconnected by server&quot;)" methodname="ReasonCodec_UnknownTextUsesFallback" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="520846223" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000032" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1085" name="ReasonCodec_UnknownTextUsesFallback(&quot;A5:NotAnError&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ReasonCodec_UnknownTextUsesFallback(&quot;A5:NotAnError&quot;)" methodname="ReasonCodec_UnknownTextUsesFallback" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1185875391" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000087" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1089" name="ServiceCode_IsNormalised" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_IsNormalised" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000641" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1087" name="ServiceCode_IsNormalised(&quot;abc123&quot;,&quot;ABC123&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_IsNormalised(&quot;abc123&quot;,&quot;ABC123&quot;)" methodname="ServiceCode_IsNormalised" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="656526985" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000345" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1088" name="ServiceCode_IsNormalised(&quot;  ab-c1 23 &quot;,&quot;ABC123&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_IsNormalised(&quot;  ab-c1 23 &quot;,&quot;ABC123&quot;)" methodname="ServiceCode_IsNormalised" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="303994276" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000043" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1096" name="ServiceCode_RejectsInvalid" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000719" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1090" name="ServiceCode_RejectsInvalid(null)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid(null)" methodname="ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="826324518" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000103" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1091" name="ServiceCode_RejectsInvalid(&quot;&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid(&quot;&quot;)" methodname="ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="15071725" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000039" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1092" name="ServiceCode_RejectsInvalid(&quot;AB1&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid(&quot;AB1&quot;)" methodname="ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="1044530876" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000029" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1093" name="ServiceCode_RejectsInvalid(&quot;ABCDEFGHIJKLMNOPQ&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid(&quot;ABCDEFGHIJKLMNOPQ&quot;)" methodname="ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="2057559567" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000028" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1094" name="ServiceCode_RejectsInvalid(&quot;ABC12!&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid(&quot;ABC12!&quot;)" methodname="ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="403676546" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000026" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1095" name="ServiceCode_RejectsInvalid(&quot;ÄBC123&quot;)" fullname="Avatar5.Tests.EditMode.SessionRulesTests.ServiceCode_RejectsInvalid(&quot;ÄBC123&quot;)" methodname="ServiceCode_RejectsInvalid" classname="Avatar5.Tests.EditMode.SessionRulesTests" runstate="Runnable" seed="51898044" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000027" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1108" name="WorldStateServiceTests" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.012607" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1113" name="ChainedGatesOpenInOrderAndGoalCompletesExactlyOnce" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.ChainedGatesOpenInOrderAndGoalCompletesExactlyOnce" methodname="ChainedGatesOpenInOrderAndGoalCompletesExactlyOnce" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="2039351323" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.005734" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1115" name="FindInteractable_PicksNearestUnusedLever" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.FindInteractable_PicksNearestUnusedLever" methodname="FindInteractable_PicksNearestUnusedLever" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="1323532609" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000355" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1112" name="FireImpactLightsBrazierOtherElementsDoNot" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.FireImpactLightsBrazierOtherElementsDoNot" methodname="FireImpactLightsBrazierOtherElementsDoNot" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="67900504" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000263" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1110" name="Lever_NeedsToBeInRangeAndOpensItsGateOnce" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.Lever_NeedsToBeInRangeAndOpensItsGateOnce" methodname="Lever_NeedsToBeInRangeAndOpensItsGateOnce" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="1850754806" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000322" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1111" name="OnlyLeversCanBeOperatedDirectly" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.OnlyLeversCanBeOperatedDirectly" methodname="OnlyLeversCanBeOperatedDirectly" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="1539537555" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000209" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1114" name="SnapshotRestore_ReproducesStateWithoutEvents" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.SnapshotRestore_ReproducesStateWithoutEvents" methodname="SnapshotRestore_ReproducesStateWithoutEvents" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="1546486" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001611" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1109" name="Validation_CatchesDuplicateIdsBrokenLinksAndMissingGoal" fullname="Avatar5.Tests.EditMode.WorldStateServiceTests.Validation_CatchesDuplicateIdsBrokenLinksAndMissingGoal" methodname="Validation_CatchesDuplicateIdsBrokenLinksAndMissingGoal" classname="Avatar5.Tests.EditMode.WorldStateServiceTests" runstate="Runnable" seed="2059040414" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.003117" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1158" name="Avatar5.Tests.Rendering.dll" fullname="C:/A5W/p03/Library/ScriptAssemblies/Avatar5.Tests.Rendering.dll" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:54Z" duration="3.904392" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="7524" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1159" name="Avatar5" fullname="Avatar5" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:54Z" duration="3.904017" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1160" name="Tests" fullname="Avatar5.Tests" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:54Z" duration="3.903722" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1161" name="Rendering" fullname="Avatar5.Tests.Rendering" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:54Z" duration="3.903404" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1120" name="RenderingAssetTests" fullname="Avatar5.Tests.Rendering.RenderingAssetTests" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:52Z" duration="1.680629" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1139" name="Benchmark_OnlyRunsWithCommandLineFlag" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Benchmark_OnlyRunsWithCommandLineFlag" methodname="Benchmark_OnlyRunsWithCommandLineFlag" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="420231097" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000323" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1138" name="InkSampleRadius_ScalesWithResolution" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.InkSampleRadius_ScalesWithResolution" methodname="InkSampleRadius_ScalesWithResolution" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1646602837" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.000224" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1135" name="InkVolumeDefaults_AreOffSoOtherScenesStayUnchanged" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.InkVolumeDefaults_AreOffSoOtherScenesStayUnchanged" methodname="InkVolumeDefaults_AreOffSoOtherScenesStayUnchanged" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1911287557" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:50Z" duration="0.001334" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1136" name="OtherScenes_DoNotEnableInkLines" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.OtherScenes_DoNotEnableInkLines" methodname="OtherScenes_DoNotEnableInkLines" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1063505521" result="Passed" start-time="2026-10-17 01:08:50Z" end-time="2026-10-17 01:08:51Z" duration="1.657202" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1132" name="PaletteColours_MatchElementIdentity" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteColours_MatchElementIdentity" methodname="PaletteColours_MatchElementIdentity" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="911815630" result="Passed" start-time="2026-10-17 01:08:51Z" end-time="2026-10-17 01:08:51Z" duration="0.002396" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1131" name="PaletteFamily_HasRequiredToonMaterials" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-17 01:08:51Z" end-time="2026-10-17 01:08:52Z" duration="0.011039" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1126" name="PaletteFamily_HasRequiredToonMaterials(&quot;Fire&quot;,3)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Fire&quot;,3)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="157082117" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.005101" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1127" name="PaletteFamily_HasRequiredToonMaterials(&quot;Water&quot;,2)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Water&quot;,2)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="546380078" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000730" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1128" name="PaletteFamily_HasRequiredToonMaterials(&quot;Earth&quot;,3)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Earth&quot;,3)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="2136011622" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000695" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1129" name="PaletteFamily_HasRequiredToonMaterials(&quot;Air&quot;,3)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Air&quot;,3)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="159182884" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000720" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1130" name="PaletteFamily_HasRequiredToonMaterials(&quot;Neutral&quot;,4)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PaletteFamily_HasRequiredToonMaterials(&quot;Neutral&quot;,4)" methodname="PaletteFamily_HasRequiredToonMaterials" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1871396112" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000884" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1134" name="PcRenderer_HasActiveInkFeature_OnRenderGraph" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.PcRenderer_HasActiveInkFeature_OnRenderGraph" methodname="PcRenderer_HasActiveInkFeature_OnRenderGraph" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1625349427" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.001339" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1133" name="QualityProfiles_LowMediumHigh_ScaleCost" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.QualityProfiles_LowMediumHigh_ScaleCost" methodname="QualityProfiles_LowMediumHigh_ScaleCost" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1080184166" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.001765" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1137" name="RenderingAssembly_HasNoGameplayDependencies" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.RenderingAssembly_HasNoGameplayDependencies" methodname="RenderingAssembly_HasNoGameplayDependencies" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1881236684" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000675" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1125" name="Shader_CompilesWithoutErrors" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.002951" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1121" name="Shader_CompilesWithoutErrors(&quot;Avatar5/Toon&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Avatar5/Toon&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="38450389" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.001982" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1122" name="Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Water&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Water&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1307227543" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000167" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1123" name="Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Hull Outline&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Avatar5/Toon Hull Outline&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1898519608" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000131" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1124" name="Shader_CompilesWithoutErrors(&quot;Hidden/Avatar5/InkOutline&quot;)" fullname="Avatar5.Tests.Rendering.RenderingAssetTests.Shader_CompilesWithoutErrors(&quot;Hidden/Avatar5/InkOutline&quot;)" methodname="Shader_CompilesWithoutErrors" classname="Avatar5.Tests.Rendering.RenderingAssetTests" runstate="Runnable" seed="1180863767" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.000111" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1140" name="ToonBandTests" fullname="Avatar5.Tests.Rendering.ToonBandTests" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.479798" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1145" name="ShadeSide_UsesShadeColourNotBlack" fullname="Avatar5.Tests.Rendering.ToonBandTests.ShadeSide_UsesShadeColourNotBlack" methodname="ShadeSide_UsesShadeColourNotBlack" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="1174785333" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.379864" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1144" name="Sphere_ShowsConfiguredNumberOfBands" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.099324" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1141" name="Sphere_ShowsConfiguredNumberOfBands(2)" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands(2)" methodname="Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="2133840782" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.032484" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1142" name="Sphere_ShowsConfiguredNumberOfBands(3)" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands(3)" methodname="Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="1742850447" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.034917" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1143" name="Sphere_ShowsConfiguredNumberOfBands(4)" fullname="Avatar5.Tests.Rendering.ToonBandTests.Sphere_ShowsConfiguredNumberOfBands(4)" methodname="Sphere_ShowsConfiguredNumberOfBands" classname="Avatar5.Tests.Rendering.ToonBandTests" runstate="Runnable" seed="447018087" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.030452" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1146" name="VisualStyleSceneRenderTests" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:54Z" duration="1.742403" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1154" name="Camera_FramesCharactersAndInk_AtAspect" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Camera_FramesCharactersAndInk_AtAspect" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:53Z" duration="0.356579" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1152" name="Camera_FramesCharactersAndInk_AtAspect(1920,1080)" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Camera_FramesCharactersAndInk_AtAspect(1920,1080)" methodname="Camera_FramesCharactersAndInk_AtAspect" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1059432937" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:52Z" duration="0.209224" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1153" name="Camera_FramesCharactersAndInk_AtAspect(2520,1080)" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Camera_FramesCharactersAndInk_AtAspect(2520,1080)" methodname="Camera_FramesCharactersAndInk_AtAspect" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="249421240" result="Passed" start-time="2026-10-17 01:08:52Z" end-time="2026-10-17 01:08:53Z" duration="0.145634" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1150" name="InkLines_AppearOnCharactersAndScene" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.InkLines_AppearOnCharactersAndScene" methodname="InkLines_AppearOnCharactersAndScene" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1403461960" result="Passed" start-time="2026-10-17 01:08:53Z" end-time="2026-10-17 01:08:53Z" duration="0.194569" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[ink pixels whole 24932 (off 234), hero 858 (off 36), enemy 1327 (off 0)
+]]></output>
+              </test-case>
+              <test-case id="1151" name="InnerAndOuterLines_AreDistinguishable" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.InnerAndOuterLines_AreDistinguishable" methodname="InnerAndOuterLines_AreDistinguishable" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="635051701" result="Passed" start-time="2026-10-17 01:08:53Z" end-time="2026-10-17 01:08:53Z" duration="0.299557" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[silhouette(red) +34137, inner(cyan) +31438; edge-test shapes red +2243, cyan +2813
+]]></output>
+              </test-case>
+              <test-case id="1155" name="LightingPresets_KeepCharactersReadable" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.LightingPresets_KeepCharactersReadable" methodname="LightingPresets_KeepCharactersReadable" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="631326870" result="Passed" start-time="2026-10-17 01:08:53Z" end-time="2026-10-17 01:08:53Z" duration="0.362085" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Day: hero luma 0,513, hero dark 3,2 %, scene luma 0,533
+Golden Hour: hero luma 0,385, hero dark 4,3 %, scene luma 0,403
+Overcast: hero luma 0,386, hero dark 4,1 %, scene luma 0,426
+Night: hero luma 0,222, hero dark 9,1 %, scene luma 0,231
+]]></output>
+              </test-case>
+              <test-case id="1157" name="QualityController_ShutdownRestoresCameraAndKeyword" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.QualityController_ShutdownRestoresCameraAndKeyword" methodname="QualityController_ShutdownRestoresCameraAndKeyword" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1224453539" result="Passed" start-time="2026-10-17 01:08:53Z" end-time="2026-10-17 01:08:53Z" duration="0.002045" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1156" name="QualityProfiles_SwitchRenderingSettings" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.QualityProfiles_SwitchRenderingSettings" methodname="QualityProfiles_SwitchRenderingSettings" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1728032656" result="Passed" start-time="2026-10-17 01:08:53Z" end-time="2026-10-17 01:08:54Z" duration="0.185408" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[ink pixels low 29661, high 38700
+]]></output>
+              </test-case>
+              <test-case id="1147" name="Scene_ContainsRequiredContent" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Scene_ContainsRequiredContent" methodname="Scene_ContainsRequiredContent" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="562432172" result="Passed" start-time="2026-10-17 01:08:54Z" end-time="2026-10-17 01:08:54Z" duration="0.002693" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1148" name="Scene_UsesOnlyAvatar5Shaders" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.Scene_UsesOnlyAvatar5Shaders" methodname="Scene_UsesOnlyAvatar5Shaders" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1857366038" result="Passed" start-time="2026-10-17 01:08:54Z" end-time="2026-10-17 01:08:54Z" duration="0.000813" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1149" name="ToonScene_RendersWithoutErrorShader" fullname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests.ToonScene_RendersWithoutErrorShader" methodname="ToonScene_RendersWithoutErrorShader" classname="Avatar5.Tests.Rendering.VisualStyleSceneRenderTests" runstate="Runnable" seed="1326455192" result="Passed" start-time="2026-10-17 01:08:54Z" end-time="2026-10-17 01:08:54Z" duration="0.112491" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: <USERPROFILE>/AppData/LocalLow/DefaultCompany/Avatar5-URP-Template\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
