@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`) → P05 S05-01 Weltzustand + Level01-Greybox (`feature/p05-world-core`) → P06 S06-01 Spielstand (`feature/p06-save-core`) → P08 S08-01 Testlauf + spielbarer Build (`feature/p08-test-pipeline`) → P02 S02-02 vier Elementklassen (`feature/p02-element-classes`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01, P07a, P03 S03-01/S03-02, P02 S02-01/S02-02, P04 S04-01, P05 S05-01, P06 S06-01, P08 S08-01 (alle gemerged) · **In Arbeit:** P04 S04-02 Encounters/Mini-Boss (`feature/p04-encounters`, unfertig)
 
 ## Implementiert / als Source vorhanden
 
