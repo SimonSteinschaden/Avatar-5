@@ -30,7 +30,7 @@ function Run([string] $label, [hashtable[]] $instances) {
     foreach ($i in $instances) {
         if ($i.Wait) { Start-Sleep -Seconds $i.Wait }
         $log = Join-Path $LogDir "$label-$($i.Name).log"
-        $args = @('-batchmode', '-nographics', '-logFile', $log, '-a5-mode', 'direct', '-a5-port', "$Port", '-a5-report-players', '1',
+        $args = @('-batchmode', '-nographics', '-logFile', $log, '-a5-mode', 'direct', '-a5-port', "$Port", '-a5-report-players', '1', '-a5-save-dir', (Join-Path $LogDir "saves-$label"),
             '-a5-bot-move', '0,0', '-a5-bot-target', 'brute', '-a5-quit-after', "$($i.Quit)") + $i.Args
         $procs[$i.Name] = Start-Process -FilePath $Player -ArgumentList $args -PassThru -WindowStyle Hidden
     }

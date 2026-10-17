@@ -5,6 +5,7 @@
     "Avatar5.Contracts",
     "Avatar5.Gameplay",
     "Avatar5.Combat",
+    "Avatar5.Persistence",
     "Avatar5.World",
     "Avatar5.Foundation",
     "Avatar5.Player",

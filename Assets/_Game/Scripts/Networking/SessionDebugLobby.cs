@@ -38,7 +38,7 @@ namespace Avatar5.Networking
         private void OnGUI()
         {
             var runtime = SessionRuntime.Instance;
-            GUILayout.BeginArea(new Rect(20, 20, 380, 330), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(20, 20, 380, 360), GUI.skin.box);
             GUILayout.Label("AVATAR5 – Sitzung (Debug)");
             if (runtime == null)
             {
@@ -57,6 +57,7 @@ namespace Avatar5.Networking
             if (GUILayout.Toggle(runtime.Mode == SessionTransportMode.Relay, "Internet (Relay)", GUI.skin.button)) runtime.Mode = SessionTransportMode.Relay;
             GUILayout.EndHorizontal();
 
+            CampaignSaveSettings.ContinueRequested = GUILayout.Toggle(CampaignSaveSettings.ContinueRequested, " Spielstand fortsetzen (Host)");
             if (GUILayout.Button("Private Sitzung erstellen")) Create(runtime);
             GUILayout.BeginHorizontal();
             _code = GUILayout.TextField(_code, 32, GUILayout.Width(200));
@@ -81,6 +82,9 @@ namespace Avatar5.Networking
             var error = SessionErrorText.For(state.LastError);
             if (!string.IsNullOrEmpty(error)) GUILayout.Label("Fehler: " + error);
             if (!string.IsNullOrEmpty(_message)) GUILayout.Label(_message);
+            var world = WorldHost.Instance;
+            if (world != null && world.LastLoad.Error != SaveLoadError.None && world.LastLoad.Error != SaveLoadError.NotFound)
+                GUILayout.Label("Spielstand nicht geladen: " + SaveErrorText(world.LastLoad.Error));
             GUILayout.Label("Protokoll " + runtime.Config.ProtocolVersion + " · Inhalt " + runtime.Config.ContentVersion);
             GUILayout.EndArea();
         }
@@ -109,6 +113,18 @@ namespace Avatar5.Networking
             await runtime.LeaveAsync();
             _message = string.Empty;
             _busy = false;
+        }
+
+        private static string SaveErrorText(SaveLoadError error)
+        {
+            switch (error)
+            {
+                case SaveLoadError.UnsupportedSchema: return "von einer anderen Spielversion.";
+                case SaveLoadError.ContentMismatch: return "passt nicht zu diesem Level/Inhalt.";
+                case SaveLoadError.UnknownContentId: return "enthält unbekannte Objekte.";
+                case SaveLoadError.Corrupt: return "beschädigt (auch das Backup).";
+                default: return "Lesefehler.";
+            }
         }
 
         private static string PhaseText(SessionPhase phase)
