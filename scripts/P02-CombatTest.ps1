@@ -6,9 +6,9 @@
   Build first: Avatar5 > Build > P03 Network Arena Player (contains combat since P02).
 
   All four bots walk up to the nearest training dummy and cast:
-    host     fireball every 1.0 s
-    client1  water wave every 2.2 s
-    client2  fireball 1.0 s + water wave 2.5 s
+    host     fire class: fireball every 1.0 s
+    client1  water class: water wave every 2.2 s
+    client2  water class: ice shard 1.0 s + water wave 2.5 s
     client3  tries a fireball every 0.05 s (spam; host must enforce the 0.8 s cooldown)
   Casting stops after CastSeconds; burning runs out; then every peer reports dummy health, the damage it
   received as events, accepted casts and reactions. All peers must agree with the host.
@@ -25,32 +25,31 @@ New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 Get-ChildItem $LogDir -Filter '*.log' -ErrorAction SilentlyContinue | Remove-Item -Force
 
 $delay = 6
-$quit = $delay + $CastSeconds + 9
+# After casting, every bot walks south out of the brute's reach, so all logs end in a quiet, comparable state.
+$quit = $delay + $CastSeconds + 14
 $code = "127.0.0.1:$Port"
 $processes = @{}
 function Start-Instance([string] $name, [string[]] $extra) {
     $log = Join-Path $LogDir "$name.log"
     $args = @('-batchmode', '-nographics', '-logFile', $log, '-a5-mode', 'direct', '-a5-port', "$Port",
         '-a5-report-players', '1', '-a5-bot-move', '0,0', '-a5-bot-delay', "$delay", '-a5-bot-approach', '3.5',
-        '-a5-bot-cast-for', "$CastSeconds", '-a5-bot-target', 'any') + $extra
+        '-a5-bot-cast-for', "$CastSeconds", '-a5-bot-target', 'any', '-a5-bot-after-move', '0,-1') + $extra
     $script:processes[$name] = Start-Process -FilePath $Player -ArgumentList $args -PassThru -WindowStyle Hidden
 }
 
-Start-Instance 'host' @('-a5-session', 'host', '-a5-bot-cast', '0:1.0', '-a5-quit-after', "$($quit + 3)")
+Start-Instance 'host' @('-a5-session', 'host', '-a5-class', 'fire', '-a5-bot-cast', '0:1.0', '-a5-quit-after', "$($quit + 3)")
 Start-Sleep -Seconds 3
-Start-Instance 'client1' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-cast', '1:2.2', '-a5-quit-after', "$quit")
-Start-Instance 'client2' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-cast', '0:1.0,1:2.5', '-a5-quit-after', "$quit")
-Start-Instance 'client3' @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-cast', '0:0.05', '-a5-quit-after', "$quit")
+Start-Instance 'client1' @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'water', '-a5-bot-cast', '1:2.2', '-a5-quit-after', "$quit")
+Start-Instance 'client2' @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'water', '-a5-bot-cast', '0:1.0,1:2.5', '-a5-quit-after', "$quit")
+Start-Instance 'client3' @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'fire', '-a5-bot-cast', '0:0.05', '-a5-quit-after', "$quit")
 
 $deadline = (Get-Date).AddSeconds($quit + 40)
 while ((Get-Date) -lt $deadline -and ($processes.Values | Where-Object { -not $_.HasExited })) { Start-Sleep -Milliseconds 500 }
 $processes.Values | Where-Object { -not $_.HasExited } | ForEach-Object { $_.Kill() }
 
-function LastCombat([string] $name) {
-    $line = Get-Content (Join-Path $LogDir "$name.log") -ErrorAction SilentlyContinue | Where-Object { $_ -like 'A5COMBAT*' } | Select-Object -Last 1
-    if (-not $line) { return $null }
+function ParseCombat([string] $line) {
     $r = @{ Line = $line; Dummies = @{} }
-    foreach ($key in 'events', 'casts', 'steam', 'extinguish', 'dupes') {
+    foreach ($key in 'events', 'casts', 'steam', 'extinguish', 'freeze', 'dupes') {
         if ($line -match "$key=(-?[0-9]+)") { $r[$key] = [int]$Matches[1] }
     }
     foreach ($m in [regex]::Matches($line, 'e([0-9]+)=([0-9.]+)/([0-9]+)\|dmg=([0-9.]+)\|st=([0-9]+)')) {
@@ -63,6 +62,16 @@ function LastCombat([string] $name) {
     return $r
 }
 
+function AllCombat([string] $name) {
+    return @(Get-Content (Join-Path $LogDir "$name.log") -ErrorAction SilentlyContinue | Where-Object { $_ -like 'A5COMBAT*' } | ForEach-Object { ParseCombat $_ })
+}
+
+function LastCombat([string] $name) {
+    $all = AllCombat $name
+    if ($all.Count -eq 0) { return $null }
+    return $all[-1]
+}
+
 $results = @()
 function Check([string] $name, [bool] $ok, [string] $detail) { $script:results += ,@{ Name = $name; Ok = $ok; Detail = $detail } }
 
@@ -72,6 +81,7 @@ if ($hostR) {
     Check 'casts accepted on host' ($hostR.casts -ge 30) "casts=$($hostR.casts)"
     Check 'Steam reaction happened' ($hostR.steam -ge 1) "steam=$($hostR.steam)"
     Check 'Extinguish reaction happened' ($hostR.extinguish -ge 1) "extinguish=$($hostR.extinguish)"
+    Check 'Freeze reaction happened (ice on wet)' ($hostR.freeze -ge 1) "freeze=$($hostR.freeze)"
     # Since P04 the arena also holds a brute (revives, so its HP is not cumulative); compare the 5000 HP dummies only.
     foreach ($k in @($hostR.Dummies.Keys)) { if ($hostR.Dummies[$k].Max -ne 5000) { $hostR.Dummies.Remove($k) } }
     Check 'two dummies present' ($hostR.Dummies.Count -eq 2) "dummies=$($hostR.Dummies.Count)"
@@ -83,10 +93,13 @@ if ($hostR) {
     foreach ($name in 'client1', 'client2', 'client3') {
         $c = LastCombat $name
         if (-not $c) { Check "$name reported combat" $false ''; continue }
-        Check "$name received same number of events as host" ($c.events -eq $hostR.events) "client=$($c.events) host=$($hostR.events)"
+        # The host runs a few seconds longer; compare with the host report that had seen exactly as many events.
+        $same = AllCombat 'host' | Where-Object { $_.events -eq $c.events } | Select-Object -Last 1
+        Check "$name final state matches a host state with the same event count" ($null -ne $same) "client=$($c.events) host(final)=$($hostR.events)"
         Check "$name no duplicate events" ($c.dupes -eq 0) "dupes=$($c.dupes)"
+        if (-not $same) { continue }
         foreach ($id in $hostR.Dummies.Keys) {
-            $h = $hostR.Dummies[$id]; $d = $c.Dummies[$id]
+            $h = $same.Dummies[$id]; $d = $c.Dummies[$id]
             if (-not $d) { Check "$name sees dummy $id" $false ''; continue }
             Check "$name dummy $id health equals host" ([math]::Abs($d.Health - $h.Health) -lt 0.05) ("client {0:0.0} host {1:0.0}" -f $d.Health, $h.Health)
             Check "$name dummy $id damage events equal host" ([math]::Abs($d.Damage - $h.Damage) -lt 0.05) ("client {0:0.0} host {1:0.0}" -f $d.Damage, $h.Damage)

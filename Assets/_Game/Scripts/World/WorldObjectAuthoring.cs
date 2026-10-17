@@ -16,6 +16,7 @@ namespace Avatar5.World
         [SerializeField, Min(0.1f)] private float radius = 2f;
         [SerializeField] private int[] requires = new int[0];
         [SerializeField] private ElementKind element = ElementKind.Fire;
+        [SerializeField] private bool anyElement;
         [Tooltip("Lever handle / gate leaf / flame that changes with the state.")]
         [SerializeField] private Transform animated;
 
@@ -25,8 +26,10 @@ namespace Avatar5.World
         public WorldObjectKind Kind { get { return kind; } }
         public int State { get { return _state < 0 ? WorldStateCodes.Off : _state; } }
 
-        public void Configure(int objectId, WorldObjectKind objectKind, float objectRadius, int[] requirements, Transform animatedPart, ElementKind objectElement = ElementKind.Fire)
+        public void Configure(int objectId, WorldObjectKind objectKind, float objectRadius, int[] requirements, Transform animatedPart,
+            ElementKind objectElement = ElementKind.Fire, bool acceptsAnyElement = false)
         {
+            anyElement = acceptsAnyElement;
             id = objectId;
             kind = objectKind;
             radius = objectRadius;
@@ -40,7 +43,7 @@ namespace Avatar5.World
             var p = transform.position;
             return new WorldObjectDefinition
             {
-                Id = id, Kind = kind, Position = new Float2(p.x, p.z), Radius = radius, Requires = (int[])requires.Clone(), Element = element
+                Id = id, Kind = kind, Position = new Float2(p.x, p.z), Radius = radius, Requires = (int[])requires.Clone(), Element = element, AnyElement = anyElement
             };
         }
 

@@ -31,6 +31,8 @@ namespace Avatar5.Networking
         private static int _eventsSeen;
         private static int _steam;
         private static int _extinguish;
+        private static int _freeze;
+        private static int _flare;
         private static int _castsAccepted;
         private static int _telegraphs;
         private static int _enemyCasts;
@@ -283,6 +285,8 @@ namespace Avatar5.Networking
             {
                 if (e.EffectId == (int)ReactionKind.Steam) _steam++;
                 else if (e.EffectId == (int)ReactionKind.Extinguish) _extinguish++;
+                else if (e.EffectId == (int)ReactionKind.Freeze) _freeze++;
+                else if (e.EffectId == (int)ReactionKind.Flare) _flare++;
             }
             else if (e.ResultKind == (int)CombatEventKind.AbilityCastAccepted)
             {
@@ -358,7 +362,8 @@ namespace Avatar5.Networking
             line.Append(" t=").Append(Time.unscaledTime.ToString("0.0", CultureInfo.InvariantCulture));
             line.Append(" self=").Append(manager.LocalClientId + 1UL);
             line.Append(" events=").Append(_eventsSeen).Append(" casts=").Append(_castsAccepted);
-            line.Append(" steam=").Append(_steam).Append(" extinguish=").Append(_extinguish);
+            line.Append(" steam=").Append(_steam).Append(" extinguish=").Append(_extinguish)
+                .Append(" freeze=").Append(_freeze).Append(" flare=").Append(_flare);
             line.Append(" dupes=").Append(CombatHost.Instance != null ? CombatHost.Instance.DuplicateEventsDropped : -1);
             line.Append(" telegraphs=").Append(_telegraphs).Append(" enemyCasts=").Append(_enemyCasts).Append(" enemyHits=").Append(_enemyHits);
             line.Append(" enemyDefeats=").Append(_enemyDefeats).Append(" playerDefeats=").Append(_playerDefeats);

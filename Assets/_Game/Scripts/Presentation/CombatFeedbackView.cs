@@ -24,9 +24,27 @@ namespace Avatar5.Presentation
         private float _bannerUntil;
         private GUIStyle _style;
 
+        private ElementKind _localElement;
+
         public void SetLocalPlayer(ICombatStateSource local)
         {
             _local = local;
+        }
+
+        public void SetLocalElement(ElementKind element)
+        {
+            _localElement = element;
+        }
+
+        private static string AbilityHint(ElementKind element)
+        {
+            switch (element)
+            {
+                case ElementKind.Water: return "LMB Eissplitter · RMB Wasserwelle";
+                case ElementKind.Earth: return "LMB Steinspieß · RMB Beben";
+                case ElementKind.Air: return "LMB Windklinge · RMB Böe";
+                default: return "LMB Feuerball · RMB Flammenstoß";
+            }
         }
 
         private void OnEnable()
@@ -61,11 +79,23 @@ namespace Avatar5.Presentation
                     Add(e.TargetActorId, Mathf.RoundToInt(e.Amount).ToString(), e.AbilityId == 0 ? new Color(1f, 0.55f, 0.1f) : Color.white);
                     break;
                 case CombatEventKind.ReactionTriggered:
-                    Add(e.TargetActorId, e.EffectId == (int)ReactionKind.Steam ? "Dampf!" : "Gelöscht!", new Color(0.6f, 0.9f, 1f));
+                    Add(e.TargetActorId, ReactionText((ReactionKind)e.EffectId), new Color(0.6f, 0.9f, 1f));
                     break;
                 case CombatEventKind.ActorDefeated:
                     Add(e.TargetActorId, "Besiegt", Color.red);
                     break;
+            }
+        }
+
+        private static string ReactionText(ReactionKind kind)
+        {
+            switch (kind)
+            {
+                case ReactionKind.Steam: return "Dampf!";
+                case ReactionKind.Extinguish: return "Gelöscht!";
+                case ReactionKind.Freeze: return "Eingefroren!";
+                case ReactionKind.Flare: return "Aufgeflammt!";
+                default: return "Reaktion!";
             }
         }
 
@@ -112,7 +142,7 @@ namespace Avatar5.Presentation
             GUILayout.BeginArea(new Rect(Screen.width - 260f, Screen.height - 110f, 240f, 90f), GUI.skin.box);
             GUILayout.Label("Leben: " + Mathf.CeilToInt(s.Health) + " / " + Mathf.RoundToInt(s.MaxHealth));
             GUILayout.Label("Energie: " + Mathf.FloorToInt(s.Energy) + " / " + Mathf.RoundToInt(s.MaxEnergy));
-            GUILayout.Label("LMB Feuerball · RMB Wasserwelle · E Benutzen" + (s.Status != StatusFlags.None ? " · " + s.Status : string.Empty));
+            GUILayout.Label(AbilityHint(_localElement) + " · E Benutzen" + (s.Status != StatusFlags.None ? " · " + s.Status : string.Empty));
             GUILayout.EndArea();
         }
     }

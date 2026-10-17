@@ -31,7 +31,8 @@ namespace Avatar5.EditorTools
         public const string DummyPrefabPath = "Assets/_Game/Prefabs/TrainingDummy.prefab";
         public const string BrutePrefabPath = "Assets/_Game/Prefabs/Enemy_Brute.prefab";
         public const string AbilityFolder = "Assets/_Game/Data/Abilities";
-        private static readonly int[] PlayerLoadout = { StarterAbilities.FireballId, StarterAbilities.WaterWaveId };
+        // Default loadout until the owner's class choice arrives (Fire); the host swaps it per class.
+        private static readonly int[] PlayerLoadout = StarterAbilities.LoadoutFor(ElementKind.Fire);
         public const string NetworkPrefabsListPath = "Assets/DefaultNetworkPrefabs.asset";
         public const string PlayerOutput = "Artifacts/P03Arena/Avatar5_P03Arena.exe";
         private const int NetworkTickRate = 20;
@@ -135,7 +136,9 @@ namespace Avatar5.EditorTools
                 if (!AssetDatabase.IsValidFolder("Assets/_Game/Data")) AssetDatabase.CreateFolder("Assets/_Game", "Data");
                 AssetDatabase.CreateFolder("Assets/_Game/Data", "Abilities");
             }
-            var definitions = new[] { StarterAbilities.Fireball(), StarterAbilities.WaterWave(), StarterEnemies.BruteSlam() };
+            var list = new List<AbilityDefinition>(StarterAbilities.All());
+            list.Add(StarterEnemies.BruteSlam());
+            var definitions = list.ToArray();
             var assets = new AbilityDefinitionAsset[definitions.Length];
             for (var i = 0; i < definitions.Length; i++)
             {
@@ -311,10 +314,14 @@ namespace Avatar5.EditorTools
             var views = new GameObject("CombatViews");
             views.AddComponent<CombatCueView>().Configure(new[]
             {
-                new CueVisual { CueId = StarterAbilities.FireballCue, Kind = CueVisualKind.Projectile, Color = new Color(1f, 0.45f, 0.05f, 1f),
-                    Speed = StarterAbilities.Fireball().ProjectileSpeed, Range = StarterAbilities.Fireball().Range },
-                new CueVisual { CueId = StarterAbilities.WaterWaveCue, Kind = CueVisualKind.Cone, Color = new Color(0.2f, 0.55f, 1f, 0.8f),
-                    Range = StarterAbilities.WaterWave().Range, ConeHalfAngleDegrees = StarterAbilities.WaterWave().ConeHalfAngleDegrees },
+                Projectile(StarterAbilities.Fireball(), new Color(1f, 0.45f, 0.05f, 1f)),
+                Projectile(StarterAbilities.IceShard(), new Color(0.7f, 0.9f, 1f, 1f)),
+                Projectile(StarterAbilities.StoneSpike(), new Color(0.5f, 0.35f, 0.2f, 1f)),
+                Projectile(StarterAbilities.WindBlade(), new Color(0.95f, 0.95f, 0.95f, 1f)),
+                Area(StarterAbilities.FlameBurst(), new Color(1f, 0.4f, 0.05f, 0.8f)),
+                Area(StarterAbilities.WaterWave(), new Color(0.2f, 0.55f, 1f, 0.8f)),
+                new CueVisual { CueId = StarterAbilities.QuakeCue, Kind = CueVisualKind.Burst, Color = new Color(0.45f, 0.35f, 0.2f, 0.9f), Range = StarterAbilities.Quake().Range },
+                Area(StarterAbilities.Gust(), new Color(0.9f, 0.95f, 1f, 0.6f)),
                 new CueVisual { CueId = StarterEnemies.BruteTelegraphCue, Kind = CueVisualKind.Telegraph, Color = new Color(0.95f, 0.15f, 0.1f, 1f),
                     Range = StarterEnemies.BruteSlam().Range, Duration = StarterEnemies.Brute().TelegraphDuration },
                 new CueVisual { CueId = StarterEnemies.BruteSlamCue, Kind = CueVisualKind.Burst, Color = new Color(0.55f, 0.35f, 0.15f, 0.9f),
@@ -332,6 +339,16 @@ namespace Avatar5.EditorTools
             if (!EditorSceneManager.SaveScene(scene, ScenePath))
                 throw new InvalidOperationException("Failed to save scene: " + ScenePath);
             AddSceneToBuildSettings(ScenePath);
+        }
+
+        private static CueVisual Projectile(AbilityDefinition a, Color color)
+        {
+            return new CueVisual { CueId = a.CueId, Kind = CueVisualKind.Projectile, Color = color, Speed = a.ProjectileSpeed, Range = a.Range };
+        }
+
+        private static CueVisual Area(AbilityDefinition a, Color color)
+        {
+            return new CueVisual { CueId = a.CueId, Kind = CueVisualKind.Cone, Color = color, Range = a.Range, ConeHalfAngleDegrees = a.ConeHalfAngleDegrees };
         }
 
         private static void SetField(UnityEngine.Object target, string field, UnityEngine.Object value)

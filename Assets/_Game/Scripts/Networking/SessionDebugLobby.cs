@@ -1,3 +1,4 @@
+using System;
 using Avatar5.Contracts;
 using UnityEngine;
 
@@ -57,6 +58,13 @@ namespace Avatar5.Networking
             if (GUILayout.Toggle(runtime.Mode == SessionTransportMode.Relay, "Internet (Relay)", GUI.skin.button)) runtime.Mode = SessionTransportMode.Relay;
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Klasse:", GUILayout.Width(50));
+            foreach (ElementKind element in Enum.GetValues(typeof(ElementKind)))
+            {
+                if (GUILayout.Toggle(PlayerClassSettings.Selected == element, ElementName(element), GUI.skin.button)) PlayerClassSettings.Selected = element;
+            }
+            GUILayout.EndHorizontal();
             CampaignSaveSettings.ContinueRequested = GUILayout.Toggle(CampaignSaveSettings.ContinueRequested, " Spielstand fortsetzen (Host)");
             if (GUILayout.Button("Private Sitzung erstellen")) Create(runtime);
             GUILayout.BeginHorizontal();
@@ -113,6 +121,17 @@ namespace Avatar5.Networking
             await runtime.LeaveAsync();
             _message = string.Empty;
             _busy = false;
+        }
+
+        private static string ElementName(ElementKind element)
+        {
+            switch (element)
+            {
+                case ElementKind.Water: return "Wasser";
+                case ElementKind.Earth: return "Erde";
+                case ElementKind.Air: return "Luft";
+                default: return "Feuer";
+            }
         }
 
         private static string SaveErrorText(SaveLoadError error)

@@ -52,6 +52,11 @@ namespace Avatar5.Networking
         [SerializeField, Min(0f)] private float reviveSeconds = 5f;
 
         private readonly NetworkVariable<NetCombatState> _state = new NetworkVariable<NetCombatState>();
+        private readonly NetworkVariable<byte> _element = new NetworkVariable<byte>();
+
+        /// <summary>Element class of a player (host-written); raised on every peer when it changes.</summary>
+        public ElementKind Element { get { return (ElementKind)_element.Value; } }
+        public event System.Action<ElementKind> ElementChanged;
         private NetworkPlayerAvatar _player;
         private CharacterController _controller;
         private UnityEngine.AI.NavMeshAgent _agent;
@@ -100,6 +105,7 @@ namespace Avatar5.Networking
 
         public override void OnNetworkSpawn()
         {
+            _element.OnValueChanged += (previous, current) => { if (ElementChanged != null) ElementChanged((ElementKind)current); };
             ActorRegistry.Register(ActorId, transform);
             if (IsServer && CombatHost.Instance != null) CombatHost.Instance.Register(this);
         }
@@ -108,6 +114,13 @@ namespace Avatar5.Networking
         {
             ActorRegistry.Unregister(ActorId, transform);
             if (IsServer && CombatHost.Instance != null) CombatHost.Instance.Unregister(this);
+        }
+
+        /// <summary>Host only: sets the class element and the matching loadout.</summary>
+        internal void SetElementClass(ElementKind element, int[] newLoadout)
+        {
+            loadout = newLoadout;
+            _element.Value = (byte)element;
         }
 
         /// <summary>Host only: copies the simulation state into the replicated variable.</summary>

@@ -32,6 +32,12 @@ namespace Avatar5.Presentation
             }
         }
 
+        /// <summary>Changes the untinted colour (e.g. class colour); status tints are applied on top.</summary>
+        public void SetBaseColor(Color color)
+        {
+            _baseColor = color;
+        }
+
         private void OnDestroy()
         {
             if (_fillMaterial != null) Destroy(_fillMaterial);

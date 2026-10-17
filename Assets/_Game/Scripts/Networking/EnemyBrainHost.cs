@@ -24,6 +24,7 @@ namespace Avatar5.Networking
         private EnemyBrain _brain;
         private Vector3 _home;
         private uint _sequence;
+        private bool _wasFrozen;
 
         public EnemyState State { get { return (EnemyState)_state.Value; } }
         public ulong Target { get { return _brain != null ? _brain.Target : 0; } }
@@ -82,6 +83,16 @@ namespace Avatar5.Networking
             var host = CombatHost.Instance;
             host.CollectPlayerCandidates(_actor.ActorId, _candidates);
             var self = new Float2(transform.position.x, transform.position.z);
+            var frozen = (_actor.CombatState.Status & StatusFlags.Frozen) != 0;
+            if (frozen)
+            {
+                // Frozen: stand still; the first frozen frame cancels a running telegraph (co-op interrupt).
+                if (!_wasFrozen && _brain.Stagger(0.6f)) Debug.Log("[Avatar5.Enemy] telegraph interrupted by freeze");
+                _wasFrozen = true;
+                if (_agent != null && _agent.isOnNavMesh && _agent.hasPath) _agent.ResetPath();
+                return;
+            }
+            _wasFrozen = false;
             var output = _brain.Tick(Time.deltaTime, self, _candidates);
             host.ReportEnemyTarget(_actor.ActorId, output.TargetActorId);
 

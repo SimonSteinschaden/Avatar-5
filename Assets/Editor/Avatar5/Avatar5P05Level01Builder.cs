@@ -214,7 +214,9 @@ namespace Avatar5.EditorTools
             flame.transform.localPosition = new Vector3(0f, 1.5f, 0f);
             flame.transform.localScale = new Vector3(0.8f, 1f, 0.8f);
             flame.GetComponent<Renderer>().sharedMaterial = materials["Aim"];
-            brazier.AddComponent<WorldObjectAuthoring>().Configure(BrazierId, WorldObjectKind.Brazier, 1.2f, new int[0], flame.transform, ElementKind.Fire);
+            // Element shrine: every class can activate it alone (fire, ice, stone or wind), see design decision A.
+            brazier.name = "ElementShrine";
+            brazier.AddComponent<WorldObjectAuthoring>().Configure(BrazierId, WorldObjectKind.Brazier, 1.2f, new int[0], flame.transform, ElementKind.Fire, true);
         }
     }
 }

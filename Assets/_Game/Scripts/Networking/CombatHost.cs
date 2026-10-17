@@ -195,6 +195,23 @@ namespace Avatar5.Networking
             return _simulation != null && _simulation.IsDefeated(actorId);
         }
 
+        /// <summary>Host: a player picked an element class; swaps the loadout in the simulation.</summary>
+        internal bool SelectClass(NetworkCombatActor actor, ElementKind element)
+        {
+            if (_simulation == null || actor == null || actor.Team != TeamKind.Players) return false;
+            var loadout = StarterAbilities.LoadoutFor(element);
+            // The choice can arrive before the actor is registered (host: same frame as spawn); Register reads actor.Loadout.
+            actor.SetElementClass(element, loadout);
+            if (_actors.ContainsKey(actor.ActorId) && !_simulation.SetLoadout(actor.ActorId, loadout)) return false;
+            return true;
+        }
+
+        internal bool IsFrozen(ulong actorId)
+        {
+            ActorCombatState state;
+            return _simulation != null && _simulation.TryGetState(actorId, out state) && (state.Status & StatusFlags.Frozen) != 0;
+        }
+
         // ---- casting (called by NetworkPlayerAvatar on the host) --------------------------------
 
         /// <summary>

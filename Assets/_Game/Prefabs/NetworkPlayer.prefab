@@ -238,7 +238,7 @@ MonoBehaviour:
   maxHealth: 100
   maxEnergy: 100
   energyRegenPerSecond: 15
-  loadout: 65000000c9000000
+  loadout: 6500000066000000
   reviveSeconds: 5
 --- !u!114 &2259102614668220995
 MonoBehaviour:

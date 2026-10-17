@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1c6103b8004a5449b555524db30bfc, type: 3}
+  m_Name: ice_shard
+  m_EditorClassIdentifier: Avatar5.Combat::Avatar5.Combat.AbilityDefinitionAsset
+  id: 202
+  key: ice_shard
+  element: 1
+  targeting: 0
+  energyCost: 18
+  cooldown: 0.7
+  range: 14
+  coneHalfAngleDegrees: 45
+  projectileSpeed: 20
+  projectileRadius: 0.25
+  damage: 14
+  knockback: 0
+  appliesStatus: 2
+  statusDuration: 4
+  statusDamagePerSecond: 0
+  cueId: 2002

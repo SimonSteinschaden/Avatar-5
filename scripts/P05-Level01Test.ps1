@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  End-to-end run of the Level01 greybox: solo (host only) and co-op (host + 2 clients + 1 late joiner).
+  End-to-end run of the Level01 greybox: solo once per element class, and co-op with mixed classes (host + 2 clients + 1 late joiner).
 
 .DESCRIPTION
   Build first: Avatar5 > Build > Level01 Player
@@ -51,21 +51,26 @@ function WorldOf([string] $file) {
     return $w
 }
 
-# ---- solo ------------------------------------------------------------------------------------
+# ---- solo, once per element class (every class must be able to finish alone) -----------------
 $code = "127.0.0.1:$Port"
-Run 'solo' @(@{ Name = 'host'; Quit = $Seconds; Args = @('-a5-session', 'host', '-a5-bot-delay', '3', '-a5-bot-route', $route) })
-$soloWorld = WorldOf 'solo-host.log'
-Check 'solo: route finished' ((Lines 'solo-host.log' 'A5ROUTE' | Where-Object { $_ -like '*done*' }).Count -ge 1) ''
-Check 'solo: level completed' ($soloWorld -and $soloWorld.Completed) $(if ($soloWorld) { $soloWorld.Line } else { 'no world report' })
-Check 'solo: lever, gates and brazier on' ($soloWorld -and $soloWorld.States -eq '1001:1,1101:1,2001:1,2101:1,9001:0') $(if ($soloWorld) { $soloWorld.States } else { '' })
+foreach ($class in 'fire', 'water', 'earth', 'air') {
+    Run "solo-$class" @(@{ Name = 'host'; Quit = $Seconds; Args = @('-a5-session', 'host', '-a5-class', $class, '-a5-bot-delay', '3', '-a5-bot-route', $route) })
+    $log = "solo-$class-host.log"
+    $soloWorld = WorldOf $log
+    $plays = (Get-Content (Join-Path $LogDir $log) -ErrorAction SilentlyContinue | Where-Object { $_ -like '*Actor 1 plays*' } | Select-Object -First 1)
+    Check "solo ${class}: class applied" ([string]$plays -match "plays $class") "$plays"
+    Check "solo ${class}: route finished" ((Lines $log 'A5ROUTE' | Where-Object { $_ -like '*done*' }).Count -ge 1) ''
+    Check "solo ${class}: level completed" ($soloWorld -and $soloWorld.Completed) $(if ($soloWorld) { $soloWorld.Line } else { 'no world report' })
+    Check "solo ${class}: lever, gates and shrine on" ($soloWorld -and $soloWorld.States -eq '1001:1,1101:1,2001:1,2101:1,9001:0') $(if ($soloWorld) { $soloWorld.States } else { '' })
+}
 
 # ---- co-op with a late joiner ------------------------------------------------------------------
 $coop = @(
-    @{ Name = 'host'; Quit = $Seconds + 6; Args = @('-a5-session', 'host', '-a5-bot-delay', '6', '-a5-bot-route', $route) },
-    @{ Name = 'client1'; Wait = 3; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-delay', '3', '-a5-bot-route', $route) },
-    @{ Name = 'client2'; Wait = 1; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-bot-delay', '2', '-a5-bot-route', $route) },
+    @{ Name = 'host'; Quit = $Seconds + 6; Args = @('-a5-session', 'host', '-a5-class', 'fire', '-a5-bot-delay', '6', '-a5-bot-route', $route) },
+    @{ Name = 'client1'; Wait = 3; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'water', '-a5-bot-delay', '3', '-a5-bot-route', $route) },
+    @{ Name = 'client2'; Wait = 1; Quit = $Seconds; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'earth', '-a5-bot-delay', '2', '-a5-bot-route', $route) },
     # Joins after the lever was pulled; must still see gate A open (snapshot on join). Stands still.
-    @{ Name = 'late'; Wait = 14; Quit = $Seconds - 18; Args = @('-a5-session', 'join', '-a5-code', $code) }
+    @{ Name = 'late'; Wait = 14; Quit = $Seconds - 18; Args = @('-a5-session', 'join', '-a5-code', $code, '-a5-class', 'air') }
 )
 Run 'coop' $coop
 $hostWorld = WorldOf 'coop-host.log'

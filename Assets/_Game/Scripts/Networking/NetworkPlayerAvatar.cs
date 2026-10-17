@@ -10,6 +10,23 @@ using UnityEngine;
 
 namespace Avatar5.Networking
 {
+    /// <summary>Class the local player picked in the lobby (or via -a5-class fire|water|earth|air).</summary>
+    public static class PlayerClassSettings
+    {
+        public static ElementKind Selected = ElementKind.Fire;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ReadCommandLine()
+        {
+            var args = Environment.GetCommandLineArgs();
+            for (var i = 0; i < args.Length - 1; i++)
+            {
+                ElementKind parsed;
+                if (args[i] == "-a5-class" && Enum.TryParse(args[i + 1], true, out parsed)) Selected = parsed;
+            }
+        }
+    }
+
     /// <summary>Wire format of a <see cref="PlayerCommand"/>. ActorId is not sent: the host derives it from the sender.</summary>
     public struct NetPlayerCommand : INetworkSerializable
     {
@@ -147,6 +164,13 @@ namespace Avatar5.Networking
                 if (IsOwner) AttachLocalControls(adapter);
             }
             if (IsOwner && SessionBot.IsActive) gameObject.AddComponent<SessionBot>().Bind(this);
+            var combatActor = GetComponent<NetworkCombatActor>();
+            if (combatActor != null)
+            {
+                combatActor.ElementChanged += ApplyClassColour;
+                ApplyClassColour(combatActor.Element);
+                if (IsOwner) SelectClassRpc((byte)PlayerClassSettings.Selected);
+            }
 
             var aim = GetComponent<AimIndicatorView>();
             if (aim != null) aim.Configure(this, aim.Marker);
@@ -170,7 +194,12 @@ namespace Avatar5.Networking
             var hud = FindAnyObjectByType<MovementDebugHud>();
             if (hud != null) hud.Configure(this);
             var feedback = FindAnyObjectByType<CombatFeedbackView>();
-            if (feedback != null) feedback.SetLocalPlayer(GetComponent<NetworkCombatActor>());
+            if (feedback != null)
+            {
+                var actor = GetComponent<NetworkCombatActor>();
+                feedback.SetLocalPlayer(actor);
+                feedback.SetLocalElement(PlayerClassSettings.Selected);
+            }
         }
 
         /// <summary>Local intent from the owner's input adapter (or bot). Forwards to the host.</summary>
@@ -181,6 +210,33 @@ namespace Avatar5.Networking
             if (IsServer) return HostReceive(NetworkManager.LocalClientId, new NetPlayerCommand(command));
             SubmitCommandRpc(new NetPlayerCommand(command));
             return RequestStatus.Accepted;
+        }
+
+        [Rpc(SendTo.Server, Delivery = RpcDelivery.Reliable)]
+        private void SelectClassRpc(byte element, RpcParams rpcParams = default)
+        {
+            // Only the owner chooses, only once per spawn, and only a real element.
+            if (rpcParams.Receive.SenderClientId != OwnerClientId || _classChosen || !Enum.IsDefined(typeof(ElementKind), element)) return;
+            if (CombatHost.Instance != null && CombatHost.Instance.SelectClass(GetComponent<NetworkCombatActor>(), (ElementKind)element))
+            {
+                _classChosen = true;
+                Debug.Log("[Avatar5.Session] Actor " + ActorId + " plays " + (ElementKind)element);
+            }
+        }
+
+        private bool _classChosen;
+
+        private void ApplyClassColour(ElementKind element)
+        {
+            var bar = GetComponent<HealthBarView>();
+            if (bar == null) return;
+            switch (element)
+            {
+                case ElementKind.Water: bar.SetBaseColor(new Color(0.2f, 0.45f, 0.95f)); break;
+                case ElementKind.Earth: bar.SetBaseColor(new Color(0.45f, 0.65f, 0.25f)); break;
+                case ElementKind.Air: bar.SetBaseColor(new Color(0.85f, 0.85f, 0.9f)); break;
+                default: bar.SetBaseColor(new Color(0.9f, 0.35f, 0.15f)); break;
+            }
         }
 
         /// <summary>Test hook: lets a client try to drive an avatar it does not own (host must refuse).</summary>
@@ -200,8 +256,8 @@ namespace Avatar5.Networking
             var command = wire.ToCommand(0);
             var status = _ingress.Admit(sender, ref command, Time.unscaledTimeAsDouble);
             if (status != RequestStatus.Accepted) return status;
-            // Defeated players keep their sequence moving but neither walk nor act until revived.
-            if (CombatHost.Instance != null && CombatHost.Instance.IsDefeated(ActorId))
+            // Defeated or frozen players keep their sequence moving but neither walk nor act.
+            if (CombatHost.Instance != null && (CombatHost.Instance.IsDefeated(ActorId) || CombatHost.Instance.IsFrozen(ActorId)))
             {
                 command.Move = new Float2(0f, 0f);
                 command.Action = PlayerActionKind.None;
