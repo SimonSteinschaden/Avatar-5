@@ -1,0 +1,73 @@
+{
+    "generatedUtc":  "2026-10-17T02:23:16Z",
+    "commit":  "0618cdf",
+    "branch":  "feature/p02-element-classes",
+    "unity":  "6000.3.26f1",
+    "machine":  "<PC>",
+    "result":  "passed",
+    "steps":  [
+                  {
+                      "name":  "build",
+                      "status":  "passed",
+                      "summary":  "exit=0, compiler errors=0",
+                      "seconds":  39.5,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\build.log"
+                  },
+                  {
+                      "name":  "EditMode",
+                      "status":  "passed",
+                      "summary":  "146/146 passed, 0 failed, 0 skipped",
+                      "seconds":  15.2,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\EditMode.xml"
+                  },
+                  {
+                      "name":  "PlayMode",
+                      "status":  "passed",
+                      "summary":  "34/36 passed, 0 failed, 2 skipped",
+                      "seconds":  25.2,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\PlayMode.xml"
+                  },
+                  {
+                      "name":  "P03-SessionTest",
+                      "status":  "passed",
+                      "summary":  "11/11 checks passed",
+                      "seconds":  75.7,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\P03-SessionTest.txt"
+                  },
+                  {
+                      "name":  "P03-NetworkPlayerTest",
+                      "status":  "passed",
+                      "summary":  "8/8 checks passed",
+                      "seconds":  32.5,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\P03-NetworkPlayerTest.txt"
+                  },
+                  {
+                      "name":  "P02-CombatTest",
+                      "status":  "passed",
+                      "summary":  "26/26 checks passed",
+                      "seconds":  39,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\P02-CombatTest.txt"
+                  },
+                  {
+                      "name":  "P04-EnemyTest",
+                      "status":  "passed",
+                      "summary":  "18/18 checks passed",
+                      "seconds":  43.5,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\P04-EnemyTest.txt"
+                  },
+                  {
+                      "name":  "P05-Level01Test",
+                      "status":  "passed",
+                      "summary":  "24/24 checks passed",
+                      "seconds":  388.7,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\P05-Level01Test.txt"
+                  },
+                  {
+                      "name":  "P06-SaveTest",
+                      "status":  "passed",
+                      "summary":  "10/10 checks passed",
+                      "seconds":  41.7,
+                      "log":  "C:\\A5W\\p03\\Artifacts\\TestReport\\P06-SaveTest.txt"
+                  }
+              ]
+}

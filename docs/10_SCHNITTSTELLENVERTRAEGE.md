@@ -141,6 +141,14 @@ Belegung der `CombatEvent`-Felder: `EventId` streng steigend pro Session (Cues t
 - **Eingabe:** `PlayerCommand.Action = Cast`, `ActionRefId` = Slot (0 linke Maustaste/rechter Trigger, 1 rechte Maustaste/linker Trigger, neue Action `CastSecondary`). Der Host bildet daraus `AbilityRequest` (Ziel = Position + Zielrichtung × 5 m, ohne Zielrichtung die Blickrichtung).
 - **Ids:** Spieler-Actor 1–4 (`ActorIds`), Nicht-Spieler `1000 + NetworkObjectId` (nur Session-gültig, nie speichern).
 
+### 3d-2. Elementklassen (S02-02, Designentscheidung A vom 17.10.2026)
+
+- `StatusFlags.Frozen = 4` (kann weder laufen, zaubern noch eine Ankündigung beenden; friert ein Gegner ein, wird seine laufende Ankündigung abgebrochen). `ReactionKind.Freeze = 3`, `ReactionKind.Flare = 4`.
+- `ReactionRule.AbilityId` (0 = jede Fähigkeit des Elements), `AddsDuration`, `RefreshAbilityStatus`. Reihenfolge der Standardregeln: Einfrieren (Eissplitter auf Nass → Gefroren 1,6 s, +6) → Aufflammen (Luft auf Brennend, +12, Brennen läuft weiter) → Dampf → Löschen.
+- Klassen = `ElementKind`; `StarterAbilities.LoadoutFor(element)` = { Slot 0 Projektil, Slot 1 Fläche }: Feuer {Feuerball 101, Flammenstoß 102}, Wasser {Eissplitter 202, Wasserwelle 201}, Erde {Steinspieß 301, Beben 302}, Luft {Windklinge 402, Böe 401}.
+- Klassenwahl: Lobby oder `-a5-class`; der Owner meldet sie einmal pro Spawn per RPC, der Host setzt Loadout (`CombatSimulation.SetLoadout`) und repliziert das Element (`NetworkCombatActor.Element`).
+- **Rätselregel:** Jedes Elementrätsel muss mit jeder Klasse allein lösbar sein. `WorldObjectDefinition.AnyElement` (Elementschrein) nimmt jedes Element an; elementgebundene Ziele sind nur zulässig, wenn es im selben Abschnitt eine Alternative für die anderen Klassen gibt.
+
 ## 3e. Umgesetzte P04-Verträge (S04-01, `Avatar5.Gameplay.Enemies`)
 
 ```csharp

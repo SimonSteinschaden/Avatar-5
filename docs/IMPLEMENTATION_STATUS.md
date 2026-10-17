@@ -1,6 +1,6 @@
 # Avatar5 – tatsächlicher Implementierungsstand
 
-**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`) → P05 S05-01 Weltzustand + Level01-Greybox (`feature/p05-world-core`) → P06 S06-01 Spielstand (`feature/p06-save-core`) → P08 S08-01 Testlauf + spielbarer Build (`feature/p08-test-pipeline`)
+**Zeitpunkt:** 17.10.2026 · **Stand `main`:** P01 Spielersteuerung und isometrische Kamera + P07a Toon-Shading & schwarze Konturen (beide gemerged) · **In Arbeit (aufeinander aufbauende Branches):** P03 S03-01 Sessions (`feature/p03-sessions`) → S03-02 Netzwerk-Spieler (`feature/p03-network-player`) → P02 S02-01 Kampfkern (`feature/p02-combat-core`) → P04 S04-01 erster Gegner (`feature/p04-first-enemy`) → P05 S05-01 Weltzustand + Level01-Greybox (`feature/p05-world-core`) → P06 S06-01 Spielstand (`feature/p06-save-core`) → P08 S08-01 Testlauf + spielbarer Build (`feature/p08-test-pipeline`) → P02 S02-02 vier Elementklassen (`feature/p02-element-classes`)
 
 ## Implementiert / als Source vorhanden
 
@@ -94,6 +94,20 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 
 **Spielen:** `Level01.unity` öffnen → Play → Sitzung erstellen. Zum Hebel rechts vorne, **E** → Tor A öffnet sich; Brute besiegen; Feuerball auf die Schale rechts hinten → Tor B; ins grüne Ziel. Banner „Level geschafft!“.
 
+### P02 Story S02-02 – Vier Elementklassen mit je 2 Fähigkeiten (Branch `feature/p02-element-classes`, Designentscheidung A)
+
+| Klasse | Slot 0 (Projektil, LMB) | Slot 1 (Fläche, RMB) |
+|---|---|---|
+| Feuer | Feuerball (Brennen) | Flammenstoß (Kegel, Brennen) |
+| Wasser | Eissplitter (Nass; auf Nass → **Einfrieren**) | Wasserwelle (Kegel, Nass, Rückstoß) |
+| Erde | Steinspieß (schwer, Rückstoß) | Beben (Kreis um sich, Rückstoß) |
+| Luft | Windklinge (schnell) | Böe (Kegel, starker Rückstoß; auf Brennend → **Aufflammen**) |
+
+- Reaktionen jetzt 4: Dampf, Löschen, Einfrieren (Gefroren 1,6 s, unterbricht Gegner-Ankündigungen), Aufflammen.
+- Klassenwahl in der Lobby (Feuer/Wasser/Erde/Luft) oder `-a5-class`; Host setzt das Loadout; Spielerfarbe und HUD-Texte nach Klasse.
+- Rätselregel: Level01-Schale ist jetzt ein **Elementschrein** (jedes Element) – jede Klasse kann Level01 allein schaffen.
+- Verträge §3d-2.
+
 ### P08 Story S08-01 – Ein Befehl für alle Tests, spielbarer Windows-Build (Branch `feature/p08-test-pipeline`)
 
 - `scripts/Run-AllTests.ps1`: Build aller Testplayer + spielbarer Build, EditMode, PlayMode, alle 6 Mehrprozess-Tests; Bericht `Artifacts/TestReport/report.md`/`report.json` (Commit, Unity-Version, Status/Dauer je Schritt). Details: `docs/P08_TESTLAUF.md`.
@@ -127,6 +141,22 @@ Eingabe: neue Action `CastSecondary` (rechte Maustaste, linker Trigger) → Slot
 | Generatoren/Werkzeuge | `Assets/_Game/Rendering/Editor` | `Avatar5/Setup/Build P07a Visual Style Test`, `…/Capture P07a Screenshots`, `Avatar5/Build/P07a Visual Style Benchmark` |
 
 **Ansehen:** `Assets/_Game/Scenes/VisualStyle_Test.unity` öffnen (Konturen sind auch im Edit Mode sichtbar) → Play für Debug-Overlay und Hotkeys. Details: `docs/P07a_RENDERING_IMPLEMENTATION.md`, Stilregeln: `docs/P07a_VISUAL_STYLE_GUIDE.md`, Bilder: `docs/p07a_screenshots/`. Der Stil ist von Maya vorläufig akzeptiert (17.10.2026).
+
+## Ausgeführte Prüfungen P02 S02-02 (17.10.2026, `scripts/Run-AllTests.ps1`, separater Klon)
+
+| Schritt | Status | Ergebnis | Dauer |
+|---|---|---|---|
+| build | passed | exit=0, compiler errors=0 | 39.5 s |
+| EditMode | passed | 146/146 passed, 0 failed, 0 skipped | 15.2 s |
+| PlayMode | passed | 34/36 passed, 0 failed, 2 skipped | 25.2 s |
+| P03-SessionTest | passed | 11/11 checks passed | 75.7 s |
+| P03-NetworkPlayerTest | passed | 8/8 checks passed | 32.5 s |
+| P02-CombatTest | passed | 26/26 checks passed | 39 s |
+| P04-EnemyTest | passed | 18/18 checks passed | 43.5 s |
+| P05-Level01Test | passed | 24/24 checks passed | 388.7 s |
+| P06-SaveTest | passed | 10/10 checks passed | 41.7 s |
+
+Gesamtergebnis **PASSED**. Neu geprüft: EditMode +6 Fälle (alle 8 Fähigkeiten gültig, Klassen-Loadouts, Einfrieren inkl. Zauber-Sperre und Ablauf, Aufflammen, Loadout-Wechsel, Unterbrechung der Ankündigung, Elementschrein); Level01 **allein mit jeder der 4 Klassen** geschafft und gemischtes Koop (Feuer/Wasser/Erde + Luft-Nachzügler); Kampftest mit Klassen, 3× Einfrieren. Zwei Fehler gefunden und behoben: Die Klassenwahl des Hosts kam vor seiner Registrierung an und ging verloren (alle Solo-Läufe spielten unbemerkt Feuer – der Test prüft das jetzt), und der Kampftest verglich Endstände, während die Brute noch kämpfte. Bericht: `docs/testlaeufe/P02b_2026-10-17_report.*`.
 
 ## Ausgeführte Prüfungen P08 S08-01 (17.10.2026, `scripts/Run-AllTests.ps1`, separater Klon)
 
@@ -249,7 +279,7 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 - P03: **Relay/Internet nicht getestet**, weil das Projekt noch nicht mit einem Unity-Cloud-Projekt verknüpft ist (`cloudProjectId` leer); der Relay-Adapter ist nur kompiliert. Kein Test über zwei PCs/Internetanschlüsse (M1-Abnahme), keine Latenz-/Verlustsimulation, keine Netzmetriken, kein Rejoin, kein Szenenwechsel. Keine manuelle Bedienung der Debug-Lobby durch eine Person.
 - Netzwerk-Spieler: keine Client-Prediction (eigene Figur reagiert mit einer Netzwerk-Rundreise Verzögerung; laut Architektur erst nach Latenzmessung entscheiden). Kein manueller Spieltest mit zwei Personen, keine Latenz-/Verlustsimulation. Dodge/Interact werden übertragen, aber noch nicht ausgeführt. Late Join nur, solange die Arena geladen ist; Szenenwechsel fehlt noch.
 - Input-Rebinding-UI (P07); nur JSON-Speichern/Laden ist vorhanden.
-- P02: erst 2 von 24 Fähigkeiten, nur Feuer/Wasser; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
+- P02: 8 von 24 Fähigkeiten (M2-Ziel 4 × 2 erreicht, Balance ungeprüft); Klassen sind frei wählbar, aber noch ohne eigenes Klassenmenü/Charaktermodell; kein Rückstoß-Feedback auf dem Client außer der replizierten Position; Zauber verzögern sich um eine Netzwerk-Rundreise (keine Vorhersage). `CombatSimulation` merkt sich alle (Cast, Ziel)-Paare der Session (wächst mit der Spielzeit, für Level-Längen unkritisch, später kürzen). Kein manueller Spieltest, keine Balance-Prüfung.
 - P04: ein Archetyp, kein EncounterDirector, keine Skalierung nach Spielerzahl, kein Boss; kein Stuck-Handling über das NavMesh hinaus; Gegner-Definition noch als Code (`EnemyCatalog`), Asset folgt mit S04-02. Spieler werden am Ort wiederbelebt (Checkpoint-Regel kommt mit P05/P06).
 - P05: Level01 ist ein Greybox-Gerüst von wenigen Minuten, nicht das M2-Level (15–30 min, 1–2 Elementrätsel, 3 Gegnertypen, Mini-Boss). Kein Hub, keine Levelübergänge/Szenenwechsel im Netz, kein Checkpoint-Neustart (Snapshot/Restore existiert, wird aber noch nicht genutzt), kein QuestGraph. Bots laufen gerade Linien; ein echter Spieltest fehlt.
 - P06: noch keine Progression (XP, Talente, `IStatProvider`), keine Checkpoint-Spawnpunkte (Spieler starten nach Fortsetzen am Levelstart), Spieler-Lebenspunkte werden gespeichert, aber noch nicht wiederhergestellt; nur ein Kampagnen-Slot; keine Rotation über mehr als ein Backup; Text zur Besitzregel steht nur in der Doku, noch nicht im Spiel.
@@ -265,4 +295,4 @@ Erster Lauf fand einen echten Fehler (Figur bewegte sich bei sehr hohen Bildrate
 
 ## Nächster sinnvoller Schritt
 
-Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P06 S06-02 (XP, Talente, `IStatProvider`, Belohnungen über den Ledger), P04 S04-02 (weitere Archetypen + EncounterDirector), P02 auf 4 Elemente × 2 Fähigkeiten und Level01 auf M2-Umfang. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
+Projekt mit Unity Cloud verknüpfen und Relay-Join zwischen zwei PCs testen (M1-Abnahme: `P03_NetworkArena` mit 2–4 Spielern über das Internet). Danach P04 S04-02 (2 weitere Archetypen, Mini-Boss, EncounterDirector), Level01 auf M2-Umfang (15–30 min, 2 Elementrätsel), P06 S06-02 (XP, Talente), P04 S04-02 (weitere Archetypen + EncounterDirector), P02 auf 4 Elemente × 2 Fähigkeiten und Level01 auf M2-Umfang. Nebenbei: P01-Spieler/-Arena auf `Avatar5/Toon` + Ink-Volume umstellen und einen Windows-Build des Gesamtstands erstellen.
