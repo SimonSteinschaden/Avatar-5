@@ -32,7 +32,9 @@ namespace Avatar5.Contracts
         ReactionTriggered = 6,
         ActorDefeated = 7,
         ActorRevived = 8,
-        ProjectileEnded = 9
+        ProjectileEnded = 9,
+        /// <summary>An enemy announced an attack (Amount = telegraph seconds, AbilityId = the attack).</summary>
+        TelegraphStarted = 10
     }
 
     /// <summary>Elemental reactions (value of <see cref="CombatEvent.EffectId"/> for ReactionTriggered).</summary>

@@ -169,6 +169,25 @@ namespace Avatar5.Gameplay.Combat
             return new AbilityCastResult { Status = RequestStatus.Accepted, CastId = castId };
         }
 
+        /// <summary>
+        /// Announces an upcoming attack so every peer can show it before damage happens. Pure information:
+        /// the attack itself still goes through <see cref="TryCast"/> when the telegraph ends.
+        /// </summary>
+        public void RaiseTelegraph(ulong actorId, int abilityId, int cueId, Float2 origin, Float2 aimPoint, float seconds)
+        {
+            Actor actor;
+            if (!_actors.TryGetValue(actorId, out actor) || actor.State.Defeated) return;
+            var direction = PlanarMath.Normalize(new Float2(aimPoint.X - origin.X, aimPoint.Y - origin.Y));
+            Raise(CombatEventKind.TelegraphStarted, actorId, 0, abilityId, 0, seconds);
+            RaiseCue(cueId, origin, direction);
+        }
+
+        public bool IsDefeated(ulong actorId)
+        {
+            Actor actor;
+            return _actors.TryGetValue(actorId, out actor) && actor.State.Defeated;
+        }
+
         private RequestStatus Validate(in AbilityRequest request)
         {
             Actor actor;
