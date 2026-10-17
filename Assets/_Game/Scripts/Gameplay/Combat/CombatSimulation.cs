@@ -29,6 +29,7 @@ namespace Avatar5.Gameplay.Combat
             public readonly Dictionary<int, double> ReadyAt = new Dictionary<int, double>();
             public double BurningUntil;
             public double WetUntil;
+            public double FrozenUntil;
             public float BurningDps;
             public ulong BurningSource;
             public double NextBurnTick;
@@ -99,6 +100,17 @@ namespace Avatar5.Gameplay.Combat
             _requests.RemoveActor(actorId);
             _actorOrder.Remove(actorId);
             return _actors.Remove(actorId);
+        }
+
+        /// <summary>Changes an actor's abilities (class choice). Cooldowns of removed abilities are dropped.</summary>
+        public bool SetLoadout(ulong actorId, int[] loadout)
+        {
+            Actor actor;
+            if (!_actors.TryGetValue(actorId, out actor) || loadout == null) return false;
+            foreach (var id in loadout) if (!_catalog.Contains(id)) return false;
+            actor.Loadout = (int[])loadout.Clone();
+            actor.ReadyAt.Clear();
+            return true;
         }
 
         /// <summary>Restores a defeated actor to full health (dummies, later checkpoints).</summary>
@@ -195,6 +207,7 @@ namespace Avatar5.Gameplay.Combat
         {
             Actor actor;
             if (!_actors.TryGetValue(request.ActorId, out actor) || actor.State.Defeated) return RequestStatus.RejectedInvalidState;
+            if ((actor.State.Status & StatusFlags.Frozen) != 0) return RequestStatus.RejectedInvalidState;
             if (!_requests.TryAccept(request.ActorId, request.SequenceId)) return RequestStatus.Duplicate;
 
             AbilityDefinition ability;
@@ -325,6 +338,7 @@ namespace Avatar5.Gameplay.Combat
                     if (Time >= actor.BurningUntil) RemoveStatus(actor, StatusFlags.Burning, 0);
                 }
                 if ((actor.State.Status & StatusFlags.Wet) != 0 && Time >= actor.WetUntil) RemoveStatus(actor, StatusFlags.Wet, 0);
+                if ((actor.State.Status & StatusFlags.Frozen) != 0 && Time >= actor.FrozenUntil) RemoveStatus(actor, StatusFlags.Frozen, 0);
             }
         }
 
@@ -338,13 +352,16 @@ namespace Avatar5.Gameplay.Combat
             if (!_appliedHits.Add((castId, targetId))) return;
 
             var damage = ability.Damage;
-            var reaction = _rules.Find(target.State.Status, ability.Element);
+            var reaction = _rules.Find(target.State.Status, ability.Element, ability.Id);
             if (reaction != null)
             {
                 damage += reaction.BonusDamage;
                 Raise(CombatEventKind.ReactionTriggered, sourceId, targetId, ability.Id, (int)reaction.Kind, reaction.BonusDamage);
                 if (reaction.Removes != StatusFlags.None) RemoveStatus(target, reaction.Removes, ability.Id);
-                if (reaction.Adds != StatusFlags.None) AddStatus(target, reaction.Adds, sourceId, ability, ability.StatusDuration);
+                if (reaction.Adds != StatusFlags.None)
+                    AddStatus(target, reaction.Adds, sourceId, ability, reaction.AddsDuration > 0f ? reaction.AddsDuration : ability.StatusDuration);
+                if (reaction.RefreshAbilityStatus && (target.State.Status & StatusFlags.Burning) != 0)
+                    target.BurningUntil = Time + Math.Max(2f, (float)(target.BurningUntil - Time));
             }
 
             Damage(target, sourceId, ability.Id, damage, (int)castId);
@@ -381,6 +398,7 @@ namespace Avatar5.Gameplay.Combat
                 if (isNew) target.NextBurnTick = Time + _rules.DamageTickInterval;
             }
             if ((status & StatusFlags.Wet) != 0) target.WetUntil = Time + duration;
+            if ((status & StatusFlags.Frozen) != 0) target.FrozenUntil = Time + duration;
             if (isNew) Raise(CombatEventKind.StatusApplied, sourceId, target.State.ActorId, ability.Id, (int)status, duration);
         }
 

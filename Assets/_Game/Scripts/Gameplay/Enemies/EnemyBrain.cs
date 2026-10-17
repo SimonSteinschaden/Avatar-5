@@ -102,6 +102,19 @@ namespace Avatar5.Gameplay.Enemies
             _target = 0;
         }
 
+        /// <summary>
+        /// Interrupts whatever the enemy does (frozen, stunned): a running telegraph is cancelled without an attack
+        /// and the enemy recovers for at least <paramref name="seconds"/>. Returns true if a telegraph was cancelled.
+        /// </summary>
+        public bool Stagger(float seconds)
+        {
+            if (_state == EnemyState.Dead) return false;
+            var cancelled = _state == EnemyState.Telegraph;
+            _state = EnemyState.Recover;
+            _timer = seconds > _timer || cancelled ? seconds : _timer;
+            return cancelled;
+        }
+
         public void OnRevived()
         {
             _state = EnemyState.Idle;

@@ -18,7 +18,9 @@ namespace Avatar5.Contracts
     {
         None = 0,
         Burning = 1 << 0,
-        Wet = 1 << 1
+        Wet = 1 << 1,
+        /// <summary>Cannot move, act or finish a telegraph while frozen (interrupts enemy attacks).</summary>
+        Frozen = 1 << 2
     }
 
     /// <summary>Value of <see cref="CombatEvent.ResultKind"/>.</summary>
@@ -44,7 +46,11 @@ namespace Avatar5.Contracts
         /// <summary>Fire hits a wet target: the water flashes to steam, bonus damage, Wet removed, no Burning.</summary>
         Steam = 1,
         /// <summary>Water hits a burning target: fire goes out, target becomes Wet.</summary>
-        Extinguish = 2
+        Extinguish = 2,
+        /// <summary>Ice hits a wet target: it freezes solid for a moment.</summary>
+        Freeze = 3,
+        /// <summary>Wind fans a burning target: the fire flares up for bonus damage and keeps burning.</summary>
+        Flare = 4
     }
 
     /// <summary>Host-authoritative, readable combat state of one actor (replicated to clients).</summary>

@@ -17,6 +17,8 @@ namespace Avatar5.Gameplay.World
         public int[] Requires = new int[0];
         /// <summary>Brazier: the element that lights it.</summary>
         public ElementKind Element = ElementKind.Fire;
+        /// <summary>Brazier: any element activates it (element shrine), so every class can solve the puzzle alone.</summary>
+        public bool AnyElement;
     }
 
     public sealed class LevelDefinition
@@ -148,7 +150,8 @@ namespace Avatar5.Gameplay.World
             foreach (var id in _order)
             {
                 var o = _objects[id];
-                if (o.Kind != WorldObjectKind.Brazier || _states[id] == WorldStateCodes.On || o.Element != impact.Element) continue;
+                if (o.Kind != WorldObjectKind.Brazier || _states[id] == WorldStateCodes.On) continue;
+                if (!o.AnyElement && o.Element != impact.Element) continue;
                 if (Distance(impact.Position, o.Position) <= o.Radius + impact.Radius) Set(id, WorldStateCodes.On);
             }
         }
